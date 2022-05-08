@@ -1,6 +1,6 @@
 from DataModel import ObjectModel
 
-class PlantUmlDiagramRenderer:
+class ObjectModelPumlRenderer:
 
     def __init__(self, title, objectModel : ObjectModel):
         self.title = title
@@ -50,12 +50,12 @@ class PlantUmlDiagramRenderer:
 
         for object in self.objectModel.objectDict.values():
             result += "rectangle \"" + object.domain + "\" as " + object.domain[0] + " {\n"
-            result += "rectangle \"" + object.type + "\" as " + object.typeName() + " {\n"
-            result += "    object \"" + object.name() + "\" as " + object.name() + " {\n"
+            result += "    rectangle \"" + object.type + "\" as " + object.typeName() + " {\n"
+            result += "        object \"" + object.name() + "\" as " + object.name() + " {\n"
             for propertyName in object.propertyDict.keys():
-                result += "        " + propertyName + " : \"" + object.propertyDict[propertyName] + "\"\n"
+                result += "            " + propertyName + " : \"" + object.propertyDict[propertyName] + "\"\n"
+            result += "        }\n"
             result += "    }\n"
-            result += "}\n"
             result += "}\n"
             result += "\n"
         return result
@@ -70,4 +70,3 @@ class PlantUmlDiagramRenderer:
 
         result += "\n"
         return result
-

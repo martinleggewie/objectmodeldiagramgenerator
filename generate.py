@@ -1,9 +1,11 @@
 
 import argparse
+from DataModel import DomainModel
 
 from DataReader import DataReader
 from DataRepository import DataRepository
-from PlantUmlDiagramRenderer import PlantUmlDiagramRenderer
+from ObjectModelPumlRenderer import ObjectModelPumlRenderer
+from DomainModelPumlRenderer import DomainModelPumlRenderer
 
 
 print("")
@@ -26,17 +28,38 @@ dataRepository = DataRepository(DataReader(args))
 
 print("Render the diagram(s).")
 for objectModel in dataRepository.objectModelSequence.objectModelList:
-    renderedOutput = PlantUmlDiagramRenderer(objectModel.businessEvent, objectModel).render()
-
-    outputFilename = (
-        args.outputfileprefix + "_"
-        + dataRepository.objectModelSequence.title + "_"
-        + objectModel.businessEvent
+    # Render the object diagram
+    objectDiagram = ObjectModelPumlRenderer(objectModel.businessEvent, objectModel).render()
+    objectDiagramOutputFilename = (
+          args.outputfileprefix
+        + "_"
+        + dataRepository.objectModelSequence.title
+        + "_"
+        + objectModel.businessEvent 
+        + "_"
+        + "objectdiagram"
         + ".puml"
     )
-    print("Write output file: " + outputFilename)
-    outputFile = open(outputFilename, "w")
-    outputFile.write(renderedOutput)
+    print("Write output file: " + objectDiagramOutputFilename)
+    objectDiagramOutputFile = open(objectDiagramOutputFilename, "w")
+    objectDiagramOutputFile.write(objectDiagram)
+
+    # And now render the corresponding domain model diagram
+    domainModel = DomainModel(objectModel)
+    domainModelDiagram = DomainModelPumlRenderer(objectModel.businessEvent, domainModel).render()
+    domainModelDiagramOutputFilename = (
+          args.outputfileprefix
+        + "_"
+        + dataRepository.objectModelSequence.title
+        + "_"
+        + objectModel.businessEvent 
+        + "_"
+        + "domainmodeldiagram"
+        + ".puml"
+    )
+    print("Write output file: " + domainModelDiagramOutputFilename)
+    domainModelDiagramOutputFile = open(domainModelDiagramOutputFilename, "w")
+    domainModelDiagramOutputFile.write(domainModelDiagram)
 
 print("")
 print("Done")
