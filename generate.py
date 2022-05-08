@@ -24,33 +24,17 @@ args = parser.parse_args()
 print("Load the XLSX file.")
 dataRepository = DataRepository(DataReader(args))
 
-#objectModelChanges = dataRepository.objectModelChanges
-#for rowNumber in range(0, objectModelChanges.shape[0]):
-#    for colNumber in range(0, objectModelChanges.shape[1]):
-#        print(rowNumber, colNumber)
-#        print(objectModelChanges.iat[rowNumber, colNumber])
-#
-#for businessEvent in dataRepository.businessEventDict.values():
-#    print("    Business Event")
-#    print("      ID:   ", businessEvent.id)
-#    print("      Name: ", businessEvent.name)
-
-
-objectModelSequence = dataRepository.objectModelSequence
-print(objectModelSequence.title)
-print(len(objectModelSequence.objectModelList))
-
 print("Render the diagram(s).")
 for objectModel in dataRepository.objectModelSequence.objectModelList:
     renderedOutput = PlantUmlDiagramRenderer(objectModel.businessEvent, objectModel).render()
 
-    print("Write the output file.")
     outputFilename = (
         args.outputfileprefix + "_"
         + dataRepository.objectModelSequence.title + "_"
         + objectModel.businessEvent
         + ".puml"
     )
+    print("Write output file: " + outputFilename)
     outputFile = open(outputFilename, "w")
     outputFile.write(renderedOutput)
 

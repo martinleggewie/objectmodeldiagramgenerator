@@ -9,7 +9,8 @@ class PlantUmlDiagramRenderer:
     def render(self):
         return (
               self.__header()
-            + self.__content()  
+            + self.__objects()  
+            + self.__associations()  
             + self.__footer()
         )
 
@@ -44,13 +45,29 @@ class PlantUmlDiagramRenderer:
         result += "\n"
         return result
 
-    def __content(self):
+    def __objects(self):
         result = ""
 
         for object in self.objectModel.objectDict.values():
-            result += "object \"" + object.name() + " : " + object.type + "\" as " + object.name() + " {\n"
+            result += "rectangle \"" + object.domain + "\" as " + object.domain[0] + " {\n"
+            result += "rectangle \"" + object.type + "\" as " + object.typeName() + " {\n"
+            result += "    object \"" + object.name() + "\" as " + object.name() + " {\n"
             for propertyName in object.propertyDict.keys():
-                result += "    " + propertyName + " : \"" + object.propertyDict[propertyName] + "\"\n"
+                result += "        " + propertyName + " : \"" + object.propertyDict[propertyName] + "\"\n"
+            result += "    }\n"
+            result += "}\n"
             result += "}\n"
             result += "\n"
         return result
+
+    def __associations(self):
+        result = ""
+
+        for object in self.objectModel.objectDict.values():
+            for dependee in object.dependees():
+                result += object.name() + " --> " + dependee
+                result += "\n"
+
+        result += "\n"
+        return result
+

@@ -16,7 +16,7 @@ class DataRepository:
         return result
 
     def __objectModelSequence(self):
-        result = ObjectModelSequence("Hallo")
+        result = ObjectModelSequence("objectmodelchanges")
 
         rawData = self.dataReader.dfObjectModelChanges
         rowCount = rawData.shape[0]
@@ -43,14 +43,13 @@ class DataRepository:
         currentBusinessEventId = None
         currentObjectModel = None
         for rowNumber in range(3, rowCount):
-            print("Reading row number: " + str(rowNumber))
 
             # Fetch and check BusinessEvent. In case a new BusinessEvent starts, then complete the current ObjectModel and start a new one.
             currentValue = rawData.iat[rowNumber, 0]
             if currentValue != currentBusinessEventId:
-                # We have found a new BusinessEvent, and that means we also need to create a new ObjectModel.
+                # We have found a new BusinessEvent. That means we also need to create a new ObjectModel based on the previous ObjectModel.
                 currentBusinessEventId = currentValue
-                currentObjectModel = ObjectModel(currentBusinessEventId)
+                currentObjectModel = ObjectModel(currentBusinessEventId, currentObjectModel)
                 result.objectModelList.append(currentObjectModel)
 
             # Now start with parsing the rest of the row. This rest of the row contains the concrete values for all the properties.
