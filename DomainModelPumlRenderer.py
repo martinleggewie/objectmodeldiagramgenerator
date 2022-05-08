@@ -17,7 +17,7 @@ class DomainModelPumlRenderer:
     def __header(self):
         result = ""
         result += "\n"
-        result += "@startuml " + self.title + "\n"
+        result += "@startuml domainmodel_" + self.title + "\n"
         result += "\n"
         result += "top to bottom direction\n"
         result += "skinparam shadowing false\n"
