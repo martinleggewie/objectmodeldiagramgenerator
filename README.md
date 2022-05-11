@@ -5,6 +5,6 @@ Generates PlantUML files representing an object model. Reads the information abo
 To start the diagram generation try the following on the command line in the main folder:
 
 ```
-python3.9 generate.py -i business-events_object-model-changes.xlsx -o objectdiagrams
+java -jar TODO -i business-events_object-model-changes.xlsx -o martinstest
 ```
-If the generator run was successful, you will find a bunch of puml files in the current folder. Each puml file starts with "objectdiagrams_".
+If the generator run was successful, you will find a bunch of puml files in the current folder. Each puml file starts with "martinstest_".
