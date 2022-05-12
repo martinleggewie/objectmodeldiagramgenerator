@@ -6,7 +6,13 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDefinition;
+import org.codemaker.objectmodeldiagramgenerator.infrastructure.OmgDefinitionReader;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -68,7 +74,20 @@ public class Main {
     System.out.println("Creating system diagrams:");
     System.out.println("    input file:    " + inputFilePath.toAbsolutePath());
     System.out.println("    output folder: " + outputFolderPath.toAbsolutePath());
-//    try {
+
+    OmgDefinition definition = new OmgDefinition();
+    try {
+      OmgDefinitionReader definitionReader = new OmgDefinitionReader(new FileInputStream(inputFilePath.toFile()));
+      definition = definitionReader.read();
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    System.out.println(definition);
+
+    //    try {
 //      DependiesSequenceReader dependiesSequenceReader = new DependiesSequenceReader(new FileInputStream(inputFilePath.toFile()));
 //      DependiesSequence dependiesSequence = dependiesSequenceReader.read();
 //      for (Dependies dependies : dependiesSequence.getDependiesList()) {
