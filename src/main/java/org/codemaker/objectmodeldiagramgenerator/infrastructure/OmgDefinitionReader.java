@@ -31,6 +31,7 @@ public class OmgDefinitionReader {
   private final String SHEETNAME_BUSINESSEVENTS = "businessevents";
   private final String SHEETNAME_PREFIX_OBJECTMODELSEQUENCE = "objectmodels_";
   private final String PROPERTYNAME_SUFFIX_PRIMARYKEY = "_pk";
+  private final String PROPERTYNAME_SUFFIX_FOREIGNKEY = "_fk";
   private final String PROPERTYVALUE_NOTSET = "-";
 
   private final InputStream inputStream;
@@ -198,7 +199,8 @@ public class OmgDefinitionReader {
               if (!soFarObjectKeyValue.equals(PROPERTYVALUE_NOTSET)) {
                 Map<String, String> soFarPropertyMapCopy = new HashMap<>(soFarPropertyMap);
                 soFarPropertyMapCopy.remove(soFarObjectKeyRaw);
-                OmgObject soFarObject = new OmgObject(soFarObjectKeyValue, soFarClass, soFarPropertyMapCopy);
+                Set<OmgObject> dependeeObjects = dependeeObjects(soFarPropertyMapCopy, result);
+                OmgObject soFarObject = new OmgObject(soFarObjectKeyValue, soFarClass, soFarPropertyMapCopy, dependeeObjects);
                 objects.add(soFarObject);
               }
             }
@@ -217,6 +219,27 @@ public class OmgDefinitionReader {
         result.add(objectModel);
       }
     }
+    return result;
+  }
+
+  private Set<OmgObject> dependeeObjects(Map<String, String> propertyMap, List<OmgObjectModel> objectModels) {
+    Set<OmgObject> result = new HashSet<>();
+
+    for (String key : propertyMap.keySet()) {
+      if (key.endsWith(PROPERTYNAME_SUFFIX_FOREIGNKEY)) {
+        // We have found a reference to another object. We now need to search the complete list of object models to find the
+        // corresponding dependee object.
+        String foreignKeyValue = propertyMap.get(key);
+        for (OmgObjectModel objectModel : objectModels) {
+          for (OmgObject object : objectModel.getObjects()) {
+            if (object.getKey().equals(foreignKeyValue)) {
+              result.add(object);
+            }
+          }
+        }
+      }
+    }
+
     return result;
   }
 }
