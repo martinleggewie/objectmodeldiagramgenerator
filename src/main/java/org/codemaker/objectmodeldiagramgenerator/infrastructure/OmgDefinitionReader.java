@@ -150,7 +150,7 @@ public class OmgDefinitionReader {
         if (matcher.matches()) {
           String className = matcher.group(1).trim();
           String classKey = matcher.group(2).trim();
-          OmgDomain domain = columnIndexDomainMap.get(1);
+          OmgDomain domain = columnIndexDomainMap.get(i);
           currentClass = new OmgClass(classKey, className, domain);
         }
       }

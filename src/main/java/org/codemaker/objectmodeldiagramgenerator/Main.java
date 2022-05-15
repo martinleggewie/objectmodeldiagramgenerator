@@ -7,18 +7,22 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDefinition;
+import org.codemaker.objectmodeldiagramgenerator.domain.services.PumlDiagramService;
+import org.codemaker.objectmodeldiagramgenerator.domain.valueobjects.PumlDiagram;
 import org.codemaker.objectmodeldiagramgenerator.infrastructure.OmgDefinitionReader;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Main {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
 
     // 1. Set up all options
     Option inputOption = Option.builder("i").longOpt("input")
@@ -75,40 +79,19 @@ public class Main {
     System.out.println("    input file:    " + inputFilePath.toAbsolutePath());
     System.out.println("    output folder: " + outputFolderPath.toAbsolutePath());
 
-    OmgDefinition definition;
-    try {
-      OmgDefinitionReader definitionReader = new OmgDefinitionReader(new FileInputStream(inputFilePath.toFile()));
-      definition = definitionReader.read();
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    OmgDefinitionReader definitionReader = new OmgDefinitionReader(new FileInputStream(inputFilePath.toFile()));
+    OmgDefinition definition = definitionReader.read();
+
+    if (!Files.exists(outputFolderPath)) {
+      Files.createDirectory(outputFolderPath);
     }
-
-    System.out.println(definition);
-
-    //    try {
-//      DependiesSequenceReader dependiesSequenceReader = new DependiesSequenceReader(new FileInputStream(inputFilePath.toFile()));
-//      DependiesSequence dependiesSequence = dependiesSequenceReader.read();
-//      for (Dependies dependies : dependiesSequence.getDependiesList()) {
-//        String pumlOutput = new PumlGenerator(dependies).generate();
-//        String outputFilename = dependies.getTitle().replaceAll(" --> ", "-") + ".puml";
-//        Path outputFilePath = Paths.get(outputFolderPath.toString() + "/" + outputFilename);
-//
-//        System.out.println("    output file:   " + outputFilePath.toAbsolutePath().toString());
-//        if (!Files.exists(outputFolderPath)) {
-//          Files.createDirectory(outputFolderPath);
-//        }
-//        FileWriter fileWriter = new FileWriter(outputFilePath.toFile(), false);
-//        fileWriter.write(pumlOutput);
-//        fileWriter.close();
-//      }
-//    } catch (IOException | URISyntaxException e) {
-//      System.err.println("Creating the system diagrams failed.");
-//      System.err.println(e);
-//    }
-
+    PumlDiagramService pumlDiagramService = new PumlDiagramService(definition);
+    for (PumlDiagram pumlDiagram : pumlDiagramService.createDiagrams()) {
+      System.out.println(pumlDiagram.getName());
+      Path outputFilePath = Paths.get(outputFolderPath.toString() + "/" + pumlDiagram.getName());
+      FileWriter fileWriter = new FileWriter(outputFilePath.toFile(), false);
+      fileWriter.write(pumlDiagram.getContent());
+      fileWriter.close();
+    }
   }
-
-
 }

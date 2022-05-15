@@ -28,6 +28,10 @@ public class OmgObject {
     return propertyMap;
   }
 
+  public Set<OmgObject> getDependeeObjects() {
+    return dependeeObjects;
+  }
+
   public String displayName() {
     return key;
   }
