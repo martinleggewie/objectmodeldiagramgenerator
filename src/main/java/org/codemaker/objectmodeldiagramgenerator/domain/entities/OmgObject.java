@@ -6,11 +6,12 @@ import java.util.Map;
 public class OmgObject {
   private final String key;
   private final OmgClass clazz;
-  private final Map<String, String> propertyMap = new HashMap<>();
+  private final Map<String, String> propertyMap;
 
-  public OmgObject(String key, OmgClass clazz) {
+  public OmgObject(String key, OmgClass clazz, Map<String, String> propertyMap) {
     this.key = key;
     this.clazz = clazz;
+    this.propertyMap = propertyMap;
   }
 
   public String getKey() {

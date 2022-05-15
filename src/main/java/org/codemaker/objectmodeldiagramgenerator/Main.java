@@ -75,7 +75,7 @@ public class Main {
     System.out.println("    input file:    " + inputFilePath.toAbsolutePath());
     System.out.println("    output folder: " + outputFolderPath.toAbsolutePath());
 
-    OmgDefinition definition = new OmgDefinition();
+    OmgDefinition definition;
     try {
       OmgDefinitionReader definitionReader = new OmgDefinitionReader(new FileInputStream(inputFilePath.toFile()));
       definition = definitionReader.read();
