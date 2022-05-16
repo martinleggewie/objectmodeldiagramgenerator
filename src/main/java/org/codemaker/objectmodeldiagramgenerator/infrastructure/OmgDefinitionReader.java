@@ -45,15 +45,18 @@ public class OmgDefinitionReader {
     XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
 
     // 1. read business events
+    System.out.println("    Reading the business events.");
     XSSFSheet businessEventDefinitionsSheet = workbook.getSheet(SHEETNAME_BUSINESSEVENTS);
     Map<String, OmgBusinessEvent> businessEventMap = readBusinessEventMap(businessEventDefinitionsSheet);
 
     // 2. read all object model sequences. We can identify an object model sequence sheet by its name prefix
+    System.out.println("    Reading the object model sequences.");
     List<OmgObjectModelSequence> objectModelSequences = new ArrayList<>();
     Iterator<Sheet> sheetIterator = workbook.sheetIterator();
     while (sheetIterator.hasNext()) {
       Sheet sheet = sheetIterator.next();
       if (sheet.getSheetName().startsWith(SHEETNAME_PREFIX_OBJECTMODELSEQUENCE)) {
+        System.out.println("        Sheet name: " + sheet.getSheetName());
         objectModelSequences.add(readObjectModelSequence((XSSFSheet) sheet, businessEventMap));
       }
     }
@@ -68,9 +71,11 @@ public class OmgDefinitionReader {
     rowIterator.next();
     while (rowIterator.hasNext()) {
       Row row = rowIterator.next();
-      String key = row.getCell(0).getStringCellValue();
-      String description = row.getCell(1).getStringCellValue();
-      result.put(key, new OmgBusinessEvent(key, description, "(not yet defined)"));
+      String key = row.getCell(0).getStringCellValue().trim();
+      String description = row.getCell(1).getStringCellValue().trim();
+      String scenario = row.getCell(2).getStringCellValue().trim();
+      result.put(key, new OmgBusinessEvent(key, description, scenario));
+      System.out.println("        Business event: " + key + ", " + scenario + ", " + description);
     }
     return result;
   }
@@ -78,10 +83,13 @@ public class OmgDefinitionReader {
   private OmgObjectModelSequence readObjectModelSequence(XSSFSheet sheet, Map<String, OmgBusinessEvent> businessEventMap) {
     // 1. Determine the name of the sequence
     String sequenceName = sheet.getSheetName().substring(SHEETNAME_PREFIX_OBJECTMODELSEQUENCE.length());
+    System.out.println("        Sequence name:  " + sequenceName);
 
     // 2. Find the size of the sheet to be parsed.
     int maxRowIndex = sheet.getLastRowNum();
     int maxColumnIndex = maxColumnIndex(sheet);
+    System.out.println("        maxRowIndex:    " + maxRowIndex);
+    System.out.println("        maxColumnIndex: " + maxColumnIndex);
 
     // 3. find the domains and the column indices which belong to the domains.
     Map<Integer, OmgDomain> columnIndexDomainMap = columnIndexDomainMap(sheet, maxColumnIndex);
@@ -126,6 +134,7 @@ public class OmgDefinitionReader {
           String domainName = matcher.group(1).trim();
           String domainKey = matcher.group(2).trim();
           currentDomain = new OmgDomain(domainKey, domainName);
+          System.out.println("        Domain:         " + domainKey + ", " + domainName);
         }
       }
       result.put(i, currentDomain);
@@ -152,6 +161,7 @@ public class OmgDefinitionReader {
           String classKey = matcher.group(2).trim();
           OmgDomain domain = columnIndexDomainMap.get(i);
           currentClass = new OmgClass(classKey, className, domain);
+          System.out.println("        Class:          " + classKey + ", " + className);
         }
       }
       result.put(i, currentClass);
@@ -212,6 +222,9 @@ public class OmgDefinitionReader {
           String propertyKey = propertyKeysRow.getCell(columnIndex).getStringCellValue().trim();
           String propertyValue = row.getCell(columnIndex).getStringCellValue().trim();
           soFarPropertyMap.put(propertyKey, propertyValue);
+          System.out.print("        Property:       ");
+          System.out.printf("%-20s = %-30s", propertyKey, propertyValue);
+          System.out.printf(" / (row|col: %3d|%3d)\n", rowIndex, columnIndex);
         }
 
         // We reached the end of the row. That means we can collect all objects and the business event and create the result.
