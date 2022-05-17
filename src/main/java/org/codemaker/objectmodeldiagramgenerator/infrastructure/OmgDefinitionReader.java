@@ -184,47 +184,62 @@ public class OmgDefinitionReader {
       if (businessEventCell != null && businessEventMap.containsKey(businessEventCell.getStringCellValue())) {
         // We found a row which is supposed to contain information we need to process. It all starts with the business event.
         OmgBusinessEvent businessEvent = businessEventMap.get(businessEventCell.getStringCellValue());
-        Set<OmgObject> objects = new HashSet<>();
 
         // Now we can parse the rest of the row which is supposed to contain the actual object property values.
-        OmgClass soFarClass = null;
-        Map<String, String> soFarPropertyMap = null;
+        Set<OmgObject> objects = new HashSet<>();
+        OmgClass soFarClass = columnIndexClassMap.get(1);
+        Map<String, String> soFarPropertyMap = new HashMap<>();
         for (int columnIndex = 1; columnIndex <= maxColumnIndex; columnIndex++) {
+
           OmgClass clazz = columnIndexClassMap.get(columnIndex);
-          if (!clazz.equals(soFarClass) || (columnIndex == maxColumnIndex)) {
-            if (soFarClass != null) {
-              // We found the beginning of a new class. That means we need to conclude the object which we parsed so far.
-              String soFarObjectKeyRaw = null;
-              for (String key : soFarPropertyMap.keySet()) {
-                if (key.endsWith(PROPERTYNAME_SUFFIX_PRIMARYKEY)) {
-                  // We found the value of the object's primary key. We memorize the raw format of that key to be able to later remove
-                  // it from the list of properties.
-                  soFarObjectKeyRaw = key;
-                }
-              }
-              // We collect the object's key value from the properties first. Then we remove this property from the map because
-              // otherwise the object's key would also be contained in that map, and this would be at least confusing.
-              // But we will only create the object and add it to the objects list if the key value is set.
-              String soFarObjectKeyValue = soFarPropertyMap.get(soFarObjectKeyRaw);
-              if (!soFarObjectKeyValue.equals(PROPERTYVALUE_NOTSET)) {
-                Map<String, String> soFarPropertyMapCopy = new HashMap<>(soFarPropertyMap);
-                soFarPropertyMapCopy.remove(soFarObjectKeyRaw);
-                Set<OmgObject> dependeeObjects = dependeeObjects(soFarPropertyMapCopy, result);
-                OmgObject soFarObject = new OmgObject(soFarObjectKeyValue, soFarClass, soFarPropertyMapCopy, dependeeObjects);
-                objects.add(soFarObject);
-              }
-            }
-            soFarClass = clazz;
-            soFarPropertyMap = new HashMap<>();
-          }
 
           // We parse the concrete value of a given property. We fetch the key of that property from the third row.
           String propertyKey = propertyKeysRow.getCell(columnIndex).getStringCellValue().trim();
           String propertyValue = row.getCell(columnIndex).getStringCellValue().trim();
-          soFarPropertyMap.put(propertyKey, propertyValue);
           System.out.print("        Property:       ");
           System.out.printf("%-20s = %-30s", propertyKey, propertyValue);
           System.out.printf(" / (row|col: %3d|%3d)\n", rowIndex, columnIndex);
+
+          // We need to check if we have parsed all the properties of the current class
+          if (!clazz.equals(soFarClass) || (columnIndex == maxColumnIndex)) {
+            if (columnIndex == maxColumnIndex) {
+              // We hit the last column, and that means we need to store the current property and its value with the current object and
+              // not with the next object.
+              soFarPropertyMap.put(propertyKey, propertyValue);
+            }
+
+            // Find the primary key for the to-be-created object
+            String soFarObjectKeyRaw = null;
+            for (String key : soFarPropertyMap.keySet()) {
+              if (key.endsWith(PROPERTYNAME_SUFFIX_PRIMARYKEY)) {
+                // We found the value of the object's primary key. We memorize the raw format of that key to be able to later remove
+                // it from the list of properties.
+                soFarObjectKeyRaw = key;
+              }
+            }
+            if (soFarObjectKeyRaw == null) {
+              throw new RuntimeException(
+                      "The sheet contained an object with no primary key.\nSheet name: " + sheet.getSheetName() + "\nRow: " + rowIndex +
+                              "\nColumn: " + columnIndex);
+            }
+
+            // We collect the object's key value from the properties first. Then we remove this property from the map because
+            // otherwise the object's key would also be contained in that map, and this would be at least confusing.
+            // But we will only create the object and add it to the objects list if the key value is set.
+            String soFarObjectKeyValue = soFarPropertyMap.get(soFarObjectKeyRaw);
+            if (!soFarObjectKeyValue.equals(PROPERTYVALUE_NOTSET)) {
+              Map<String, String> soFarPropertyMapCopy = new HashMap<>(soFarPropertyMap);
+              soFarPropertyMapCopy.remove(soFarObjectKeyRaw);
+              Set<OmgObject> dependeeObjects = dependeeObjects(soFarPropertyMapCopy, result);
+              OmgObject soFarObject = new OmgObject(soFarObjectKeyValue, soFarClass, soFarPropertyMapCopy, dependeeObjects);
+              objects.add(soFarObject);
+            }
+
+            // Prepare reading the next object
+            soFarClass = clazz;
+            soFarPropertyMap = new HashMap<>();
+          }
+          soFarPropertyMap.put(propertyKey, propertyValue);
         }
 
         // We reached the end of the row. That means we can collect all objects and the business event and create the result.

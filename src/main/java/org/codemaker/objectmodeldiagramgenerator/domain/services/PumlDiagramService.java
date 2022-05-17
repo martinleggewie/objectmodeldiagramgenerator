@@ -20,9 +20,9 @@ public class PumlDiagramService {
 
   public List<PumlDiagram> createDiagrams() {
     List<PumlDiagram> result = new ArrayList<>();
-    List<OmgObjectModel> previousObjectModels = new ArrayList<>();
 
     for (OmgObjectModelSequence objectModelSequence : definition.getObjectModelSequences()) {
+      List<OmgObjectModel> previousObjectModels = new ArrayList<>();
       int objectModelCounter = 0;
       OmgBusinessEvent previousBusinessEvent = null;
       for (OmgObjectModel objectModel : objectModelSequence.getObjectModels()) {

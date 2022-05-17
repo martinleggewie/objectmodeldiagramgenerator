@@ -23,11 +23,11 @@ public class Main {
 
     // 1. Set up all options
     Option inputOption = Option.builder("i").longOpt("input")
-            .desc("path to the input XLSX file containing the " + "object model(s) and additional information").valueSeparator('=')
+            .desc("path to the input XLSX file containing the object model(s) and additional information").valueSeparator('=')
             .required(true).hasArg(true).build();
     Option outputOption = Option.builder("o").longOpt("output")
-            .desc("path to the output folder where the " + "diagram files should be created. If not specified, the diagram files will be "
-                    + "created in the same " + "folder where the input file resides.")
+            .desc("path to the output folder where the diagram files should be created. If not specified, the diagram files will be "
+                    + "created in the same folder where the input file resides.")
             .valueSeparator('=').required(false).hasArg(true).build();
     Option helpOption = Option.builder("h").longOpt("help").desc("shows this usage info").required(false).hasArg(false).build();
     Options options = new Options();
@@ -53,7 +53,7 @@ public class Main {
 
     if (!commandLine.hasOption(inputOption.getOpt())) {
       System.err.println(
-              "Option " + inputOption.getLongOpt() + " is missing. Without input filename there is " + "nothing to do here. Call " +
+              "Option " + inputOption.getLongOpt() + " is missing. Without input filename there is nothing to do here. Call " +
                       "\"systemdiagramgenerator --help\" for a usage info.");
       return;
     }
