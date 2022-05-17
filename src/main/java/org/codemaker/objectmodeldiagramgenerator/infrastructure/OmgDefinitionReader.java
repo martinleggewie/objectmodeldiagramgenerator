@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 public class OmgDefinitionReader {
 
   private final String SHEETNAME_BUSINESSEVENTS = "businessevents";
-  private final String SHEETNAME_PREFIX_OBJECTMODELSEQUENCE = "objectmodels_";
+  private final String SHEETNAME_PREFIX_OBJECTMODELSEQUENCE = "oms_";
   private final String PROPERTYNAME_SUFFIX_PRIMARYKEY = "_pk";
   private final String PROPERTYNAME_SUFFIX_FOREIGNKEY = "_fk";
   private final String PROPERTYVALUE_NOTSET = "-";
