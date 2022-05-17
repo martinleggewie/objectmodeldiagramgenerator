@@ -37,6 +37,7 @@ public class PumlDiagramService {
         String diagramName = diagramName(objectModelSequence, objectModel, objectModelCounter);
 
         builder.append(header(diagramName));
+        builder.append(title(objectModelSequence, objectModel, objectModelCounter));
         builder.append(objects(objectModel, previousObjectModels));
         builder.append(relations(objectModel, previousObjectModels));
         builder.append(footer());
@@ -65,21 +66,32 @@ public class PumlDiagramService {
     result.append("skinparam shadowing false\n");
     result.append("skinparam componentStyle uml2\n");
     result.append("skinparam roundCorner 10\n");
+    result.append("\n");
     result.append("skinparam rectangleRoundCorner 20\n");
+    result.append("skinparam rectangleFontStyle bold\n");
+    result.append("skinparam rectangleFontSize 18\n");
     result.append("\n");
     result.append("skinparam objectAttributeFontSize 16\n");
     result.append("skinparam objectBackgroundColor #cornsilk\n");
     result.append("skinparam objectBorderColor #black\n");
-    result.append("skinparam objectBorderThickness 2\n");
+    result.append("skinparam objectBorderThickness 3\n");
     result.append("skinparam objectFontSize 20\n");
+    result.append("skinparam objectFontStyle bold\n");
     result.append("\n");
     result.append("skinparam arrowColor #black\n");
     result.append("skinparam arrowFontSize 18\n");
-    result.append("skinparam arrowThickness 2\n");
+    result.append("skinparam arrowThickness 3\n");
+    result.append("\n");
+    result.append("skinparam titleFontSize 22\n");
+    result.append("skinparam titleFontStyle bold\n");
     result.append("\n");
     result.append("\n");
 
     return result.toString();
+  }
+
+  private String title(OmgObjectModelSequence objectModelSequence, OmgObjectModel objectModel, int objectModelCounter) {
+    return "title " + objectModelSequence.getName() + " - " + objectModel.getBusinessEvent().getDescription() + " - step " + objectModelCounter + "\n\n";
   }
 
   private String objects(OmgObjectModel objectModel, List<OmgObjectModel> previousObjectModels) {
