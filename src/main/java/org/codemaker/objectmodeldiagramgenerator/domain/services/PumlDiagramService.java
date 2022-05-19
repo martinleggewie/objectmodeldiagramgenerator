@@ -70,8 +70,11 @@ public class PumlDiagramService {
     result.append("skinparam rectangleRoundCorner 20\n");
     result.append("skinparam rectangleFontStyle bold\n");
     result.append("skinparam rectangleFontSize 18\n");
+    result.append("skinparam rectangleBorderColor #white\n");
+    result.append("skinparam rectangleBackgroundColor #white\n");
     result.append("\n");
     result.append("skinparam objectAttributeFontSize 16\n");
+    result.append("skinparam objectAttributeFontColor #444444\n");
     result.append("skinparam objectBackgroundColor #cornsilk\n");
     result.append("skinparam objectBorderColor #black\n");
     result.append("skinparam objectBorderThickness 3\n");
@@ -120,11 +123,19 @@ public class PumlDiagramService {
     String objectDisplayName = object.displayName();
     String objectKey = object.getKey();
 
-    result.append("rectangle \"" + domainDisplayName + "\" as " + domainKey + " {\n");
-    result.append("    rectangle \"" + classDisplayName + "\" as " + classKey + " {\n");
-    result.append("        object \"" + objectDisplayName + "\" as " + objectKey + " " + (isNew ? "#palegreen" : "") + " {\n");
-    for (String propertyKey : object.getPropertyMap().keySet()) {
-      result.append("            " + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"\n");
+    result.append("rectangle \"" + domainDisplayName + "\" as " + domainKey + " #DDDDDD {\n");
+    if (isNew) {
+      result.append("    rectangle \"" + classDisplayName + "\" as " + classKey + " #white {\n");
+      result.append("        object \"" + objectDisplayName + "\" as " + objectKey + " #palegreen {\n");
+      for (String propertyKey : object.getPropertyMap().keySet()) {
+        result.append("            <color:black>" + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"</color>\n");
+      }
+    } else {
+      result.append("    rectangle \"" + classDisplayName + "\" as " + classKey + " {\n");
+      result.append("        object \"" + objectDisplayName + "\" as " + objectKey + " {\n");
+      for (String propertyKey : object.getPropertyMap().keySet()) {
+        result.append("            " + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"\n");
+      }
     }
     result.append("        }\n");
     result.append("    }\n");
