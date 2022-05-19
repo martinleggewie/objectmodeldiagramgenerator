@@ -17,6 +17,7 @@ import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModelS
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -255,12 +256,15 @@ public class OmgDefinitionReader {
 
     for (String key : propertyMap.keySet()) {
       if (key.endsWith(PROPERTYNAME_SUFFIX_FOREIGNKEY)) {
-        // We have found a reference to another object. We now need to search the complete list of object models to find the
-        // corresponding dependee object.
-        String foreignKeyValue = propertyMap.get(key);
+        // We have found a reference to on or several objects. We now need to search the complete list of object models to find the
+        // corresponding dependee object(s).
+        String foreignKeyValueRaw = propertyMap.get(key).trim();
+        String[] splitresult = foreignKeyValueRaw.split("[(),]");
+        Set<String> foreignKeyValues = new HashSet<>(Arrays.asList(splitresult));
+
         for (OmgObjectModel objectModel : objectModels) {
           for (OmgObject object : objectModel.getObjects()) {
-            if (object.getKey().equals(foreignKeyValue)) {
+            if (foreignKeyValues.contains(object.getKey())) {
               result.add(object);
             }
           }
