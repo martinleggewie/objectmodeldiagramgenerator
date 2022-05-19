@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -26,8 +28,8 @@ public class Main {
             .desc("path to the input XLSX file containing the object model(s) and additional information").valueSeparator('=')
             .required(true).hasArg(true).build();
     Option outputOption = Option.builder("o").longOpt("output")
-            .desc("path to the output folder where the diagram files should be created. If not specified, the diagram files will be "
-                    + "created in the same folder where the input file resides.")
+            .desc("path to the output folder where the diagram files should be created. If not specified, the diagram files will be " +
+                    "created in the same folder where the input file resides.")
             .valueSeparator('=').required(false).hasArg(true).build();
     Option helpOption = Option.builder("h").longOpt("help").desc("shows this usage info").required(false).hasArg(false).build();
     Options options = new Options();
@@ -63,7 +65,7 @@ public class Main {
     Path inputFilePath = Paths.get(inputFilename);
 
     String outputFoldername = commandLine.getOptionValue(outputOption.getOpt());
-    Path outputFolderPath = null;
+    Path outputFolderPath;
     if (outputFoldername == null) {
       outputFolderPath = inputFilePath.toAbsolutePath().getParent();
     } else {
@@ -87,8 +89,11 @@ public class Main {
     System.out.println();
     System.out.println("Writing the diagrams:");
     PumlDiagramService pumlDiagramService = new PumlDiagramService(definition);
-    for (PumlDiagram pumlDiagram : pumlDiagramService.createDiagrams()) {
-      Path outputFilePath = Paths.get(outputFolderPath.toString() + "/" + pumlDiagram.getName() + ".puml");
+    List<PumlDiagram> pumlDiagrams = new ArrayList<>();
+    pumlDiagrams.addAll(pumlDiagramService.createDiagrams(PumlDiagramService.Mode.gradually));
+    pumlDiagrams.addAll(pumlDiagramService.createDiagrams(PumlDiagramService.Mode.everything));
+    for (PumlDiagram pumlDiagram : pumlDiagrams) {
+      Path outputFilePath = Paths.get(outputFolderPath + "/" + pumlDiagram.getName() + ".puml");
       System.out.println("    " + outputFilePath);
       FileWriter fileWriter = new FileWriter(outputFilePath.toFile(), false);
       fileWriter.write(pumlDiagram.getContent());

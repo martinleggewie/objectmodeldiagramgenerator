@@ -12,20 +12,31 @@ import java.util.List;
 
 public class PumlDiagramService {
 
+  public static enum Mode {
+    gradually,
+    everything;
+  }
+
+
   private final OmgDefinition definition;
 
   public PumlDiagramService(OmgDefinition definition) {
     this.definition = definition;
   }
 
-  public List<PumlDiagram> createDiagrams() {
+  public List<PumlDiagram> createDiagrams(Mode mode) {
     List<PumlDiagram> result = new ArrayList<>();
 
     for (OmgObjectModelSequence objectModelSequence : definition.getObjectModelSequences()) {
       List<OmgObjectModel> previousObjectModels = new ArrayList<>();
+      List<OmgObjectModel> futureObjectModels = new ArrayList<>(objectModelSequence.getObjectModels());
+
       int objectModelCounter = 0;
       OmgBusinessEvent previousBusinessEvent = null;
       for (OmgObjectModel objectModel : objectModelSequence.getObjectModels()) {
+
+        futureObjectModels.remove(objectModel);
+
         OmgBusinessEvent currentBusinessEvent = objectModel.getBusinessEvent();
         if (!currentBusinessEvent.equals(previousBusinessEvent)) {
           objectModelCounter = 0;
@@ -34,12 +45,12 @@ public class PumlDiagramService {
         StringBuilder builder = new StringBuilder();
         objectModelCounter++;
 
-        String diagramName = diagramName(objectModelSequence, objectModel, objectModelCounter);
+        String diagramName = diagramName(objectModelSequence, objectModel, objectModelCounter, mode);
 
         builder.append(header(diagramName));
         builder.append(title(objectModelSequence, objectModel, objectModelCounter));
-        builder.append(objects(objectModel, previousObjectModels));
-        builder.append(relations(objectModel, previousObjectModels));
+        builder.append(objects(objectModel, previousObjectModels, futureObjectModels, mode));
+        builder.append(relations(objectModel, previousObjectModels, futureObjectModels, mode));
         builder.append(footer());
 
         PumlDiagram diagram = new PumlDiagram(diagramName, builder.toString());
@@ -52,8 +63,9 @@ public class PumlDiagramService {
     return result;
   }
 
-  private String diagramName(OmgObjectModelSequence objectModelSequence, OmgObjectModel objectModel, int objectModelCounter) {
-    return objectModelSequence.getName() + "_" + objectModel.getBusinessEvent().getKey() + "_" + String.format("%03d", objectModelCounter);
+  private String diagramName(OmgObjectModelSequence objectModelSequence, OmgObjectModel objectModel, int objectModelCounter, Mode mode) {
+    return objectModelSequence.getName() + "_" + mode + "_" + objectModel.getBusinessEvent().getKey() + "_" + String.format("%03d",
+            objectModelCounter);
   }
 
   private String header(String diagramName) {
@@ -74,12 +86,13 @@ public class PumlDiagramService {
     result.append("skinparam rectangleBackgroundColor #white\n");
     result.append("\n");
     result.append("skinparam objectAttributeFontSize 16\n");
-    result.append("skinparam objectAttributeFontColor #444444\n");
-    result.append("skinparam objectBackgroundColor #cornsilk\n");
-    result.append("skinparam objectBorderColor #black\n");
+    result.append("skinparam objectAttributeFontColor #white\n");
+    result.append("skinparam objectBackgroundColor #white\n");
+    result.append("skinparam objectBorderColor #white\n");
     result.append("skinparam objectBorderThickness 3\n");
     result.append("skinparam objectFontSize 20\n");
     result.append("skinparam objectFontStyle bold\n");
+    result.append("skinparam objectFontColor #white\n");
     result.append("\n");
     result.append("skinparam arrowColor #black\n");
     result.append("skinparam arrowFontSize 18\n");
@@ -94,26 +107,36 @@ public class PumlDiagramService {
   }
 
   private String title(OmgObjectModelSequence objectModelSequence, OmgObjectModel objectModel, int objectModelCounter) {
-    return "title " + objectModelSequence.getName() + " - " + objectModel.getBusinessEvent().getDescription() + " - step " + objectModelCounter + "\n\n";
+    return "title " + objectModelSequence.getName() + " - " + objectModel.getBusinessEvent()
+            .getDescription() + " - step " + objectModelCounter + "\n\n";
   }
 
-  private String objects(OmgObjectModel objectModel, List<OmgObjectModel> previousObjectModels) {
+  private String objects(OmgObjectModel objectModel, List<OmgObjectModel> previousObjectModels, List<OmgObjectModel> futureObjectModels,
+                         Mode mode) {
     StringBuilder result = new StringBuilder();
 
     for (OmgObject object : objectModel.getObjects()) {
-      result.append(object(object, true));
+      result.append(object(object, true, false));
     }
 
     for (OmgObjectModel previousObjectModel : previousObjectModels) {
       for (OmgObject previousObject : previousObjectModel.getObjects()) {
-        result.append(object(previousObject, false));
+        result.append(object(previousObject, false, false));
+      }
+    }
+
+    if (mode.equals(Mode.everything)) {
+      for (OmgObjectModel futureObjectModel : futureObjectModels) {
+        for (OmgObject futureObject : futureObjectModel.getObjects()) {
+          result.append(object(futureObject, false, true));
+        }
       }
     }
 
     return result.toString();
   }
 
-  private String object(OmgObject object, boolean isNew) {
+  private String object(OmgObject object, boolean isNew, boolean isFuture) {
     StringBuilder result = new StringBuilder();
 
     String domainDisplayName = object.getClazz().getDomain().getDisplayName();
@@ -124,17 +147,23 @@ public class PumlDiagramService {
     String objectKey = object.getKey();
 
     result.append("rectangle \"" + domainDisplayName + "\" as " + domainKey + " #DDDDDD {\n");
+    result.append("    rectangle \"" + classDisplayName + "\" as " + classKey + " #white {\n");
     if (isNew) {
-      result.append("    rectangle \"" + classDisplayName + "\" as " + classKey + " #white {\n");
-      result.append("        object \"" + objectDisplayName + "\" as " + objectKey + " #palegreen {\n");
+      result.append("        object \"<color:black>" + objectDisplayName + "</color>\" as " + objectKey + " #palegreen {\n");
       for (String propertyKey : object.getPropertyMap().keySet()) {
         result.append("            <color:black>" + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"</color>\n");
       }
     } else {
-      result.append("    rectangle \"" + classDisplayName + "\" as " + classKey + " {\n");
-      result.append("        object \"" + objectDisplayName + "\" as " + objectKey + " {\n");
-      for (String propertyKey : object.getPropertyMap().keySet()) {
-        result.append("            " + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"\n");
+      if (isFuture) {
+        result.append("        object \"" + objectDisplayName + "\" as " + objectKey + " {\n");
+        for (String propertyKey : object.getPropertyMap().keySet()) {
+          result.append("            " + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"\n");
+        }
+      } else {
+        result.append("        object \"<color:black>" + objectDisplayName + "</color>\" as " + objectKey + " #EEEEEE {\n");
+        for (String propertyKey : object.getPropertyMap().keySet()) {
+          result.append("            <color:black>" + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"</color>\n");
+        }
       }
     }
     result.append("        }\n");
@@ -144,31 +173,49 @@ public class PumlDiagramService {
     return result.toString();
   }
 
-  private String relations(OmgObjectModel objectModel, List<OmgObjectModel> previousObjectModels) {
+  private String relations(OmgObjectModel objectModel, List<OmgObjectModel> previousObjectModels, List<OmgObjectModel> futureObjectModels,
+                           Mode mode) {
     StringBuilder result = new StringBuilder();
 
     for (OmgObject object : objectModel.getObjects()) {
-      result.append(relation(object, true));
+      result.append(relation(object, true, false));
     }
 
     for (OmgObjectModel previousObjectModel : previousObjectModels) {
       for (OmgObject previousObject : previousObjectModel.getObjects()) {
-        result.append(relation(previousObject, false));
+        result.append(relation(previousObject, false, false));
+      }
+    }
+
+    if (mode.equals(Mode.everything)) {
+      for (OmgObjectModel futureObjectModel : futureObjectModels) {
+        for (OmgObject futureObject : futureObjectModel.getObjects()) {
+          result.append(relation(futureObject, false, true));
+        }
       }
     }
 
     return result.toString();
   }
 
-  private String relation(OmgObject object, boolean isNew) {
+  private String relation(OmgObject object, boolean isNew, boolean isFuture) {
     StringBuilder result = new StringBuilder();
 
     for (OmgObject dependeeObject : object.getDependeeObjects()) {
-      result.append(object.getKey() + " ---> " + dependeeObject.getKey() + (isNew ? " #green" : "") + "\n");
+      if (isNew) {
+        result.append(object.getKey() + " ----> " + dependeeObject.getKey() + " #green \n");
+      } else {
+        if (isFuture) {
+          result.append(object.getKey() + " --[hidden]--> " + dependeeObject.getKey() + "\n");
+        } else {
+          result.append(object.getKey() + " ----> " + dependeeObject.getKey() + "\n");
+        }
+      }
     }
 
     return result.toString();
   }
+
 
   private String footer() {
     StringBuilder result = new StringBuilder();
