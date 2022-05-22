@@ -64,8 +64,8 @@ public class ObjectModelSequencesDiagramService {
   }
 
   private String diagramName(OmgObjectModelSequence objectModelSequence, OmgObjectModel objectModel, int objectModelCounter, Mode mode) {
-    return objectModelSequence.getName() + "_" + mode + "_" + objectModel.getBusinessEvent().getKey() + "_" + String.format("%03d",
-            objectModelCounter);
+    return objectModelSequence.getName() + "_" + objectModel.getBusinessEvent().getScenario()
+            .getKey() + "_" + mode + "_" + objectModel.getBusinessEvent().getKey() + "_" + String.format("%03d", objectModelCounter);
   }
 
   private String header(String diagramName) {
@@ -107,8 +107,8 @@ public class ObjectModelSequencesDiagramService {
   }
 
   private String title(OmgObjectModelSequence objectModelSequence, OmgObjectModel objectModel, int objectModelCounter) {
-    return "title " + objectModelSequence.getName() + " - " + objectModel.getBusinessEvent()
-            .getDescription() + " - step " + objectModelCounter + "\n\n";
+    return "title " + objectModelSequence.getName() + " - " + objectModel.getBusinessEvent().getScenario()
+            .getDescription() + "\\n\\n" + objectModel.getBusinessEvent().getDescription() + " - step " + objectModelCounter + "\\n\\n\n\n";
   }
 
   private String objects(OmgObjectModel objectModel, List<OmgObjectModel> previousObjectModels, List<OmgObjectModel> futureObjectModels,
