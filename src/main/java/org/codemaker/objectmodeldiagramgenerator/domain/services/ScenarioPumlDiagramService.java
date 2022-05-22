@@ -59,7 +59,7 @@ public class ScenarioPumlDiagramService {
   }
 
   private String title() {
-    return "title Scenarios and their predecessors\n";
+    return "title \\nScenarios and their predecessors\\n\n";
   }
 
   private String scenarios() {

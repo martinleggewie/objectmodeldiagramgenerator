@@ -107,7 +107,7 @@ public class ObjectModelSequencesDiagramService {
   }
 
   private String title(OmgObjectModelSequence objectModelSequence, OmgObjectModel objectModel, int objectModelCounter) {
-    return "title " + objectModelSequence.getName() + " - " + objectModel.getBusinessEvent().getScenario()
+    return "title \\n" + objectModelSequence.getName() + " - " + objectModel.getBusinessEvent().getScenario()
             .getDescription() + "\\n\\n" + objectModel.getBusinessEvent().getDescription() + " - step " + objectModelCounter + "\\n\\n\n\n";
   }
 
