@@ -7,7 +7,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDefinition;
-import org.codemaker.objectmodeldiagramgenerator.domain.services.PumlDiagramService;
+import org.codemaker.objectmodeldiagramgenerator.domain.services.ObjectModelSequencesDiagramService;
+import org.codemaker.objectmodeldiagramgenerator.domain.services.ScenarioPumlDiagramService;
 import org.codemaker.objectmodeldiagramgenerator.domain.valueobjects.PumlDiagram;
 import org.codemaker.objectmodeldiagramgenerator.infrastructure.OmgDefinitionReader;
 
@@ -88,10 +89,12 @@ public class Main {
 
     System.out.println();
     System.out.println("Writing the diagrams:");
-    PumlDiagramService pumlDiagramService = new PumlDiagramService(definition);
+    ObjectModelSequencesDiagramService objectModelSequencesDiagramService = new ObjectModelSequencesDiagramService(definition);
+    ScenarioPumlDiagramService scenarioPumlDiagramService = new ScenarioPumlDiagramService(definition);
     List<PumlDiagram> pumlDiagrams = new ArrayList<>();
-    pumlDiagrams.addAll(pumlDiagramService.createDiagrams(PumlDiagramService.Mode.gradually));
-    pumlDiagrams.addAll(pumlDiagramService.createDiagrams(PumlDiagramService.Mode.everything));
+    pumlDiagrams.add(scenarioPumlDiagramService.createDiagram());
+    pumlDiagrams.addAll(objectModelSequencesDiagramService.createDiagrams(ObjectModelSequencesDiagramService.Mode.gradually));
+    pumlDiagrams.addAll(objectModelSequencesDiagramService.createDiagrams(ObjectModelSequencesDiagramService.Mode.everything));
     for (PumlDiagram pumlDiagram : pumlDiagrams) {
       Path outputFilePath = Paths.get(outputFolderPath + "/" + pumlDiagram.getName() + ".puml");
       System.out.println("    " + outputFilePath);

@@ -13,6 +13,7 @@ import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDomain;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObject;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModel;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModelSequence;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenario;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,7 @@ import java.util.regex.Pattern;
 
 public class OmgDefinitionReader {
 
+  private final String SHEETNAME_SCENARIOS = "scenarios";
   private final String SHEETNAME_BUSINESSEVENTS = "businessevents";
   private final String SHEETNAME_PREFIX_OBJECTMODELSEQUENCE = "oms_";
   private final String PROPERTYNAME_SUFFIX_PRIMARYKEY = "_pk";
@@ -45,12 +47,17 @@ public class OmgDefinitionReader {
 
     XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
 
-    // 1. read business events
+    // 1. read scenarios
+    System.out.println("    Reading the scenarios.");
+    XSSFSheet scenarioDefinitionsSheet = workbook.getSheet(SHEETNAME_SCENARIOS);
+    Map<String, OmgScenario> scenarioMap = readScenarioMap(scenarioDefinitionsSheet);
+
+    // 2. read business events
     System.out.println("    Reading the business events.");
     XSSFSheet businessEventDefinitionsSheet = workbook.getSheet(SHEETNAME_BUSINESSEVENTS);
-    Map<String, OmgBusinessEvent> businessEventMap = readBusinessEventMap(businessEventDefinitionsSheet);
+    Map<String, OmgBusinessEvent> businessEventMap = readBusinessEventMap(businessEventDefinitionsSheet, scenarioMap);
 
-    // 2. read all object model sequences. We can identify an object model sequence sheet by its name prefix
+    // 3. read all object model sequences. We can identify an object model sequence sheet by its name prefix
     System.out.println("    Reading the object model sequences.");
     List<OmgObjectModelSequence> objectModelSequences = new ArrayList<>();
     Iterator<Sheet> sheetIterator = workbook.sheetIterator();
@@ -62,11 +69,45 @@ public class OmgDefinitionReader {
       }
     }
 
-    return new OmgDefinition(businessEventMap, objectModelSequences);
+    return new OmgDefinition(scenarioMap, businessEventMap, objectModelSequences);
   }
 
+  private Map<String, OmgScenario> readScenarioMap(XSSFSheet sheet) {
+    Map<String, OmgScenario> result = new HashMap<>();
 
-  private Map<String, OmgBusinessEvent> readBusinessEventMap(XSSFSheet sheet) {
+    // First pass: Find all the defined scenarios, but leave the references to their respective predecessors still open.
+    Iterator<Row> rowIteratorFirstPass = sheet.rowIterator();
+    rowIteratorFirstPass.next();
+    while (rowIteratorFirstPass.hasNext()) {
+      Row row = rowIteratorFirstPass.next();
+      String key = row.getCell(0).getStringCellValue().trim();
+      String description = row.getCell(2).getStringCellValue().trim();
+      result.put(key, new OmgScenario(key, description, new ArrayList<>()));
+    }
+
+    // Second pass: Now that we have found all the defined scenarios, we can add the referenced predecessor scenarios.
+    // Yes, I know that this is not the best design to collect all the information like this, but so far this whole software is not
+    // intended to be the beginning of a rise of a super software. Instead, I spend my spare private free time to program this.
+    Iterator<Row> rowIteratorSecondPass = sheet.rowIterator();
+    rowIteratorSecondPass.next();
+    while (rowIteratorSecondPass.hasNext()) {
+      Row row = rowIteratorSecondPass.next();
+      String key = row.getCell(0).getStringCellValue().trim();
+      OmgScenario scenario = result.get(key);
+      String predecessorKeysRaw = row.getCell(1).getStringCellValue().trim();
+      for (String predecessorKey : predecessorKeysRaw.split(",")) {
+        OmgScenario predecessorScenario = result.get(predecessorKey.trim());
+        if (predecessorScenario != null) {
+          scenario.getPredecessors().add(predecessorScenario);
+        }
+      }
+      System.out.println("        Scenario: " + scenario.getKey() + ", " + scenario.getDescription() + ", " + scenario.getPredecessors());
+    }
+
+    return result;
+  }
+
+  private Map<String, OmgBusinessEvent> readBusinessEventMap(XSSFSheet sheet, Map<String, OmgScenario> scenarioMap) {
     Map<String, OmgBusinessEvent> result = new HashMap<>();
     Iterator<Row> rowIterator = sheet.rowIterator();
     rowIterator.next();
@@ -74,9 +115,10 @@ public class OmgDefinitionReader {
       Row row = rowIterator.next();
       String key = row.getCell(0).getStringCellValue().trim();
       String description = row.getCell(1).getStringCellValue().trim();
-      String scenario = row.getCell(2).getStringCellValue().trim();
+      String scenarioKey = row.getCell(2).getStringCellValue().trim();
+      OmgScenario scenario = scenarioMap.get(scenarioKey);
       result.put(key, new OmgBusinessEvent(key, description, scenario));
-      System.out.println("        Business event: " + key + ", " + scenario + ", " + description);
+      System.out.println("        Business event: " + key + ", " + scenarioKey + ", " + description);
     }
     return result;
   }

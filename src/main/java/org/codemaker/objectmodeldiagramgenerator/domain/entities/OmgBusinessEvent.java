@@ -5,9 +5,9 @@ import java.util.Objects;
 public class OmgBusinessEvent {
   private final String key;
   private final String description;
-  private final String scenario;
+  private final OmgScenario scenario;
 
-  public OmgBusinessEvent(String key, String description, String scenario) {
+  public OmgBusinessEvent(String key, String description, OmgScenario scenario) {
     this.key = key;
     this.description = description;
     this.scenario = scenario;
@@ -21,7 +21,7 @@ public class OmgBusinessEvent {
     return description;
   }
 
-  public String getScenario() {
+  public OmgScenario getScenario() {
     return scenario;
   }
 

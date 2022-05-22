@@ -10,7 +10,7 @@ import org.codemaker.objectmodeldiagramgenerator.domain.valueobjects.PumlDiagram
 import java.util.ArrayList;
 import java.util.List;
 
-public class PumlDiagramService {
+public class ObjectModelSequencesDiagramService {
 
   public static enum Mode {
     gradually,
@@ -20,7 +20,7 @@ public class PumlDiagramService {
 
   private final OmgDefinition definition;
 
-  public PumlDiagramService(OmgDefinition definition) {
+  public ObjectModelSequencesDiagramService(OmgDefinition definition) {
     this.definition = definition;
   }
 
