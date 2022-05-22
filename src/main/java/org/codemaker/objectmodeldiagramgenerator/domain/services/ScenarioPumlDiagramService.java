@@ -40,7 +40,7 @@ public class ScenarioPumlDiagramService {
     result.append("skinparam roundCorner 10\n");
     result.append("\n");
     result.append("skinparam rectangleRoundCorner 20\n");
-    result.append("skinparam rectangleFontStyle bold\n");
+    result.append("skinparam rectangleFontStyle normal\n");
     result.append("skinparam rectangleFontSize 18\n");
     result.append("skinparam rectangleBorderColor #black\n");
     result.append("skinparam rectangleBorderThickness 3\n");
@@ -66,7 +66,8 @@ public class ScenarioPumlDiagramService {
     StringBuilder result = new StringBuilder();
 
     for (OmgScenario scenario : definition.getScenarioMap().values()) {
-      result.append("rectangle \"" + lineWrap(scenario.getDescription(), 30) + "\" as " + scenario.getKey() + " {\n");
+      result.append("rectangle \"<b>" + scenario.getKey() + "</b>\\n\\n" + lineWrap(scenario.getDescription(),
+              30) + "\" as " + scenario.getKey() + " " + "{\n");
       result.append("}\n");
     }
 
