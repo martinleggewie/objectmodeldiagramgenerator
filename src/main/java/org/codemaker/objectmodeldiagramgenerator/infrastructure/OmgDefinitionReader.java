@@ -65,7 +65,10 @@ public class OmgDefinitionReader {
     XSSFSheet businessEventDefinitionsSheet = workbook.getSheet(SHEETNAME_BUSINESSEVENTS);
     Map<String, OmgBusinessEvent> businessEventMap = readBusinessEventMap(businessEventDefinitionsSheet, scenarioMap);
 
-    // 4. read all object model sequences. We can identify an object model sequence sheet by its name prefix
+    // 4. read all object model sequences. We can identify an object model sequence sheet by its name prefix.
+    // Please note that the objects contained in these sequence do not yet have the connections to their dependee objects.
+    // Finding the correct dependee objects and adding a relation to the is part of the next step.
+    // We cannot do this in this step because we first need to have parsed all the objects from all sheets.
     System.out.println("    Reading the object model sequences.");
     List<OmgObjectModelSequence> objectModelSequences = new ArrayList<>();
     Iterator<Sheet> sheetIterator = workbook.sheetIterator();
@@ -76,6 +79,12 @@ public class OmgDefinitionReader {
         objectModelSequences.add(readObjectModelSequence((XSSFSheet) sheet, businessEventMap, transitionStateMap));
       }
     }
+
+    // 5. For each found object find all the dependee objects in all object model sequences.
+    // Finding them is more complicated as it sounds because we have to respect a) the transition state, and b) the scenarios and their
+    // predecessor scenarios.
+    System.out.println("    Connect all objects from all object model sequences to their dependee objects.");
+    postprocessDependeeObjects(objectModelSequences);
 
     return new OmgDefinition(scenarioMap, businessEventMap, objectModelSequences);
   }
@@ -340,8 +349,7 @@ public class OmgDefinitionReader {
             if (!soFarObjectKeyValue.equals(PROPERTYVALUE_NOTSET)) {
               Map<String, String> soFarPropertyMapCopy = new HashMap<>(soFarPropertyMap);
               soFarPropertyMapCopy.remove(soFarObjectKeyRaw);
-              Set<OmgObject> dependeeObjects = dependeeObjects(soFarPropertyMapCopy, result);
-              OmgObject soFarObject = new OmgObject(soFarObjectKeyValue, soFarClass, soFarPropertyMapCopy, dependeeObjects);
+              OmgObject soFarObject = new OmgObject(soFarObjectKeyValue, soFarClass, soFarPropertyMapCopy, new HashSet<>());
               objects.add(soFarObject);
             }
 
@@ -360,25 +368,52 @@ public class OmgDefinitionReader {
     return result;
   }
 
-  private Set<OmgObject> dependeeObjects(Map<String, String> propertyMap, List<OmgObjectModel> objectModels) {
-    Set<OmgObject> result = new HashSet<>();
-
-    for (String key : propertyMap.keySet()) {
-      if (key.endsWith(PROPERTYNAME_SUFFIX_FOREIGNKEY)) {
-        // We have found a reference to on or several objects. We now need to search the complete list of object models to find the
-        // corresponding dependee object(s).
-        String foreignKeyValueRaw = propertyMap.get(key).trim();
-        String[] splitresult = foreignKeyValueRaw.split("[(),]");
-        Set<String> foreignKeyValues = new HashSet<>(Arrays.asList(splitresult));
-
-        for (OmgObjectModel objectModel : objectModels) {
-          for (OmgObject object : objectModel.getObjects()) {
-            if (foreignKeyValues.contains(object.getKey())) {
-              result.add(object);
+  private void postprocessDependeeObjects(List<OmgObjectModelSequence> objectModelSequences) {
+    for (OmgObjectModelSequence objectModelSequence : objectModelSequences) {
+      OmgTransitionState transitionState = objectModelSequence.getTransitionState();
+      for (OmgObjectModel objectModel : objectModelSequence.getObjectModels()) {
+        OmgBusinessEvent businessEvent = objectModel.getBusinessEvent();
+        OmgScenario scenario = businessEvent.getScenario();
+        for (OmgObject object : objectModel.getObjects()) {
+          Map<String, String> propertyMap = object.getPropertyMap();
+          for (String key : propertyMap.keySet()) {
+            if (key.endsWith(PROPERTYNAME_SUFFIX_FOREIGNKEY)) {
+              // We have found a reference to one or several objects. We now need to search everything to find the
+              // corresponding dependee object(s).
+              String foreignKeyValueRaw = propertyMap.get(key).trim();
+              String[] splitresult = foreignKeyValueRaw.split("[(),]");
+              Set<String> foreignKeyValues = new HashSet<>(Arrays.asList(splitresult));
+              Set<OmgObject> dependeeObjects = findObjects(foreignKeyValues, objectModelSequences, transitionState, scenario);
+              object.getDependeeObjects().addAll(dependeeObjects);
             }
           }
         }
       }
+    }
+  }
+
+  private Set<OmgObject> findObjects(Set<String> keys, List<OmgObjectModelSequence> objectModelSequences,
+                                     OmgTransitionState transitionState, OmgScenario scenario) {
+    Set<OmgObject> result = new HashSet<>();
+
+    // First search in the same scenario
+    for (OmgObjectModelSequence objectModelSequence : objectModelSequences) {
+      if (objectModelSequence.getTransitionState().equals(transitionState)) {
+        for (OmgObjectModel objectModel : objectModelSequence.getObjectModels()) {
+          if (objectModel.getBusinessEvent().getScenario().equals(scenario)) {
+            for (OmgObject object : objectModel.getObjects()) {
+              if (keys.contains(object.getKey())) {
+                result.add(object);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Now search in the predecessor scenarios as well - watch out: you will find mild recursion below this line
+    for (OmgScenario predecessorScenario : scenario.getPredecessors()) {
+      result.addAll(findObjects(keys, objectModelSequences, transitionState, predecessorScenario));
     }
 
     return result;

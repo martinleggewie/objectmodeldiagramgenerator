@@ -5,10 +5,14 @@ import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDefinition;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObject;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModel;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModelSequence;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenario;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionState;
 import org.codemaker.objectmodeldiagramgenerator.domain.valueobjects.PumlDiagram;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ObjectModelSequencesDiagramService {
 
@@ -28,44 +32,75 @@ public class ObjectModelSequencesDiagramService {
     List<PumlDiagram> result = new ArrayList<>();
 
     for (OmgObjectModelSequence objectModelSequence : definition.getObjectModelSequences()) {
-      List<OmgObjectModel> previousObjectModels = new ArrayList<>();
-      List<OmgObjectModel> futureObjectModels = new ArrayList<>(objectModelSequence.getObjectModels());
+      OmgTransitionState transitionState = objectModelSequence.getTransitionState();
 
-      int objectModelCounter = 0;
-      OmgBusinessEvent previousBusinessEvent = null;
-      for (OmgObjectModel objectModel : objectModelSequence.getObjectModels()) {
+      Map<OmgScenario, List<OmgObjectModel>> scenarioObjectModelMap = scenarioObjectModelMap(objectModelSequence);
+      for (OmgScenario scenario : scenarioObjectModelMap.keySet()) {
+        List<OmgObjectModel> previousObjectModels = new ArrayList<>();
+        List<OmgObjectModel> futureObjectModels = new ArrayList<>(scenarioObjectModelMap.get(scenario));
 
-        futureObjectModels.remove(objectModel);
+        int objectModelCounter = 0;
+        OmgBusinessEvent previousBusinessEvent = null;
 
-        OmgBusinessEvent currentBusinessEvent = objectModel.getBusinessEvent();
-        if (!currentBusinessEvent.equals(previousBusinessEvent)) {
-          objectModelCounter = 0;
-          previousBusinessEvent = currentBusinessEvent;
+        for (OmgObjectModel objectModel : scenarioObjectModelMap.get(scenario)) {
+
+          futureObjectModels.remove(objectModel);
+
+          OmgBusinessEvent currentBusinessEvent = objectModel.getBusinessEvent();
+          if (!currentBusinessEvent.equals(previousBusinessEvent)) {
+            objectModelCounter = 0;
+            previousBusinessEvent = currentBusinessEvent;
+          }
+          StringBuilder builder = new StringBuilder();
+          objectModelCounter++;
+
+          String diagramName = diagramName(objectModelSequence, objectModel, objectModelCounter, mode);
+
+          builder.append(header(diagramName));
+          builder.append(title(objectModelSequence, objectModel, objectModelCounter));
+          builder.append(objects(objectModel, previousObjectModels, futureObjectModels, mode));
+          builder.append(relations(objectModel, previousObjectModels, futureObjectModels, mode));
+          builder.append(footer());
+
+          PumlDiagram diagram = new PumlDiagram(diagramName, builder.toString());
+          result.add(diagram);
+
+          previousObjectModels.add(objectModel);
         }
-        StringBuilder builder = new StringBuilder();
-        objectModelCounter++;
-
-        String diagramName = diagramName(objectModelSequence, objectModel, objectModelCounter, mode);
-
-        builder.append(header(diagramName));
-        builder.append(title(objectModelSequence, objectModel, objectModelCounter));
-        builder.append(objects(objectModel, previousObjectModels, futureObjectModels, mode));
-        builder.append(relations(objectModel, previousObjectModels, futureObjectModels, mode));
-        builder.append(footer());
-
-        PumlDiagram diagram = new PumlDiagram(diagramName, builder.toString());
-        result.add(diagram);
-
-        previousObjectModels.add(objectModel);
       }
     }
 
     return result;
   }
 
+  private Map<OmgScenario, List<OmgObjectModel>> scenarioObjectModelMap(OmgObjectModelSequence objectModelSequence) {
+    Map<OmgScenario, List<OmgObjectModel>> result = new HashMap<>();
+
+    for (OmgObjectModel objectModel : objectModelSequence.getObjectModels()) {
+      OmgScenario scenario = objectModel.getBusinessEvent().getScenario();
+      List<OmgObjectModel> objectModels = result.computeIfAbsent(scenario, k -> new ArrayList<>());
+      objectModels.add(objectModel);
+    }
+
+    return result;
+  }
+
   private String diagramName(OmgObjectModelSequence objectModelSequence, OmgObjectModel objectModel, int objectModelCounter, Mode mode) {
-    return objectModelSequence.getName() + "_" + objectModel.getBusinessEvent().getScenario()
-            .getKey() + "_" + mode + "_" + objectModel.getBusinessEvent().getKey() + "_" + String.format("%03d", objectModelCounter);
+    StringBuilder result = new StringBuilder();
+
+    result.append(objectModelSequence.getName());
+    result.append("_");
+    result.append(mode);
+    result.append("_");
+    result.append(objectModel.getBusinessEvent().getScenario().getKey());
+    result.append("_");
+    result.append(objectModelSequence.getTransitionState().getKey());
+    result.append("_");
+    result.append(objectModel.getBusinessEvent().getKey());
+    result.append("_");
+    result.append(String.format("%03d", objectModelCounter));
+
+    return result.toString();
   }
 
   private String header(String diagramName) {
@@ -99,7 +134,10 @@ public class ObjectModelSequencesDiagramService {
     result.append("skinparam arrowThickness 3\n");
     result.append("\n");
     result.append("skinparam titleFontSize 22\n");
-    result.append("skinparam titleFontStyle bold\n");
+    result.append("skinparam titleFontStyle normal\n");
+    result.append("skinparam titleBackgroundColor cornsilk\n");
+    result.append("skinparam titleBorderThickness 3\n");
+    result.append("skinparam titleBorderColor black\n");
     result.append("\n");
     result.append("\n");
 
@@ -107,8 +145,20 @@ public class ObjectModelSequencesDiagramService {
   }
 
   private String title(OmgObjectModelSequence objectModelSequence, OmgObjectModel objectModel, int objectModelCounter) {
-    return "title \\n" + objectModelSequence.getName() + " - " + objectModel.getBusinessEvent().getScenario()
-            .getDescription() + "\\n\\n" + objectModel.getBusinessEvent().getDescription() + " - step " + objectModelCounter + "\\n\\n\n\n";
+    StringBuilder result = new StringBuilder();
+
+    OmgTransitionState transitionState = objectModelSequence.getTransitionState();
+    OmgScenario scenario = objectModel.getBusinessEvent().getScenario();
+    OmgBusinessEvent businessEvent = objectModel.getBusinessEvent();
+
+    result.append("title \\n");
+    result.append("<b>Sheet:</b> " + objectModelSequence.getName() + "\\n\\n");
+    result.append("<b>Transition State:</b> " + transitionState.getKey() + " - " + transitionState.getDescription() + "\\n\\n");
+    result.append("<b>Scenario:</b> " + scenario.getKey() + " - " + scenario.getDescription() + "\\n\\n");
+    result.append("<b>Business Event:</b> " + businessEvent.getKey() + " - " + businessEvent.getDescription() + "\\n\\n");
+    result.append("<b>Step:</b> " + objectModelCounter + "\\n\\n\n\n");
+
+    return result.toString();
   }
 
   private String objects(OmgObjectModel objectModel, List<OmgObjectModel> previousObjectModels, List<OmgObjectModel> futureObjectModels,
