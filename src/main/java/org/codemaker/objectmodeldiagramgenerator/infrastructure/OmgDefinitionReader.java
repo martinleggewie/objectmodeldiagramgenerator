@@ -14,6 +14,7 @@ import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObject;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModel;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModelSequence;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenario;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionState;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +31,7 @@ import java.util.regex.Pattern;
 
 public class OmgDefinitionReader {
 
+  private final String SHEETNAME_TRANSITIONSTATES = "transitionstates";
   private final String SHEETNAME_SCENARIOS = "scenarios";
   private final String SHEETNAME_BUSINESSEVENTS = "businessevents";
   private final String SHEETNAME_PREFIX_OBJECTMODELSEQUENCE = "oms_";
@@ -38,6 +40,7 @@ public class OmgDefinitionReader {
   private final String PROPERTYVALUE_NOTSET = "-";
 
   private final InputStream inputStream;
+  private String transitionStateKey;
 
   public OmgDefinitionReader(InputStream inputStream) {
     this.inputStream = inputStream;
@@ -47,17 +50,22 @@ public class OmgDefinitionReader {
 
     XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
 
-    // 1. read scenarios
+    // 1. read transition states
+    System.out.println("    Reading the transition states.");
+    XSSFSheet transitionStateDefinitionsSheet = workbook.getSheet(SHEETNAME_TRANSITIONSTATES);
+    Map<String, OmgTransitionState> transitionStateMap = readTransitionStateMap(transitionStateDefinitionsSheet);
+
+    // 2. read scenarios
     System.out.println("    Reading the scenarios.");
     XSSFSheet scenarioDefinitionsSheet = workbook.getSheet(SHEETNAME_SCENARIOS);
     Map<String, OmgScenario> scenarioMap = readScenarioMap(scenarioDefinitionsSheet);
 
-    // 2. read business events
+    // 3. read business events
     System.out.println("    Reading the business events.");
     XSSFSheet businessEventDefinitionsSheet = workbook.getSheet(SHEETNAME_BUSINESSEVENTS);
     Map<String, OmgBusinessEvent> businessEventMap = readBusinessEventMap(businessEventDefinitionsSheet, scenarioMap);
 
-    // 3. read all object model sequences. We can identify an object model sequence sheet by its name prefix
+    // 4. read all object model sequences. We can identify an object model sequence sheet by its name prefix
     System.out.println("    Reading the object model sequences.");
     List<OmgObjectModelSequence> objectModelSequences = new ArrayList<>();
     Iterator<Sheet> sheetIterator = workbook.sheetIterator();
@@ -65,11 +73,59 @@ public class OmgDefinitionReader {
       Sheet sheet = sheetIterator.next();
       if (sheet.getSheetName().startsWith(SHEETNAME_PREFIX_OBJECTMODELSEQUENCE)) {
         System.out.println("        Sheet name: " + sheet.getSheetName());
-        objectModelSequences.add(readObjectModelSequence((XSSFSheet) sheet, businessEventMap));
+        objectModelSequences.add(readObjectModelSequence((XSSFSheet) sheet, businessEventMap, transitionStateMap));
       }
     }
 
     return new OmgDefinition(scenarioMap, businessEventMap, objectModelSequences);
+  }
+
+  private Map<String, OmgTransitionState> readTransitionStateMap(XSSFSheet sheet) {
+    Map<String, OmgTransitionState> result = new HashMap<>();
+
+    // Find all the defined transition states and store them temporarily in a set of maps. Each map stores the three parsed values key,
+    // predecessorKey, and description.
+    Set<Map<String, String>> tempStorage = new HashSet<>();
+    Iterator<Row> rowIteratorFirstPass = sheet.rowIterator();
+    rowIteratorFirstPass.next();
+    while (rowIteratorFirstPass.hasNext()) {
+      Row row = rowIteratorFirstPass.next();
+      String key = row.getCell(0).getStringCellValue().trim();
+      String predecessorKey = row.getCell(1).getStringCellValue().trim();
+      String description = row.getCell(2).getStringCellValue().trim();
+      Map<String, String> tempMap = new HashMap<>();
+      tempMap.put("key", key);
+      tempMap.put("predecessorKey", predecessorKey);
+      tempMap.put("description", description);
+      tempStorage.add(tempMap);
+    }
+
+    // Now that we have found all information in a raw format, we can create proper objects out of them. We do this in two phases:
+    // 1. We create all the transition state objects which don't have a predecessor.
+    // 2. We create the remaining transition state objects which do have a predecessor. As we have created all of them in the first
+    // phase, we can set the references accordingly.
+    for (Map<String, String> phase1Map : tempStorage) {
+      if (phase1Map.get("predecessorKey").equals(PROPERTYVALUE_NOTSET)) {
+        String key = phase1Map.get("key");
+        String description = phase1Map.get("description");
+        OmgTransitionState transitionState = new OmgTransitionState(key, description, null);
+        result.put(key, transitionState);
+        System.out.println("        TransitionState: " + key + ", " + description + ", (no predecessor)");
+      }
+    }
+    for (Map<String, String> phase1Map : tempStorage) {
+      if (!phase1Map.get("predecessorKey").equals(PROPERTYVALUE_NOTSET)) {
+        String key = phase1Map.get("key");
+        String description = phase1Map.get("description");
+        String predecessorKey = phase1Map.get("predecessorKey");
+        OmgTransitionState predecessorTransitionState = result.get(predecessorKey);
+        OmgTransitionState transitionState = new OmgTransitionState(key, description, predecessorTransitionState);
+        result.put(key, transitionState);
+        System.out.println("        TransitionState: " + key + ", " + description + ", " + predecessorKey);
+      }
+    }
+
+    return result;
   }
 
   private Map<String, OmgScenario> readScenarioMap(XSSFSheet sheet) {
@@ -123,10 +179,21 @@ public class OmgDefinitionReader {
     return result;
   }
 
-  private OmgObjectModelSequence readObjectModelSequence(XSSFSheet sheet, Map<String, OmgBusinessEvent> businessEventMap) {
-    // 1. Determine the name of the sequence
-    String sequenceName = sheet.getSheetName().substring(SHEETNAME_PREFIX_OBJECTMODELSEQUENCE.length());
+  private OmgObjectModelSequence readObjectModelSequence(XSSFSheet sheet, Map<String, OmgBusinessEvent> businessEventMap,
+                                                         Map<String, OmgTransitionState> transitionStateMap) {
+    // 1. Determine the name of the sequence and the corresponding transition state
+    String sequenceName = null;
+    String transitionStateKey = null;
+    String sheetNamePattern = SHEETNAME_PREFIX_OBJECTMODELSEQUENCE + "(\\w+)_(\\w+)";
+    String sheetName = sheet.getSheetName();
+    Matcher sheetNameMatcher = Pattern.compile(sheetNamePattern).matcher(sheetName);
+    if (sheetNameMatcher.find()) {
+      sequenceName = sheetNameMatcher.group(1);
+      transitionStateKey = sheetNameMatcher.group(2);
+    }
     System.out.println("        Sequence name:  " + sequenceName);
+    System.out.println("        TransitionState key:  " + transitionStateKey);
+    OmgTransitionState transitionState = transitionStateMap.get(transitionStateKey);
 
     // 2. Find the size of the sheet to be parsed.
     int maxRowIndex = sheet.getLastRowNum();
@@ -143,7 +210,7 @@ public class OmgDefinitionReader {
     // 5. By now we have collected all the meta data, and that means we can finally start parsing the actual object model sequence content.
     List<OmgObjectModel> objectModels = objectModels(sheet, maxColumnIndex, columnIndexClassMap, maxRowIndex, businessEventMap);
 
-    return new OmgObjectModelSequence(sequenceName, objectModels);
+    return new OmgObjectModelSequence(sequenceName, transitionState, objectModels);
   }
 
   private int maxColumnIndex(XSSFSheet sheet) {

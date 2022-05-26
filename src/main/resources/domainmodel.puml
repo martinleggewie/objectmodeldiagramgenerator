@@ -76,19 +76,32 @@ end note
 
 class " ObjectModel " as ObjectModel {
 }
-note bottom of ObjectModel
+note top of ObjectModel
 Defined in one row of an
 "oms_" sheet, with row
 numbers 4 and higher.
 end note
 
 class " ObjectModelSequence " as ObjectModelSequence {
+  name : String
 }
 note top of ObjectModelSequence
 Defined by one "oms_" sheet.
+
+The OMS's name is defined as a
+part of the sheet's name.
+
+The corresponding TransitionState
+is also defined as a part of the
+sheet's name.
 end note
 
 class " Scenario " as Scenario {
+  key : String
+  description : String
+}
+
+class " TransitionState " as TransitionState {
   key : String
   description : String
 }
@@ -98,6 +111,11 @@ BusinessEvent       --> "1"     Scenario
 
 Class               --> "1"     Domain
 
+Definition          --> "1..*"  Scenario
+Definition          --> "1..*"  BusinessEvent
+Definition          --> "1..*"  ObjectModelSequence
+Definition          --> "1..*"  TransitionState
+
 Object              --> "1"     Class
 Object              --> "0..*"  Object : dependees
 
@@ -105,11 +123,10 @@ ObjectModel         --> "1..*"  Object
 ObjectModel         --> "1"     BusinessEvent
 
 ObjectModelSequence --> "1..*"  ObjectModel
-
-Definition          --> "1..*"  Scenario
-Definition          --> "1..*"  BusinessEvent
-Definition          --> "1..*"  ObjectModelSequence
+ObjectModelSequence --> "1"     TransitionState
 
 Scenario            --> "0..*"  Scenario : predecessors
+
+TransitionState     --> "0..1"  TransitionState : predecessor
 
 @enduml
