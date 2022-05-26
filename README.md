@@ -8,6 +8,8 @@ With this proprietary format you (the reader and modeler) can define the followi
 - There are classes. Each class has a name and must relate to one domain.
 - There are objects. Each object has a key and must relate to one business event and one class. Each object can relate to other objects. Each object can have properties (that is, a tupel of a name and and value).
 
+**Check file "/src/main/resources/domainmodel.puml" for the complete domain model which the generator currently supports/expects.**
+
 Based on this information defined following this domain model the generator creates a list of text files.
 Each text file contains the definition of one diagram using the PlantUML DSL.
 

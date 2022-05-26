@@ -1,0 +1,115 @@
+
+@startuml domainmodel
+
+top to bottom direction
+'left to right direction
+
+skinparam shadowing false
+skinparam componentStyle uml2
+
+skinparam roundCorner 10
+
+skinparam classBackgroundColor #cornsilk
+skinparam classBorderColor #black
+skinparam classBorderThickness 3
+skinparam classFontSize 20
+skinparam classFontStyle bold
+skinparam classAttributeFontSize 16
+
+skinparam arrowColor #black
+skinparam arrowFontSize 20
+skinparam arrowFontStyle bold
+skinparam arrowThickness 3
+
+skinparam noteBackgroundColor #white
+skinparam noteBorderColor #black
+skinparam noteBorderThickness 1
+skinparam noteFontSize 16
+
+skinparam rectangleRoundCorner 20
+
+skinparam titleFontSize 20
+skinparam titleFontStyle bold
+
+
+hide empty members
+
+title \nDomain model for object model generator\n
+
+class " BusinessEvent " as BusinessEvent {
+  key : String
+  description : String
+}
+
+class " Class " as Class {
+  key : String
+  displayName : String
+}
+note bottom of Class
+Defined in the second and
+third row of an "oms_" sheet.
+end note
+
+class " Definition " as Definition {
+}
+note top of Definition
+Represents the whole Excel file.
+end note
+
+class " Domain " as Domain {
+  key : String
+  description : String
+}
+note bottom of Domain
+Defined in the first row
+of an "oms_" sheet.
+end note
+
+class " Object " as Object {
+  key : String
+  properties : Map<key,value>
+}
+note bottom of Object
+Defined in a column group
+in one ObjectModel row.
+end note
+
+class " ObjectModel " as ObjectModel {
+}
+note bottom of ObjectModel
+Defined in one row of an
+"oms_" sheet, with row
+numbers 4 and higher.
+end note
+
+class " ObjectModelSequence " as ObjectModelSequence {
+}
+note top of ObjectModelSequence
+Defined by one "oms_" sheet.
+end note
+
+class " Scenario " as Scenario {
+  key : String
+  description : String
+}
+
+
+BusinessEvent       --> "1"     Scenario
+
+Class               --> "1"     Domain
+
+Object              --> "1"     Class
+Object              --> "0..*"  Object : dependees
+
+ObjectModel         --> "1..*"  Object
+ObjectModel         --> "1"     BusinessEvent
+
+ObjectModelSequence --> "1..*"  ObjectModel
+
+Definition          --> "1..*"  Scenario
+Definition          --> "1..*"  BusinessEvent
+Definition          --> "1..*"  ObjectModelSequence
+
+Scenario            --> "0..*"  Scenario : predecessors
+
+@enduml
