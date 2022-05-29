@@ -4,6 +4,7 @@ import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgBusinessEven
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDefinition;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObject;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModel;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModel.Action;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModelSequence;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenario;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionState;
@@ -23,8 +24,9 @@ public class ObjectModelSequencesDiagramService {
   }
 
   public static enum Phase {
-    past,
-    currentAdd,
+    pastCreate,
+    pastRemove,
+    currentCreate,
     currentRemove,
     future,
     outside
@@ -206,6 +208,7 @@ public class ObjectModelSequencesDiagramService {
                          Mode mode) {
     StringBuilder result = new StringBuilder();
     List<OmgObject> dependeeObjectsSoFar = new ArrayList<>();
+    List<OmgObject> removedObjectsSoFar = new ArrayList<>();
 
     // Collect all the objects of this scenario in one flattened list so that we can later check if a given object is defined in this
     // scenario or not.
@@ -218,9 +221,12 @@ public class ObjectModelSequencesDiagramService {
     }
 
     // Draw the objects from the given object model, and also their dependee objects in case they are defined outside this scenario
+    Action action = objectModel.getAction();
     for (OmgObject object : objectModel.getObjects()) {
-      result.append(object(object, Phase.currentAdd));
-
+      result.append(object(object, action.equals(Action.create) ? Phase.currentCreate : Phase.currentRemove));
+      if (action.equals(Action.delete)) {
+        removedObjectsSoFar.add(object);
+      }
       for (OmgObject dependeeObject : object.getDependeeObjects()) {
         if (!allObjectsInThisScenario.contains(dependeeObject) && !dependeeObjectsSoFar.contains(dependeeObject)) {
           result.append(object(dependeeObject, Phase.outside));
@@ -233,7 +239,7 @@ public class ObjectModelSequencesDiagramService {
     // they are defined outside this scenario
     for (OmgObjectModel previousObjectModel : previousObjectModels) {
       for (OmgObject previousObject : previousObjectModel.getObjects()) {
-        result.append(object(previousObject, Phase.past));
+        result.append(object(previousObject, removedObjectsSoFar.contains(previousObject) ? Phase.pastRemove : Phase.pastCreate));
 
         for (OmgObject dependeeObject : previousObject.getDependeeObjects()) {
           if (!allObjectsInThisScenario.contains(dependeeObject) && !dependeeObjectsSoFar.contains(dependeeObject)) {
@@ -276,13 +282,13 @@ public class ObjectModelSequencesDiagramService {
 
     result.append("rectangle \"" + domainDisplayName + "\" as " + domainKey + " #DDDDDD {\n");
     result.append("    rectangle \"" + classDisplayName + "\" as " + classKey + " #white {\n");
-    if (phase.equals(Phase.currentAdd)) {
+    if (phase.equals(Phase.currentCreate)) {
       result.append("        object \"<color:black>" + objectDisplayName + "</color>\" as " + objectKey + " #palegreen {\n");
       for (String propertyKey : object.getPropertyMap().keySet()) {
         result.append("            <color:black>" + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"</color>\n");
       }
     } else if (phase.equals(Phase.currentRemove)) {
-      result.append("        object \"<color:black>" + objectDisplayName + "</color>\" as " + objectKey + " #red {\n");
+      result.append("        object \"<color:black>" + objectDisplayName + "</color>\" as " + objectKey + " #tomato {\n");
       for (String propertyKey : object.getPropertyMap().keySet()) {
         result.append("            <color:black>" + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"</color>\n");
       }
@@ -291,8 +297,13 @@ public class ObjectModelSequencesDiagramService {
       for (String propertyKey : object.getPropertyMap().keySet()) {
         result.append("            " + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"\n");
       }
-    } else if (phase.equals(Phase.past)) {
+    } else if (phase.equals(Phase.pastCreate)) {
       result.append("        object \"<color:black>" + objectDisplayName + "</color>\" as " + objectKey + " #E8F0FF {\n");
+      for (String propertyKey : object.getPropertyMap().keySet()) {
+        result.append("            <color:black>" + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"</color>\n");
+      }
+    } else if (phase.equals(Phase.pastRemove)) {
+      result.append("        object \"<color:black>" + objectDisplayName + "</color>\" as " + objectKey + " #magenta {\n");
       for (String propertyKey : object.getPropertyMap().keySet()) {
         result.append("            <color:black>" + propertyKey + " = \"" + object.getPropertyMap().get(propertyKey) + "\"</color>\n");
       }
@@ -313,23 +324,30 @@ public class ObjectModelSequencesDiagramService {
                            Mode mode) {
     StringBuilder result = new StringBuilder();
     List<RelationDescriptor> relationDescriptorsSoFar = new ArrayList<>();
+    List<OmgObject> removedObjectsSoFar = new ArrayList<>();
 
+    // Process the relations which are defined in the current objects
+    Action action = objectModel.getAction();
     for (OmgObject object : objectModel.getObjects()) {
       for (OmgObject dependeeObject : object.getDependeeObjects()) {
         RelationDescriptor relationDescriptor = new RelationDescriptor(object, dependeeObject);
         if (!relationDescriptorsSoFar.contains(relationDescriptor)) {
-          result.append(relation(relationDescriptor, Phase.currentAdd));
+          result.append(relation(relationDescriptor, action.equals(Action.create) ? Phase.currentCreate : Phase.currentRemove));
           relationDescriptorsSoFar.add(relationDescriptor);
+          if (action.equals(Action.delete)) {
+            removedObjectsSoFar.add(object);
+          }
         }
       }
     }
 
+    // Process the relations which are defined in the past objects
     for (OmgObjectModel previousObjectModel : previousObjectModels) {
       for (OmgObject previousObject : previousObjectModel.getObjects()) {
         for (OmgObject dependeeObject : previousObject.getDependeeObjects()) {
           RelationDescriptor relationDescriptor = new RelationDescriptor(previousObject, dependeeObject);
           if (!relationDescriptorsSoFar.contains(relationDescriptor)) {
-            result.append(relation(relationDescriptor, Phase.past));
+            result.append(relation(relationDescriptor, removedObjectsSoFar.contains(previousObject) ? Phase.pastRemove : Phase.pastCreate));
             relationDescriptorsSoFar.add(relationDescriptor);
           }
         }
@@ -337,9 +355,9 @@ public class ObjectModelSequencesDiagramService {
     }
 
     if (mode.equals(Mode.everything)) {
+      // Process the relations which are defined in the future objects
       for (OmgObjectModel futureObjectModel : futureObjectModels) {
         for (OmgObject futureObject : futureObjectModel.getObjects()) {
-
           for (OmgObject dependeeObject : futureObject.getDependeeObjects()) {
             RelationDescriptor relationDescriptor = new RelationDescriptor(futureObject, dependeeObject);
             if (!relationDescriptorsSoFar.contains(relationDescriptor)) {
@@ -360,14 +378,16 @@ public class ObjectModelSequencesDiagramService {
     String fromKey = relationDescriptor.getFrom().getKey();
     String toKey = relationDescriptor.getTo().getKey();
 
-    if (phase.equals(Phase.currentAdd)) {
+    if (phase.equals(Phase.currentCreate)) {
       result.append(fromKey + " ----> " + toKey + " #green \n");
     } else if (phase.equals(Phase.currentRemove)) {
       result.append(fromKey + " ----> " + toKey + " #red\n");
     } else if (phase.equals(Phase.future)) {
       result.append(fromKey + " --[hidden]--> " + toKey + "\n");
-    } else if (phase.equals(Phase.past)) {
+    } else if (phase.equals(Phase.pastCreate)) {
       result.append(fromKey + " ----> " + toKey + "\n");
+    } else if (phase.equals(Phase.pastRemove)) {
+      result.append(fromKey + " --[hidden]--> " + toKey + "\n");
     } else if (phase.equals(Phase.outside)) {
       result.append(fromKey + " ----> " + toKey + " #grey\n");
     }

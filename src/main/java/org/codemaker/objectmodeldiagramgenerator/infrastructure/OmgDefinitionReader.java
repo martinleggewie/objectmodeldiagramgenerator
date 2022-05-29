@@ -46,9 +46,14 @@ public class OmgDefinitionReader {
     this.inputStream = inputStream;
   }
 
-  public OmgDefinition read() throws IOException {
+  public OmgDefinition read() {
 
-    XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+    XSSFWorkbook workbook = null;
+    try {
+      workbook = new XSSFWorkbook(inputStream);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
 
     // 1. read transition states
     System.out.println("    Reading the transition states.");
@@ -225,7 +230,7 @@ public class OmgDefinitionReader {
   private int maxColumnIndex(XSSFSheet sheet) {
     // For the number of columns we look at the third row because there we see all the properties, and from there we can derive the
     // right-most column.
-    int result = 0;
+    int result = 1;
     XSSFCell currentCell;
     XSSFRow thirdRow = sheet.getRow(2);
     do {
@@ -242,7 +247,7 @@ public class OmgDefinitionReader {
 
     OmgDomain currentDomain = null;
     XSSFRow firstRow = sheet.getRow(0);
-    for (int i = 1; i <= maxColumnIndex; i++) {
+    for (int i = 2; i <= maxColumnIndex; i++) {
       XSSFCell currentCell = firstRow.getCell(i);
       if (currentCell != null && currentCell.getStringCellValue().trim().length() > 0) {
         // We found the start of a new domain.
@@ -268,7 +273,7 @@ public class OmgDefinitionReader {
 
     OmgClass currentClass = null;
     XSSFRow secondRow = sheet.getRow(1);
-    for (int i = 1; i <= maxColumnIndex; i++) {
+    for (int i = 2; i <= maxColumnIndex; i++) {
       XSSFCell currentCell = secondRow.getCell(i);
       if (currentCell != null && currentCell.getStringCellValue().trim().length() > 0) {
         // We found the start of a new class.
@@ -304,11 +309,15 @@ public class OmgDefinitionReader {
         // We found a row which is supposed to contain information we need to process. It all starts with the business event.
         OmgBusinessEvent businessEvent = businessEventMap.get(businessEventCell.getStringCellValue());
 
+        // Then we expect the information about which action this row represents
+        String actionString = row.getCell(1).getStringCellValue().trim().toLowerCase();
+        OmgObjectModel.Action action = OmgObjectModel.Action.valueOf(actionString);
+
         // Now we can parse the rest of the row which is supposed to contain the actual object property values.
         Set<OmgObject> objects = new HashSet<>();
-        OmgClass soFarClass = columnIndexClassMap.get(1);
+        OmgClass soFarClass = columnIndexClassMap.get(2);
         Map<String, String> soFarPropertyMap = new HashMap<>();
-        for (int columnIndex = 1; columnIndex <= maxColumnIndex; columnIndex++) {
+        for (int columnIndex = 2; columnIndex <= maxColumnIndex; columnIndex++) {
 
           OmgClass clazz = columnIndexClassMap.get(columnIndex);
 
@@ -361,7 +370,7 @@ public class OmgDefinitionReader {
         }
 
         // We reached the end of the row. That means we can collect all objects and the business event and create the result.
-        OmgObjectModel objectModel = new OmgObjectModel(businessEvent, objects);
+        OmgObjectModel objectModel = new OmgObjectModel(businessEvent, objects, action);
         result.add(objectModel);
       }
     }
