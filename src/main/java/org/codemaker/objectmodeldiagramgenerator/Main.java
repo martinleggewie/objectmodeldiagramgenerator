@@ -91,8 +91,8 @@ public class Main {
     XSSFWorkbook workbook = new XSSFWorkbook(Files.newInputStream(inputFilePath.toFile().toPath()));
 
     DescriptorRepository descriptorRepository = new XSSFWorkbookDescriptionRepository(workbook);
-    Set<OmgTransitionStateDescriptor> transitionStateDescriptors = descriptorRepository.findAllTransitionStateDescriptors();
-    Set<OmgScenarioDescriptor> scenarioDescriptors = descriptorRepository.findAllScenarioDescriptors();
+    Set<OmgTransitionStateDescriptor> transitionStateDescriptors = descriptorRepository.findTransitionStateDescriptors();
+    Set<OmgScenarioDescriptor> scenarioDescriptors = descriptorRepository.findScenarioDescriptors();
     System.out.println("huhu");
 
     if (false) {
