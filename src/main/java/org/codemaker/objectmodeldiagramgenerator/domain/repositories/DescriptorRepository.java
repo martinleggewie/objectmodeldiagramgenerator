@@ -1,25 +1,31 @@
 package org.codemaker.objectmodeldiagramgenerator.domain.repositories;
 
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgBusinessEventDescriptor;
-import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectSequenceDescriptor;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionStateDescriptor;
 
 import java.util.Set;
 
 public interface DescriptorRepository {
 
-  public Set<OmgTransitionStateDescriptor> findTransitionStateDescriptors();
+  /**
+   * Defines a property value which is not set. Can be used to explicitly indicate that a String value is actually - well - not set. Using
+   * this special value is better than setting an unset value to "" or null.
+   */
+  String PROPERTYVALUE_NOTSET = "NA";
 
-  public OmgTransitionStateDescriptor findTransitionStateDescriptor(String transitionStateDescriptorKey);
+  Set<OmgTransitionStateDescriptor> findTransitionStateDescriptors();
 
-  public Set<OmgScenarioDescriptor> findScenarioDescriptors();
+  OmgTransitionStateDescriptor findTransitionStateDescriptor(String transitionStateDescriptorKey);
 
-  public OmgScenarioDescriptor findScenarioDescriptor(String scenarioDescriptorKey);
+  Set<OmgScenarioDescriptor> findScenarioDescriptors();
 
-  public Set<OmgBusinessEventDescriptor> findBusinessEventDescriptors();
+  OmgScenarioDescriptor findScenarioDescriptor(String scenarioDescriptorKey);
 
-  public OmgBusinessEventDescriptor findBusinessEventDescriptor(String businessDescriptorKey);
+  Set<OmgBusinessEventDescriptor> findBusinessEventDescriptors();
 
-  public Set<OmgObjectSequenceDescriptor> findObjectSequenceDescriptors();
+  OmgBusinessEventDescriptor findBusinessEventDescriptor(String businessDescriptorKey);
+
+  Set<OmgObjectSequenceDescriptor> findObjectSequenceDescriptors();
 }

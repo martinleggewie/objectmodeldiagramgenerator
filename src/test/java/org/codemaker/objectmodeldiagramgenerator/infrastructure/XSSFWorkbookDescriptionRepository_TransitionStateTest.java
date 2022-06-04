@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.codemaker.objectmodeldiagramgenerator.domain.repositories.DescriptorRepository.PROPERTYVALUE_NOTSET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -27,7 +28,7 @@ class XSSFWorkbookDescriptionRepository_TransitionStateTest {
   @Test
   void findAllTransitionStateDescriptors() {
     // Arrange
-    OmgTransitionStateDescriptor descriptor1 = new OmgTransitionStateDescriptor("state1", "This is state 1.", "");
+    OmgTransitionStateDescriptor descriptor1 = new OmgTransitionStateDescriptor("state1", "This is state 1.", PROPERTYVALUE_NOTSET);
     OmgTransitionStateDescriptor descriptor2 = new OmgTransitionStateDescriptor("state2", "This is state 2.", "state1");
     OmgTransitionStateDescriptor descriptor3 = new OmgTransitionStateDescriptor("state3", "This is state 3.", "state1");
     OmgTransitionStateDescriptor descriptor4 = new OmgTransitionStateDescriptor("state4", "This is state 4.", "state1");
@@ -46,7 +47,7 @@ class XSSFWorkbookDescriptionRepository_TransitionStateTest {
   @Test
   void findTransitionStateDescriptor() {
     // Arrange
-    OmgTransitionStateDescriptor descriptor1 = new OmgTransitionStateDescriptor("state1", "This is state 1.", "");
+    OmgTransitionStateDescriptor descriptor1 = new OmgTransitionStateDescriptor("state1", "This is state 1.", PROPERTYVALUE_NOTSET);
     OmgTransitionStateDescriptor descriptor2 = new OmgTransitionStateDescriptor("state2", "This is state 2.", "state1");
     OmgTransitionStateDescriptor descriptor3 = new OmgTransitionStateDescriptor("state3", "This is state 3.", "state1");
 

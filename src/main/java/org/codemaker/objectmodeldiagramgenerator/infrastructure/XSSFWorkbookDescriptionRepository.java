@@ -34,7 +34,7 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
   private final String SHEETNAME_PREFIX_OBJECTMODELSEQUENCE = "oms_";
   private final String PROPERTYNAME_SUFFIX_PRIMARYKEY = "_pk";
   private final String PROPERTYNAME_SUFFIX_FOREIGNKEY = "_fk";
-  private final String PROPERTYVALUE_NOTSET = "-";
+  private final String PROPERTYVALUE_XLS_NOTSET = "-";
 
   private final XSSFWorkbook workbook;
 
@@ -61,8 +61,8 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
       Row row = rowIterator.next();
       String key = row.getCell(0).getStringCellValue().trim();
       String predecessorKey = row.getCell(1).getStringCellValue().trim();
-      if (predecessorKey.equals(PROPERTYVALUE_NOTSET)) {
-        predecessorKey = "";
+      if (predecessorKey.equals(PROPERTYVALUE_XLS_NOTSET)) {
+        predecessorKey = PROPERTYVALUE_NOTSET;
       }
       String description = row.getCell(2).getStringCellValue().trim();
       OmgTransitionStateDescriptor transitionStateDescriptor = new OmgTransitionStateDescriptor(key, description, predecessorKey);
@@ -95,7 +95,7 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
       String description = row.getCell(2).getStringCellValue().trim();
 
       List<String> predecessorKeys = new ArrayList<>();
-      if (!predecessorKeysRaw.equals(PROPERTYVALUE_NOTSET)) {
+      if (!predecessorKeysRaw.equals(PROPERTYVALUE_XLS_NOTSET)) {
         for (String predecessorKey : predecessorKeysRaw.split(",")) {
           predecessorKeys.add(predecessorKey.trim());
         }
@@ -228,6 +228,9 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
             System.out.print("        Property:       ");
             System.out.printf("%-20s = %-30s", propertyKey, propertyValue);
             System.out.printf(" / (row|col: %3d|%3d)\n", rowIndex, columnIndex);
+          }
+          if (propertyValue.equals(PROPERTYVALUE_XLS_NOTSET)) {
+            propertyValue = PROPERTYVALUE_NOTSET;
           }
 
           // We need to check if we have parsed all the properties of the current class
