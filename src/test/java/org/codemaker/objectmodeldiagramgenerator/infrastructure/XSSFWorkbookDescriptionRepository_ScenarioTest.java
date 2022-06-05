@@ -5,8 +5,7 @@ import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioDesc
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,23 +28,23 @@ class XSSFWorkbookDescriptionRepository_ScenarioTest {
   @Test
   void findAllScenarioDescriptors() {
     // Arrange
-    OmgScenarioDescriptor descriptor1 = new OmgScenarioDescriptor("scenario1", "Description for scenario 1.", new ArrayList<>());
-    List<String> predecessorKeysDescriptor2 = new ArrayList<>();
+    OmgScenarioDescriptor descriptor1 = new OmgScenarioDescriptor("scenario1", "Description for scenario 1.", new HashSet<>());
+    Set<String> predecessorKeysDescriptor2 = new HashSet<>();
     predecessorKeysDescriptor2.add("scenario1");
     OmgScenarioDescriptor descriptor2 = new OmgScenarioDescriptor("scenario2", "Description for scenario 2.", predecessorKeysDescriptor2);
-    List<String> predecessorKeysDescriptor3 = new ArrayList<>();
+    Set<String> predecessorKeysDescriptor3 = new HashSet<>();
     predecessorKeysDescriptor3.add("scenario1");
     OmgScenarioDescriptor descriptor3 = new OmgScenarioDescriptor("scenario3", "Description for scenario 3.", predecessorKeysDescriptor3);
-    List<String> predecessorKeysDescriptor4 = new ArrayList<>();
+    Set<String> predecessorKeysDescriptor4 = new HashSet<>();
     predecessorKeysDescriptor4.add("scenario2");
     predecessorKeysDescriptor4.add("scenario3");
     OmgScenarioDescriptor descriptor4 = new OmgScenarioDescriptor("scenario4", "Description for scenario 4.", predecessorKeysDescriptor4);
-    List<String> predecessorKeysDescriptor5 = new ArrayList<>();
+    Set<String> predecessorKeysDescriptor5 = new HashSet<>();
     predecessorKeysDescriptor5.add("scenario1");
     predecessorKeysDescriptor5.add("scenario3");
     predecessorKeysDescriptor5.add("scenario4");
     OmgScenarioDescriptor descriptor5 = new OmgScenarioDescriptor("scenario5", "Description for scenario 5.", predecessorKeysDescriptor5);
-    OmgScenarioDescriptor descriptor6 = new OmgScenarioDescriptor("scenario6", "Description for scenario 6.", new ArrayList<>());
+    OmgScenarioDescriptor descriptor6 = new OmgScenarioDescriptor("scenario6", "Description for scenario 6.", new HashSet<>());
 
     // Act
     Set<OmgScenarioDescriptor> result = cut.findScenarioDescriptors();
@@ -63,18 +62,18 @@ class XSSFWorkbookDescriptionRepository_ScenarioTest {
   @Test
   void findScenarioDescriptor() {
     // Arrange
-    OmgScenarioDescriptor descriptor1 = new OmgScenarioDescriptor("scenario1", "Description for scenario 1.", new ArrayList<>());
-    List<String> predecessorKeysDescriptor2 = new ArrayList<>();
+    OmgScenarioDescriptor descriptor1 = new OmgScenarioDescriptor("scenario1", "Description for scenario 1.", new HashSet<>());
+    Set<String> predecessorKeysDescriptor2 = new HashSet<>();
     predecessorKeysDescriptor2.add("scenario1");
     OmgScenarioDescriptor descriptor2 = new OmgScenarioDescriptor("scenario2", "Description for scenario 2.", predecessorKeysDescriptor2);
-    List<String> predecessorKeysDescriptor3 = new ArrayList<>();
+    Set<String> predecessorKeysDescriptor3 = new HashSet<>();
     predecessorKeysDescriptor3.add("scenario1");
     OmgScenarioDescriptor descriptor3 = new OmgScenarioDescriptor("scenario3", "Description for scenario 3.", predecessorKeysDescriptor3);
-    List<String> predecessorKeysDescriptor4 = new ArrayList<>();
+    Set<String> predecessorKeysDescriptor4 = new HashSet<>();
     predecessorKeysDescriptor4.add("scenario2");
     predecessorKeysDescriptor4.add("scenario3");
     OmgScenarioDescriptor descriptor4 = new OmgScenarioDescriptor("scenario4", "Description for scenario 4.", predecessorKeysDescriptor4);
-    List<String> predecessorKeysDescriptor5 = new ArrayList<>();
+    Set<String> predecessorKeysDescriptor5 = new HashSet<>();
     predecessorKeysDescriptor5.add("scenario1");
     predecessorKeysDescriptor5.add("scenario3");
     predecessorKeysDescriptor5.add("scenario4");

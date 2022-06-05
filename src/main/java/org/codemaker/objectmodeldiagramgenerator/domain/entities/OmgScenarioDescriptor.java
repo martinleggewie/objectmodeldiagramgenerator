@@ -1,14 +1,14 @@
 package org.codemaker.objectmodeldiagramgenerator.domain.entities;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class OmgScenarioDescriptor {
   private final String key;
   private final String description;
-  private final List<String> predecessorKeys;
+  private final Set<String> predecessorKeys;
 
-  public OmgScenarioDescriptor(String key, String description, List<String> predecessorKeys) {
+  public OmgScenarioDescriptor(String key, String description, Set<String> predecessorKeys) {
     this.key = key;
     this.description = description;
     this.predecessorKeys = predecessorKeys;
@@ -22,7 +22,7 @@ public class OmgScenarioDescriptor {
     return description;
   }
 
-  public List<String> getPredecessorKeys() {
+  public Set<String> getPredecessorKeys() {
     return predecessorKeys;
   }
 

@@ -1,13 +1,16 @@
 package org.codemaker.objectmodeldiagramgenerator.domain.entities;
 
-import java.util.List;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Objects;
+import java.util.Set;
 
 public class OmgScenario {
   private final String key;
   private final String description;
-  private final List<OmgScenario> predecessors;
+  private final Set<OmgScenario> predecessors;
 
-  public OmgScenario(String key, String description, List<OmgScenario> predecessors) {
+  public OmgScenario(String key, String description, Set<OmgScenario> predecessors) {
     this.key = key;
     this.description = description;
     this.predecessors = predecessors;
@@ -21,7 +24,29 @@ public class OmgScenario {
     return description;
   }
 
-  public List<OmgScenario> getPredecessors() {
+  public Set<OmgScenario> getPredecessors() {
     return predecessors;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (!(o instanceof OmgScenario))
+      return false;
+    OmgScenario scenario = (OmgScenario) o;
+
+    return getKey().equals(scenario.getKey()) && getDescription().equals(scenario.getDescription()) && CollectionUtils.isEqualCollection(
+            getPredecessors(), scenario.getPredecessors());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getKey(), getDescription(), getPredecessors());
+  }
+
+  @Override
+  public String toString() {
+    return "OmgScenario{" + "key='" + key + '\'' + ", description='" + description + '\'' + ", predecessors=" + predecessors + '}';
   }
 }

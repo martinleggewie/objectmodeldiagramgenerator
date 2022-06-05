@@ -152,7 +152,7 @@ public class OmgDefinitionReader {
       Row row = rowIteratorFirstPass.next();
       String key = row.getCell(0).getStringCellValue().trim();
       String description = row.getCell(2).getStringCellValue().trim();
-      result.put(key, new OmgScenario(key, description, new ArrayList<>()));
+      result.put(key, new OmgScenario(key, description, new HashSet<>()));
     }
 
     // Second pass: Now that we have found all the defined scenarios, we can add the referenced predecessor scenarios.

@@ -94,7 +94,7 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
       String predecessorKeysRaw = row.getCell(1).getStringCellValue().trim();
       String description = row.getCell(2).getStringCellValue().trim();
 
-      List<String> predecessorKeys = new ArrayList<>();
+      Set<String> predecessorKeys = new HashSet<>();
       if (!predecessorKeysRaw.equals(PROPERTYVALUE_XLS_NOTSET)) {
         for (String predecessorKey : predecessorKeysRaw.split(",")) {
           predecessorKeys.add(predecessorKey.trim());
