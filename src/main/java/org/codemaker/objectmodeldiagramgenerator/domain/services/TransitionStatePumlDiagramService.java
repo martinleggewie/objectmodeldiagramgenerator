@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.codemaker.objectmodeldiagramgenerator.util.PumlUtil.lineWrap;
+
 public class TransitionStatePumlDiagramService {
 
   private final TransitionStateService transitionStateService;
@@ -76,28 +78,6 @@ public class TransitionStatePumlDiagramService {
     for (String key : sortedKeys) {
       OmgTransitionState state = transitionStateMap.get(key);
       result.append("rectangle \"<b>" + key + "</b>\\n\\n" + lineWrap(state.getDescription(), 30) + "\" as " + key + "\n");
-    }
-
-    return result.toString();
-  }
-
-  private String lineWrap(String rawLine, int maxLineLength) {
-    StringBuilder result = new StringBuilder();
-
-    String[] words = rawLine.trim().split(" ");
-    int lineLength = 0;
-    for (int i = 0; i < words.length; i++) {
-      String word = words[i];
-      result.append(word);
-      if (lineLength > maxLineLength) {
-        result.append("\\n");
-        lineLength = 0;
-      } else {
-        if (i < (words.length - 1)) {
-          result.append(" ");
-          lineLength += word.length() + 1;
-        }
-      }
     }
 
     return result.toString();
