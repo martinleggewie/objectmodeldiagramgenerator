@@ -86,7 +86,7 @@ class BusinessEventServiceTest {
 
   @Test
   void findBusinessEventMap() {
-    // Assign
+    // Arrange
     OmgBusinessEvent businessEvent1 = new OmgBusinessEvent("businessEvent1", "Business Event 1",
             new OmgScenario("scenario1", "Scenario 1", new HashSet<>()));
     OmgBusinessEvent businessEvent2 = new OmgBusinessEvent("businessEvent2", "Business Event 2",

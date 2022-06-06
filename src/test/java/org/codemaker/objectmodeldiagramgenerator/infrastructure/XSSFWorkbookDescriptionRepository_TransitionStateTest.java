@@ -16,13 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class XSSFWorkbookDescriptionRepository_TransitionStateTest {
 
-  private XSSFWorkbookDescriptionRepository cut;
+  private XSSFWorkbook workbook;
 
   @org.junit.jupiter.api.BeforeEach
   void setUp() throws IOException {
-    XSSFWorkbook workbook = new XSSFWorkbook(
-            Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testobjectmodeldefinition.xlsx")));
-    cut = new XSSFWorkbookDescriptionRepository(workbook);
+    workbook = new XSSFWorkbook(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testobjectmodeldefinition.xlsx")));
   }
 
   @Test
@@ -34,6 +32,7 @@ class XSSFWorkbookDescriptionRepository_TransitionStateTest {
     OmgTransitionStateDescriptor descriptor4 = new OmgTransitionStateDescriptor("state4", "This is state 4.", "state1");
 
     // Act
+    XSSFWorkbookDescriptionRepository cut = new XSSFWorkbookDescriptionRepository(workbook);
     Set<OmgTransitionStateDescriptor> result = cut.findTransitionStateDescriptors();
 
     // Assert
@@ -52,6 +51,7 @@ class XSSFWorkbookDescriptionRepository_TransitionStateTest {
     OmgTransitionStateDescriptor descriptor3 = new OmgTransitionStateDescriptor("state3", "This is state 3.", "state1");
 
     // Act
+    XSSFWorkbookDescriptionRepository cut = new XSSFWorkbookDescriptionRepository(workbook);
     OmgTransitionStateDescriptor result1 = cut.findTransitionStateDescriptor("state1");
     OmgTransitionStateDescriptor result2 = cut.findTransitionStateDescriptor("state2");
     OmgTransitionStateDescriptor result3 = cut.findTransitionStateDescriptor("state3");

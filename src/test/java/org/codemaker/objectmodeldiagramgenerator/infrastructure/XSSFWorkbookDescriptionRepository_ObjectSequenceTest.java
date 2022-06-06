@@ -20,18 +20,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class XSSFWorkbookDescriptionRepository_ObjectSequenceTest {
 
-  private XSSFWorkbookDescriptionRepository cut;
+  private XSSFWorkbook workbook;
 
   @org.junit.jupiter.api.BeforeEach
   void setUp() throws IOException {
-    XSSFWorkbook workbook = new XSSFWorkbook(
-            Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testobjectmodeldefinition.xlsx")));
-    cut = new XSSFWorkbookDescriptionRepository(workbook);
+    workbook = new XSSFWorkbook(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testobjectmodeldefinition.xlsx")));
   }
 
   @Test
   void findObjectSequenceDescriptors() {
+    // Arrange ... has already happened in the setUp method.
+
     // Act
+    XSSFWorkbookDescriptionRepository cut = new XSSFWorkbookDescriptionRepository(workbook);
     Set<OmgObjectSequenceDescriptor> objectSequenceDescriptors = cut.findObjectSequenceDescriptors();
 
     // Assert - check number of object sequence descriptors
@@ -40,7 +41,6 @@ class XSSFWorkbookDescriptionRepository_ObjectSequenceTest {
 
   @Test
   void findObjectSequenceDescriptors_state1() {
-
     // Arrange - 1. Create the domain descriptors
     OmgDomainDescriptor domainDescriptorD1 = new OmgDomainDescriptor("domain1", "My First Domain");
     OmgDomainDescriptor domainDescriptorD2 = new OmgDomainDescriptor("domain2", "My Second Domain");
@@ -171,6 +171,7 @@ class XSSFWorkbookDescriptionRepository_ObjectSequenceTest {
     objectSequenceDescriptor.getObjectSequenceStepDescriptors().add(objectSequenceStepDescriptor13);
 
     // Act
+    XSSFWorkbookDescriptionRepository cut = new XSSFWorkbookDescriptionRepository(workbook);
     Set<OmgObjectSequenceDescriptor> objectSequenceDescriptors = cut.findObjectSequenceDescriptors();
     assertEquals(1, objectSequenceDescriptors.stream().filter(d -> d.getTransitionStateDescriptorKey().equals("state1")).count());
     Optional<OmgObjectSequenceDescriptor> first = objectSequenceDescriptors.stream()
@@ -262,6 +263,7 @@ class XSSFWorkbookDescriptionRepository_ObjectSequenceTest {
     objectSequenceDescriptor.getObjectSequenceStepDescriptors().add(objectSequenceStepDescriptor1);
 
     // Act
+    XSSFWorkbookDescriptionRepository cut = new XSSFWorkbookDescriptionRepository(workbook);
     Set<OmgObjectSequenceDescriptor> objectSequenceDescriptors = cut.findObjectSequenceDescriptors();
 
     assertEquals(1, objectSequenceDescriptors.stream().filter(d -> d.getTransitionStateDescriptorKey().equals("state2")).count());

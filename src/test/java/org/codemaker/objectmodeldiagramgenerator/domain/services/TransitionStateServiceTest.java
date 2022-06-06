@@ -68,7 +68,7 @@ class TransitionStateServiceTest {
 
   @Test
   void findTransitionStateMap() {
-    // Assign
+    // Arrange
     OmgTransitionState transitionState1 = new OmgTransitionState("state1", "The first state", null);
     OmgTransitionState transitionState2 = new OmgTransitionState("state2", "The second state", transitionState1);
     OmgTransitionState transitionState3 = new OmgTransitionState("state3", "The third state", transitionState2);

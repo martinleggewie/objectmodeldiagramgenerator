@@ -16,13 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class XSSFWorkbookDescriptionRepository_ScenarioTest {
 
-  private XSSFWorkbookDescriptionRepository cut;
+  private XSSFWorkbook workbook;
 
   @org.junit.jupiter.api.BeforeEach
   void setUp() throws IOException {
-    XSSFWorkbook workbook = new XSSFWorkbook(
-            Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testobjectmodeldefinition.xlsx")));
-    cut = new XSSFWorkbookDescriptionRepository(workbook);
+    workbook = new XSSFWorkbook(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testobjectmodeldefinition.xlsx")));
   }
 
   @Test
@@ -47,6 +45,7 @@ class XSSFWorkbookDescriptionRepository_ScenarioTest {
     OmgScenarioDescriptor descriptor6 = new OmgScenarioDescriptor("scenario6", "Description for scenario 6.", new HashSet<>());
 
     // Act
+    XSSFWorkbookDescriptionRepository cut = new XSSFWorkbookDescriptionRepository(workbook);
     Set<OmgScenarioDescriptor> result = cut.findScenarioDescriptors();
 
     // Assert
@@ -80,6 +79,7 @@ class XSSFWorkbookDescriptionRepository_ScenarioTest {
     OmgScenarioDescriptor descriptor5 = new OmgScenarioDescriptor("scenario5", "Description for scenario 5.", predecessorKeysDescriptor5);
 
     // Act
+    XSSFWorkbookDescriptionRepository cut = new XSSFWorkbookDescriptionRepository(workbook);
     OmgScenarioDescriptor result1 = cut.findScenarioDescriptor("scenario1");
     OmgScenarioDescriptor result2 = cut.findScenarioDescriptor("scenario2");
     OmgScenarioDescriptor result3 = cut.findScenarioDescriptor("scenario3");

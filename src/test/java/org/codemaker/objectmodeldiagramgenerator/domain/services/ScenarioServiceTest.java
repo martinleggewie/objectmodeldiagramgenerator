@@ -77,7 +77,7 @@ class ScenarioServiceTest {
 
   @Test
   void findScenarioMap() {
-    // Assign
+    // Arrange
     OmgScenario scenario1 = new OmgScenario("scenario1", "Scenario 01", new HashSet<>());
     OmgScenario scenario2 = new OmgScenario("scenario2", "Scenario 02", new HashSet<>(Arrays.asList(scenario1)));
     OmgScenario scenario3 = new OmgScenario("scenario3", "Scenario 03", new HashSet<>(Arrays.asList(scenario1, scenario2)));

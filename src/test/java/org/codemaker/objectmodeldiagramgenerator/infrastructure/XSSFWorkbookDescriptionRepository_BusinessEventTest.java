@@ -15,13 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class XSSFWorkbookDescriptionRepository_BusinessEventTest {
 
-  private XSSFWorkbookDescriptionRepository cut;
+  private XSSFWorkbook workbook;
 
   @org.junit.jupiter.api.BeforeEach
   void setUp() throws IOException {
-    XSSFWorkbook workbook = new XSSFWorkbook(
-            Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testobjectmodeldefinition.xlsx")));
-    cut = new XSSFWorkbookDescriptionRepository(workbook);
+    workbook = new XSSFWorkbook(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testobjectmodeldefinition.xlsx")));
   }
 
   @Test
@@ -39,6 +37,7 @@ class XSSFWorkbookDescriptionRepository_BusinessEventTest {
     OmgBusinessEventDescriptor descriptor0 = new OmgBusinessEventDescriptor("bevt00", "Business Event 0 for Scenario 0.", "scenario0");
 
     // Act
+    XSSFWorkbookDescriptionRepository cut = new XSSFWorkbookDescriptionRepository(workbook);
     Set<OmgBusinessEventDescriptor> result = cut.findBusinessEventDescriptors();
 
     // Assert
@@ -69,6 +68,7 @@ class XSSFWorkbookDescriptionRepository_BusinessEventTest {
     OmgBusinessEventDescriptor descriptor9 = new OmgBusinessEventDescriptor("bevt51", "Business Event 1 for Scenario 5.", "scenario5");
 
     // Act
+    XSSFWorkbookDescriptionRepository cut = new XSSFWorkbookDescriptionRepository(workbook);
     OmgBusinessEventDescriptor result1 = cut.findBusinessEventDescriptor("bevt11");
     OmgBusinessEventDescriptor result2 = cut.findBusinessEventDescriptor("bevt12");
     OmgBusinessEventDescriptor result3 = cut.findBusinessEventDescriptor("bevt13");
