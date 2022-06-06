@@ -8,6 +8,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codemaker.objectmodeldiagramgenerator.domain.repositories.DescriptorRepository;
+import org.codemaker.objectmodeldiagramgenerator.domain.services.BusinessEventPumlDiagramService;
+import org.codemaker.objectmodeldiagramgenerator.domain.services.BusinessEventService;
 import org.codemaker.objectmodeldiagramgenerator.domain.services.ScenarioPumlDiagramService;
 import org.codemaker.objectmodeldiagramgenerator.domain.services.ScenarioService;
 import org.codemaker.objectmodeldiagramgenerator.domain.services.TransitionStatePumlDiagramService;
@@ -90,6 +92,7 @@ public class Main {
     DescriptorRepository descriptorRepository = new XSSFWorkbookDescriptionRepository(workbook);
     TransitionStateService transitionStateService = new TransitionStateService(descriptorRepository);
     ScenarioService scenarioService = new ScenarioService(descriptorRepository);
+    BusinessEventService businessEventService = new BusinessEventService(descriptorRepository, scenarioService);
     System.out.println();
     System.out.println("Writing the diagrams:");
     if (!Files.exists(outputFolderPath)) {
@@ -97,9 +100,11 @@ public class Main {
     }
     TransitionStatePumlDiagramService transitionStatePumlDiagramService = new TransitionStatePumlDiagramService(transitionStateService);
     ScenarioPumlDiagramService scenarioPumlDiagramService = new ScenarioPumlDiagramService(scenarioService);
+    BusinessEventPumlDiagramService businessEventPumlDiagramService = new BusinessEventPumlDiagramService(businessEventService);
     List<PumlDiagram> pumlDiagrams = new ArrayList<>();
     pumlDiagrams.add(scenarioPumlDiagramService.createDiagram());
     pumlDiagrams.add(transitionStatePumlDiagramService.createDiagram());
+    pumlDiagrams.add(businessEventPumlDiagramService.createDiagram());
     for (PumlDiagram pumlDiagram : pumlDiagrams) {
       String diagramName = pumlDiagram.getName();
       Path outputFilePath = null;

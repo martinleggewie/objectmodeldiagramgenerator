@@ -1,0 +1,57 @@
+@startmindmap businessevents
+
+skinparam shadowing false
+
+<style>
+    rootNode {
+        BackgroundColor lightgrey
+        FontSize 16
+        FontStyle bold
+        Padding 20
+        Margin 20
+        HorizontalAlignment left
+        RoundCorner 20
+        MaximumWidth 200
+        LineColor black
+        LineThickness 3
+    }
+    leafNode {
+        BackgroundColor cornsilk
+        FontSize 16
+        FontStyle normal
+        Padding 20
+        Margin 20
+        HorizontalAlignment left
+        LineColor black
+        LineThickness 3
+        RoundCorner 20
+        MaximumWidth 300
+    }
+    arrow {
+        LineStyle 5
+        LineThickness 3
+        LineColor black
+    }
+    title {
+        FontSize 20
+    }
+</style>
+
+
+title \nBusiness events and the scenarios they belong to\n
+
+* scenario1
+** <b>event1</b>\n\nThis is business event 1.
+** <b>event2</b>\n\nThis is business event 2. One two three four five six seven eight nine ten.
+** <b>event3</b>\n\nThis is business event 3. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten.
+* scenario2
+** <b>event4</b>\n\nThis is business event 4. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten.
+** <b>event5</b>\n\nThis is business event 5.
+* scenario3
+** <b>event6</b>\n\nThis is business event 6. One two three four five six seven eight nine ten.
+* scenario4
+** <b>event7</b>\n\nThis is business event 7.
+** <b>event8</b>\n\nThis is business event 8. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten.
+** <b>event9</b>\n\nThis is business event 9. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten.
+
+@endmindmap
