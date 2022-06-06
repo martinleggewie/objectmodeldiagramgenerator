@@ -1,0 +1,110 @@
+@startuml sequence1_scenario1_state1_003_event1_002
+
+<style>
+    Shadowing false
+    Rectangle {
+        BackgroundColor white
+        FontColor black
+        FontSize 18
+        FontStyle bold
+        HorizontalAlignment left
+        LineThickness 0
+        RoundCorner 20
+    }
+    Object {
+        BackgroundColor white
+        FontColor white
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor white
+        LineThickness 3
+        RoundCorner 20
+    }
+    Arrow {
+        LineThickness 3
+        LineColor black
+    }
+    Title {
+        BackgroundColor white
+        FontColor darkblue
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor darkblue
+        LineThickness 2
+        Margin 50
+        Padding 20
+    }
+</style>
+
+title <b>Sequence:</b> sequence1\n<b>Scenario:</b> scenario1 - This is scenario 1.\n<b>Transition State:</b> state1 - This is transition state 1.\n\n<b>Business Event:</b> event1 - This is business event 1.  (Step 2)\n\nDiagram 003 of 008
+
+rectangle "My First Domain" as domain1 #DDDDDD {
+    rectangle "My First Class" as domain1_class1 #white {
+        object "<color:black><b>d1c1-1</b></color>" as domain1_class1_d1c1_1 #cornsilk {
+            <color:black>name1 = "value001"</color>
+            <color:black>name2 = "value002"</color>
+            <color:black>name3 = "value003"</color>
+        }
+    }
+    rectangle "My Second Class" as domain1_class2 #white {
+        object "<color:black><b>d1c2-1</b></color>" as domain1_class2_d1c2_1 #palegreen {
+            <color:black>name1 = "value004"</color>
+            <color:black>name2 = "value005"</color>
+        }
+        object "<color:white><b>d1c2-2</b></color>" as domain1_class2_d1c2_2 #white {
+            <color:white>name1 = "value006"</color>
+            <color:white>name2 = "value007"</color>
+        }
+   }
+    rectangle "My Third Class" as domain1_class3 #white {
+        object "<color:white><b>d1c3-1</b></color>" as domain1_class3_d1c3_1 #white {
+            <color:white>d1c1_fk = "d1c1-1"</color>
+            <color:white>name1 = "value008"</color>
+            <color:white>name2 = "value009"</color>
+        }
+    }
+}
+rectangle "My Second Domain" as domain2 #DDDDDD {
+    rectangle "My First Class" as domain2_class1 #white {
+        object "<color:white><b>d2c1-1</b></color>" as domain2_class1_d2c1_1 #white {
+            <color:white>d1c2_fk = "d1c2-1"</color>
+            <color:white>d1c3_fk = "d1c3-1"</color>
+            <color:white>name1 = "value010"</color>
+        }
+    }
+    rectangle "My Second Class" as domain2_class2 #white {
+        object "<color:white><b>d2c2-1</b></color>" as domain2_class2_d2c2_1 #white {
+            <color:white>d1c1_fk = "d1c1-1"</color>
+            <color:white>d1c2_fk = "d1c2-1"</color>
+            <color:white>d1c3_fk = "d1c3-1"</color>
+            <color:white>d2c1_fk = "d2c1-1"</color>
+            <color:white>name1 = "value011"</color>
+            <color:white>name2 = "value012"</color>
+        }
+    }
+}
+rectangle "My Third Domain" as domain3 #DDDDDD {
+    rectangle "My First Class" as domain3_class1 #white {
+        object "<color:white><b>d3c1-1</b></color>" as domain3_class1_d3c1_1 #white {
+            <color:white>d1c1_fk = "d1c1-1"</color>
+            <color:white>d1c2_fk = "(d1c2-1,d1c2-2)"</color>
+            <color:white>d2c1_fk = "d2c1-1"</color>
+        }
+    }
+}
+
+domain1_class3_d1c3_1 --[hidden]--> domain1_class1_d1c1_1
+domain2_class1_d2c1_1 --[hidden]--> domain1_class2_d1c2_1
+domain2_class1_d2c1_1 --[hidden]--> domain1_class3_d1c3_1
+domain2_class2_d2c2_1 --[hidden]--> domain1_class1_d1c1_1
+domain2_class2_d2c2_1 --[hidden]--> domain1_class2_d1c2_1
+domain2_class2_d2c2_1 --[hidden]--> domain1_class3_d1c3_1
+domain2_class2_d2c2_1 --[hidden]--> domain2_class1_d2c1_1
+domain3_class1_d3c1_1 --[hidden]--> domain1_class1_d1c1_1
+domain3_class1_d3c1_1 --[hidden]--> domain1_class2_d1c2_1
+domain3_class1_d3c1_1 --[hidden]--> domain1_class2_d1c2_2
+domain3_class1_d3c1_1 --[hidden]--> domain2_class1_d2c1_1
+
+@enduml
