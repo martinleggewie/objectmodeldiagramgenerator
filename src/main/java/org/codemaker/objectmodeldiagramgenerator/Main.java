@@ -7,14 +7,12 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDefinition;
-import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioDescriptor;
-import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionStateDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.repositories.DescriptorRepository;
-import org.codemaker.objectmodeldiagramgenerator.domain.services.ObjectModelSequencesDiagramService;
 import org.codemaker.objectmodeldiagramgenerator.domain.services.ScenarioPumlDiagramService;
+import org.codemaker.objectmodeldiagramgenerator.domain.services.ScenarioService;
+import org.codemaker.objectmodeldiagramgenerator.domain.services.TransitionStatePumlDiagramService;
+import org.codemaker.objectmodeldiagramgenerator.domain.services.TransitionStateService;
 import org.codemaker.objectmodeldiagramgenerator.domain.valueobjects.PumlDiagram;
-import org.codemaker.objectmodeldiagramgenerator.infrastructure.OmgDefinitionReader;
 import org.codemaker.objectmodeldiagramgenerator.infrastructure.XSSFWorkbookDescriptionRepository;
 
 import java.io.FileWriter;
@@ -24,7 +22,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -87,14 +84,48 @@ public class Main {
     System.out.println("    input file:    " + inputFilePath.toAbsolutePath());
     System.out.println("    output folder: " + outputFolderPath.toAbsolutePath());
 
-
+    System.out.println();
+    System.out.println("Reading the Excel file:");
     XSSFWorkbook workbook = new XSSFWorkbook(Files.newInputStream(inputFilePath.toFile().toPath()));
-
     DescriptorRepository descriptorRepository = new XSSFWorkbookDescriptionRepository(workbook);
-    Set<OmgTransitionStateDescriptor> transitionStateDescriptors = descriptorRepository.findTransitionStateDescriptors();
-    Set<OmgScenarioDescriptor> scenarioDescriptors = descriptorRepository.findScenarioDescriptors();
-    System.out.println("huhu");
+    TransitionStateService transitionStateService = new TransitionStateService(descriptorRepository);
+    ScenarioService scenarioService = new ScenarioService(descriptorRepository);
+    System.out.println();
+    System.out.println("Writing the diagrams:");
+    if (!Files.exists(outputFolderPath)) {
+      Files.createDirectory(outputFolderPath);
+    }
+    TransitionStatePumlDiagramService transitionStatePumlDiagramService = new TransitionStatePumlDiagramService(transitionStateService);
+    ScenarioPumlDiagramService scenarioPumlDiagramService = new ScenarioPumlDiagramService(scenarioService);
+    List<PumlDiagram> pumlDiagrams = new ArrayList<>();
+    pumlDiagrams.add(scenarioPumlDiagramService.createDiagram());
+    pumlDiagrams.add(transitionStatePumlDiagramService.createDiagram());
+    for (PumlDiagram pumlDiagram : pumlDiagrams) {
+      String diagramName = pumlDiagram.getName();
+      Path outputFilePath = null;
+      String diagramNamePattern = "(\\w+?)_(\\S+)"; // mind the reluctant regex quantifier, that is the "?" in "\w+?".
+      if (diagramName.matches(diagramNamePattern)) {
+        // If the diagram name contains an underscore, we interprete what is left from that underscore as a folder name.
+        Matcher diagramNameMatcher = Pattern.compile(diagramNamePattern).matcher(diagramName);
+        if (diagramNameMatcher.find()) {
+          String folderName = diagramNameMatcher.group(1);
+          String fileName = diagramNameMatcher.group(2);
+          Path subFolderPath = Paths.get(outputFolderPath.toAbsolutePath() + "/" + folderName);
+          if (!Files.exists(subFolderPath)) {
+            Files.createDirectory(subFolderPath);
+          }
+          outputFilePath = Paths.get(outputFolderPath + "/" + folderName + "/" + fileName + ".puml");
+        }
+      } else {
+        outputFilePath = Paths.get(outputFolderPath + "/" + diagramName + ".puml");
+      }
+      System.out.println("    " + outputFilePath);
+      FileWriter fileWriter = new FileWriter(outputFilePath.toFile(), false);
+      fileWriter.write(pumlDiagram.getContent());
+      fileWriter.close();
+    }
 
+/*
     if (false) {
       System.out.println();
       System.out.println("Reading the Excel sheet:");
@@ -135,6 +166,6 @@ public class Main {
         fileWriter.write(pumlDiagram.getContent());
         fileWriter.close();
       }
-    }
+    }*/
   }
 }
