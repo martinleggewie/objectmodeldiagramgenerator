@@ -106,7 +106,7 @@ public class Main {
         Files.createDirectory(outputFolderPath);
       }
       ObjectModelSequencesDiagramService objectModelSequencesDiagramService = new ObjectModelSequencesDiagramService(definition);
-      ScenarioPumlDiagramService scenarioPumlDiagramService = new ScenarioPumlDiagramService(definition);
+      ScenarioPumlDiagramService scenarioPumlDiagramService = new ScenarioPumlDiagramService(null);
       List<PumlDiagram> pumlDiagrams = new ArrayList<>();
       pumlDiagrams.add(scenarioPumlDiagramService.createDiagram());
       pumlDiagrams.addAll(objectModelSequencesDiagramService.createDiagrams(ObjectModelSequencesDiagramService.Mode.gradually));

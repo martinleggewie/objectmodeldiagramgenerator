@@ -1,25 +1,34 @@
 package org.codemaker.objectmodeldiagramgenerator.domain.services;
 
-import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDefinition;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenario;
 import org.codemaker.objectmodeldiagramgenerator.domain.valueobjects.PumlDiagram;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class ScenarioPumlDiagramService {
 
-  private final OmgDefinition definition;
+  private final ScenarioService scenarioService;
 
-  public ScenarioPumlDiagramService(OmgDefinition definition) {
-    this.definition = definition;
+  public ScenarioPumlDiagramService(ScenarioService scenarioService) {
+    this.scenarioService = scenarioService;
   }
 
   public PumlDiagram createDiagram() {
     StringBuilder builder = new StringBuilder();
 
     builder.append(header());
+    builder.append("\n");
+    builder.append("\n");
     builder.append(title());
+    builder.append("\n");
     builder.append(scenarios());
+    builder.append("\n");
     builder.append(relations());
+    builder.append("\n");
     builder.append(footer());
+    builder.append("\n");
 
     return new PumlDiagram(diagramName(), builder.toString());
   }
@@ -31,7 +40,6 @@ public class ScenarioPumlDiagramService {
   private String header() {
     StringBuilder result = new StringBuilder();
 
-    result.append("\n");
     result.append("@startuml " + diagramName() + "\n");
     result.append("\n");
     result.append("top to bottom direction\n");
@@ -52,8 +60,6 @@ public class ScenarioPumlDiagramService {
     result.append("\n");
     result.append("skinparam titleFontSize 22\n");
     result.append("skinparam titleFontStyle bold\n");
-    result.append("\n");
-    result.append("\n");
 
     return result.toString();
   }
@@ -65,10 +71,11 @@ public class ScenarioPumlDiagramService {
   private String scenarios() {
     StringBuilder result = new StringBuilder();
 
-    for (OmgScenario scenario : definition.getScenarioMap().values()) {
-      result.append("rectangle \"<b>" + scenario.getKey() + "</b>\\n\\n" + lineWrap(scenario.getDescription(),
-              30) + "\" as " + scenario.getKey() + " " + "{\n");
-      result.append("}\n");
+    Map<String, OmgScenario> scenarioMap = scenarioService.findScenarioMap();
+    List<String> sortedKeys = scenarioMap.keySet().stream().sorted().collect(Collectors.toList());
+    for (String key : sortedKeys) {
+      OmgScenario scenario = scenarioMap.get(key);
+      result.append("rectangle \"<b>" + key + "</b>\\n\\n" + lineWrap(scenario.getDescription(), 30) + "\" as " + key + "\n");
     }
 
     return result.toString();
@@ -76,15 +83,20 @@ public class ScenarioPumlDiagramService {
 
   private String lineWrap(String rawLine, int maxLineLength) {
     StringBuilder result = new StringBuilder();
+
+    String[] words = rawLine.trim().split(" ");
     int lineLength = 0;
-    for (String word : rawLine.split(" ")) {
+    for (int i = 0; i < words.length; i++) {
+      String word = words[i];
       result.append(word);
       if (lineLength > maxLineLength) {
         result.append("\\n");
         lineLength = 0;
       } else {
-        result.append(" ");
-        lineLength += word.length() + 1;
+        if (i < (words.length - 1)) {
+          result.append(" ");
+          lineLength += word.length() + 1;
+        }
       }
     }
 
@@ -94,9 +106,14 @@ public class ScenarioPumlDiagramService {
   private String relations() {
     StringBuilder result = new StringBuilder();
 
-    for (OmgScenario scenario : definition.getScenarioMap().values()) {
-      for (OmgScenario predecessorScenario : scenario.getPredecessors()) {
-        result.append(scenario.getKey() + " ---> " + predecessorScenario.getKey() + "\n");
+    Map<String, OmgScenario> scenarioMap = scenarioService.findScenarioMap();
+    List<String> sortedKeys = scenarioMap.keySet().stream().sorted().collect(Collectors.toList());
+    for (String key : sortedKeys) {
+      OmgScenario scenario = scenarioMap.get(key);
+      List<String> sortedPredecessorKeys = scenario.getPredecessors().stream().map(OmgScenario::getKey).sorted()
+              .collect(Collectors.toList());
+      for (String predecessorKey : sortedPredecessorKeys) {
+        result.append(key + " ---> " + predecessorKey + "\n");
       }
     }
 
@@ -106,11 +123,8 @@ public class ScenarioPumlDiagramService {
   private String footer() {
     StringBuilder result = new StringBuilder();
 
-    result.append("\n");
     result.append("@enduml\n");
-    result.append("\n");
 
     return result.toString();
   }
-
 }

@@ -1,0 +1,58 @@
+@startuml scenarios
+
+top to bottom direction
+skinparam shadowing false
+skinparam componentStyle uml2
+skinparam roundCorner 10
+
+skinparam rectangleRoundCorner 20
+skinparam rectangleFontStyle normal
+skinparam rectangleFontSize 18
+skinparam rectangleBorderColor #black
+skinparam rectangleBorderThickness 3
+skinparam rectangleBackgroundColor #cornsilk
+
+skinparam arrowColor #black
+skinparam arrowFontSize 18
+skinparam arrowThickness 3
+
+skinparam titleFontSize 22
+skinparam titleFontStyle bold
+
+
+title \nScenarios and their predecessors\n
+
+rectangle "<b>scenario1</b>\n\nThis is scenario 1." as scenario1
+rectangle "<b>scenario2</b>\n\nThis is scenario 2." as scenario2
+rectangle "<b>scenario3</b>\n\nThis is scenario 3. One two three four\nfive six seven eight nine ten." as scenario3
+rectangle "<b>scenario4</b>\n\nThis is scenario 4. One two three four\nfive six seven eight nine ten. One\ntwo three four five six seven eight nine\nten." as scenario4
+rectangle "<b>scenario5</b>\n\nThis is scenario 5. One two three four\nfive six seven eight nine ten. One\ntwo three four five six seven eight nine\nten. One two three four five six seven\neight nine ten." as scenario5
+rectangle "<b>scenario6</b>\n\nThis is scenario 6." as scenario6
+rectangle "<b>scenario7</b>\n\nThis is scenario 7. One two three four\nfive six seven eight nine ten. One\ntwo three four five six seven eight nine\nten." as scenario7
+rectangle "<b>scenario8</b>\n\nThis is scenario 8. One two three four\nfive six seven eight nine ten." as scenario8
+rectangle "<b>scenario9</b>\n\nThis is scenario 9. One two three four\nfive six seven eight nine ten. One\ntwo three four five six seven eight nine\nten. One two three four five six seven\neight nine ten." as scenario9
+
+scenario2 ---> scenario1
+scenario3 ---> scenario1
+scenario3 ---> scenario2
+scenario4 ---> scenario1
+scenario4 ---> scenario2
+scenario4 ---> scenario3
+scenario5 ---> scenario3
+scenario5 ---> scenario4
+scenario7 ---> scenario1
+scenario7 ---> scenario3
+scenario7 ---> scenario5
+scenario8 ---> scenario5
+scenario8 ---> scenario6
+scenario8 ---> scenario7
+scenario9 ---> scenario1
+scenario9 ---> scenario2
+scenario9 ---> scenario3
+scenario9 ---> scenario4
+scenario9 ---> scenario5
+scenario9 ---> scenario6
+scenario9 ---> scenario7
+scenario9 ---> scenario8
+
+@enduml
