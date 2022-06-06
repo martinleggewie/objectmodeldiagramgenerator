@@ -1,10 +1,9 @@
 @startmindmap businessevents
 
-skinparam shadowing false
-
 <style>
-    rootNode {
-        BackgroundColor lightgrey
+    Shadowing false
+    RootNode {
+        BackgroundColor #EEEEEE
         FontSize 16
         FontStyle bold
         Padding 20
@@ -15,7 +14,7 @@ skinparam shadowing false
         LineColor black
         LineThickness 3
     }
-    leafNode {
+    LeafNode {
         BackgroundColor cornsilk
         FontSize 16
         FontStyle normal
@@ -27,18 +26,26 @@ skinparam shadowing false
         RoundCorner 20
         MaximumWidth 300
     }
-    arrow {
+    Arrow {
         LineStyle 5
         LineThickness 3
         LineColor black
     }
-    title {
+    Title {
+        BackgroundColor white
+        FontColor darkblue
         FontSize 20
+        FontStyle bold
+        HorizontalAlignment center
+        LineColor darkblue
+        LineThickness 2
+        Margin 50
+        Padding 20
     }
 </style>
 
 
-title \nBusiness events and the scenarios they belong to\n
+title Business events and the scenarios they belong to
 
 * scenario1
 ** <b>event1</b>\n\nThis is business event 1.

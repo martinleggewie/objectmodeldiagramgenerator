@@ -42,11 +42,10 @@ public class BusinessEventPumlDiagramService {
 
     result.append("@startmindmap " + diagramName() + "\n");
     result.append("\n");
-    result.append("skinparam shadowing false\n");
-    result.append("\n");
     result.append("<style>\n");
-    result.append("    rootNode {\n");
-    result.append("        BackgroundColor lightgrey\n");
+    result.append("    Shadowing false\n");
+    result.append("    RootNode {\n");
+    result.append("        BackgroundColor #EEEEEE\n");
     result.append("        FontSize 16\n");
     result.append("        FontStyle bold\n");
     result.append("        Padding 20\n");
@@ -57,7 +56,7 @@ public class BusinessEventPumlDiagramService {
     result.append("        LineColor black\n");
     result.append("        LineThickness 3\n");
     result.append("    }\n");
-    result.append("    leafNode {\n");
+    result.append("    LeafNode {\n");
     result.append("        BackgroundColor cornsilk\n");
     result.append("        FontSize 16\n");
     result.append("        FontStyle normal\n");
@@ -69,13 +68,21 @@ public class BusinessEventPumlDiagramService {
     result.append("        RoundCorner 20\n");
     result.append("        MaximumWidth 300\n");
     result.append("    }\n");
-    result.append("    arrow {\n");
+    result.append("    Arrow {\n");
     result.append("        LineStyle 5\n");
     result.append("        LineThickness 3\n");
     result.append("        LineColor black\n");
     result.append("    }\n");
-    result.append("    title {\n");
+    result.append("    Title {\n");
+    result.append("        BackgroundColor white\n");
+    result.append("        FontColor darkblue\n");
     result.append("        FontSize 20\n");
+    result.append("        FontStyle bold\n");
+    result.append("        HorizontalAlignment center\n");
+    result.append("        LineColor darkblue\n");
+    result.append("        LineThickness 2\n");
+    result.append("        Margin 50\n");
+    result.append("        Padding 20\n");
     result.append("    }\n");
     result.append("</style>\n");
 
@@ -83,7 +90,7 @@ public class BusinessEventPumlDiagramService {
   }
 
   private String title() {
-    return "title \\nBusiness events and the scenarios they belong to\\n\n";
+    return "title Business events and the scenarios they belong to\n";
   }
 
   private String mindmap() {

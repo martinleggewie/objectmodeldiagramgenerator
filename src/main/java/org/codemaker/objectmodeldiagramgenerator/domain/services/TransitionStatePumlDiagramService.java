@@ -44,30 +44,39 @@ public class TransitionStatePumlDiagramService {
 
     result.append("@startuml " + diagramName() + "\n");
     result.append("\n");
-    result.append("top to bottom direction\n");
-    result.append("skinparam shadowing false\n");
-    result.append("skinparam componentStyle uml2\n");
-    result.append("skinparam roundCorner 10\n");
-    result.append("\n");
-    result.append("skinparam rectangleRoundCorner 20\n");
-    result.append("skinparam rectangleFontStyle normal\n");
-    result.append("skinparam rectangleFontSize 18\n");
-    result.append("skinparam rectangleBorderColor #black\n");
-    result.append("skinparam rectangleBorderThickness 3\n");
-    result.append("skinparam rectangleBackgroundColor #cornsilk\n");
-    result.append("\n");
-    result.append("skinparam arrowColor #black\n");
-    result.append("skinparam arrowFontSize 18\n");
-    result.append("skinparam arrowThickness 3\n");
-    result.append("\n");
-    result.append("skinparam titleFontSize 22\n");
-    result.append("skinparam titleFontStyle bold\n");
+    result.append("<style>\n");
+    result.append("    Shadowing false\n");
+    result.append("    Rectangle {\n");
+    result.append("        BackgroundColor cornsilk\n");
+    result.append("        FontSize 18\n");
+    result.append("        FontStyle normal\n");
+    result.append("        HorizontalAlignment left\n");
+    result.append("        LineColor black\n");
+    result.append("        LineThickness 3\n");
+    result.append("        RoundCorner 20\n");
+    result.append("    }\n");
+    result.append("    Arrow {\n");
+    result.append("        LineColor black\n");
+    result.append("        LineThickness 3\n");
+    result.append("    }\n");
+    result.append("    Title {\n");
+    result.append("        BackgroundColor white\n");
+    result.append("        FontColor darkblue\n");
+    result.append("        FontSize 20\n");
+    result.append("        FontStyle bold\n");
+    result.append("        HorizontalAlignment center\n");
+    result.append("        LineColor darkblue\n");
+    result.append("        LineThickness 2\n");
+    result.append("        Margin 50\n");
+    result.append("        Padding 20\n");
+    result.append("    }\n");
+    result.append("</style>\n");
 
     return result.toString();
   }
 
   private String title() {
-    return "title \\nTransition states and their predecessors\\n\n";
+    return "title Transition states and their predecessors\n";
   }
 
   private String transitionstates() {

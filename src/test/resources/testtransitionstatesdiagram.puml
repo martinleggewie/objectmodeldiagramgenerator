@@ -1,26 +1,35 @@
 @startuml transitionstates
 
-top to bottom direction
-skinparam shadowing false
-skinparam componentStyle uml2
-skinparam roundCorner 10
+<style>
+    Shadowing false
+    Rectangle {
+        BackgroundColor cornsilk
+        FontSize 18
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor black
+        LineThickness 3
+        RoundCorner 20
+    }
+    Arrow {
+        LineColor black
+        LineThickness 3
+    }
+    Title {
+        BackgroundColor white
+        FontColor darkblue
+        FontSize 20
+        FontStyle bold
+        HorizontalAlignment center
+        LineColor darkblue
+        LineThickness 2
+        Margin 50
+        Padding 20
+    }
+</style>
 
-skinparam rectangleRoundCorner 20
-skinparam rectangleFontStyle normal
-skinparam rectangleFontSize 18
-skinparam rectangleBorderColor #black
-skinparam rectangleBorderThickness 3
-skinparam rectangleBackgroundColor #cornsilk
 
-skinparam arrowColor #black
-skinparam arrowFontSize 18
-skinparam arrowThickness 3
-
-skinparam titleFontSize 22
-skinparam titleFontStyle bold
-
-
-title \nTransition states and their predecessors\n
+title Transition states and their predecessors
 
 rectangle "<b>state1</b>\n\nThis is transition state 1." as state1
 rectangle "<b>state2</b>\n\nThis is transition state 2.\nOne two three four five six\nseven eight nine ten." as state2
