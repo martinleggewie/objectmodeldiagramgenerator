@@ -31,14 +31,11 @@
 
 title Transition states and their predecessors
 
-rectangle "<b>state1</b>\n\nThis is transition state 1." as state1
-rectangle "<b>state2</b>\n\nThis is transition state 2.\nOne two three four five six\nseven eight nine ten." as state2
-rectangle "<b>state3</b>\n\nThis is transition state 3.\nOne two three four five six\nseven eight nine ten. One two\nthree four five six seven\neight nine ten." as state3
-rectangle "<b>state4</b>\n\nThis is transition state 4.\nOne two three four five six\nseven eight nine ten. One two\nthree four five six seven\neight nine ten. One two three\nfour five six seven eight nine\nten." as state4
-rectangle "<b>state5</b>\n\nThis is transition state 5." as state5
+rectangle "<b>state1</b>\n\nThe first transition state.\nLet's add some more text to\nforce line breaks in diagrams." as state1
+rectangle "<b>state2</b>\n\nThe second transition state.\nHere some more text." as state2
+rectangle "<b>state3</b>\n\nThe third transition state.\nAnd here is some another text." as state3
 
 state2 ---> state1
-state3 ---> state2
-state4 ---> state3
+state3 ---> state1
 
 @enduml

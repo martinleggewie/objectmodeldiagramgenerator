@@ -31,37 +31,16 @@
 
 title Scenarios and their predecessors
 
-rectangle "<b>scenario1</b>\n\nThis is scenario 1." as scenario1
-rectangle "<b>scenario2</b>\n\nThis is scenario 2." as scenario2
-rectangle "<b>scenario3</b>\n\nThis is scenario 3. One two\nthree four five six seven\neight nine ten." as scenario3
-rectangle "<b>scenario4</b>\n\nThis is scenario 4. One two\nthree four five six seven\neight nine ten. One two three\nfour five six seven eight nine\nten." as scenario4
-rectangle "<b>scenario5</b>\n\nThis is scenario 5. One two\nthree four five six seven\neight nine ten. One two three\nfour five six seven eight nine\nten. One two three four five\nsix seven eight nine ten." as scenario5
-rectangle "<b>scenario6</b>\n\nThis is scenario 6." as scenario6
-rectangle "<b>scenario7</b>\n\nThis is scenario 7. One two\nthree four five six seven\neight nine ten. One two three\nfour five six seven eight nine\nten." as scenario7
-rectangle "<b>scenario8</b>\n\nThis is scenario 8. One two\nthree four five six seven\neight nine ten." as scenario8
-rectangle "<b>scenario9</b>\n\nThis is scenario 9. One two\nthree four five six seven\neight nine ten. One two three\nfour five six seven eight nine\nten. One two three four five\nsix seven eight nine ten." as scenario9
+rectangle "<b>scenario1</b>\n\nThe first house is built, and\nthen Anton moves in to the\nfirst floor." as scenario1
+rectangle "<b>scenario2</b>\n\nAnton marries Berta, and Berta\nmoves into the first house to\nthe first floor as well." as scenario2
+rectangle "<b>scenario3</b>\n\nThe second house is built, and\nAnton and Berta move from\nfirst house to second house,\nthird floor." as scenario3
+rectangle "<b>scenario4</b>\n\nCharlie moves in to the first\nhouse, second floor." as scenario4
+rectangle "<b>scenario5</b>\n\nThe first house is destroyed,\nbut before that, Charlie\nluckily also moves to the\nsecond house, fourth floor,\nbut kept tenant contract with\nfirst house." as scenario5
 
 scenario2 ---> scenario1
-scenario3 ---> scenario1
 scenario3 ---> scenario2
 scenario4 ---> scenario1
-scenario4 ---> scenario2
-scenario4 ---> scenario3
-scenario5 ---> scenario3
+scenario5 ---> scenario1
 scenario5 ---> scenario4
-scenario7 ---> scenario1
-scenario7 ---> scenario3
-scenario7 ---> scenario5
-scenario8 ---> scenario5
-scenario8 ---> scenario6
-scenario8 ---> scenario7
-scenario9 ---> scenario1
-scenario9 ---> scenario2
-scenario9 ---> scenario3
-scenario9 ---> scenario4
-scenario9 ---> scenario5
-scenario9 ---> scenario6
-scenario9 ---> scenario7
-scenario9 ---> scenario8
 
 @enduml

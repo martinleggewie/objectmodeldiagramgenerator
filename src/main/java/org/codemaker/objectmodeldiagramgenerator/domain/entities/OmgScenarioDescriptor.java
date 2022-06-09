@@ -1,5 +1,6 @@
 package org.codemaker.objectmodeldiagramgenerator.domain.entities;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -8,10 +9,10 @@ public class OmgScenarioDescriptor {
   private final String description;
   private final Set<String> predecessorKeys;
 
-  public OmgScenarioDescriptor(String key, String description, Set<String> predecessorKeys) {
+  public OmgScenarioDescriptor(String key, String description) {
     this.key = key;
     this.description = description;
-    this.predecessorKeys = predecessorKeys;
+    this.predecessorKeys = new HashSet<>();
   }
 
   public String getKey() {

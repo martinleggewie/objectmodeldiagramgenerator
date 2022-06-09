@@ -1,21 +1,22 @@
 package org.codemaker.objectmodeldiagramgenerator.domain.aggregates;
 
-import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObject;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OldOmgObject;
 
 public class ObjectDescriptor {
-  public static enum LifecycleState {
-    created, removed
+  public enum LifecycleState {
+    created,
+    removed
   }
 
-  private final OmgObject object;
+  private final OldOmgObject object;
   private final LifecycleState lifecycleState;
 
-  public ObjectDescriptor(OmgObject object, LifecycleState lifecycleState) {
+  public ObjectDescriptor(OldOmgObject object, LifecycleState lifecycleState) {
     this.object = object;
     this.lifecycleState = lifecycleState;
   }
 
-  public OmgObject getObject() {
+  public OldOmgObject getObject() {
     return object;
   }
 

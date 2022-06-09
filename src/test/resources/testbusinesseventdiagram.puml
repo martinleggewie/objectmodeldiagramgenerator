@@ -48,17 +48,21 @@
 title Business events and the scenarios they belong to
 
 * scenario1
-** <b>event1</b>\n\nThis is business event 1.
-** <b>event2</b>\n\nThis is business event 2. One two three four five six seven eight nine ten.
-** <b>event3</b>\n\nThis is business event 3. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten.
+** <b>event0101</b>\n\nThe first house is built with in total two floors.
+** <b>event0102</b>\n\nAnton spawns on earth.
+** <b>event0103</b>\n\nAnton moves in to first house, first floor.
 * scenario2
-** <b>event4</b>\n\nThis is business event 4. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten.
-** <b>event5</b>\n\nThis is business event 5.
+** <b>event0201</b>\n\nBerta spawns on earth.
+** <b>event0202</b>\n\nAnton and Berta marry each other.
+** <b>event0203</b>\n\nBerta moves in to first house, first floor, as well.
 * scenario3
-** <b>event6</b>\n\nThis is business event 6. One two three four five six seven eight nine ten.
+** <b>event0301</b>\n\nThe second house is built with in total four floors.
+** <b>event0302</b>\n\nAnton and Berta move from first house to second house, third floor.
 * scenario4
-** <b>event7</b>\n\nThis is business event 7.
-** <b>event8</b>\n\nThis is business event 8. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten.
-** <b>event9</b>\n\nThis is business event 9. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten. One two three four five six seven eight nine ten.
+** <b>event0401</b>\n\nCharlie spawns on earth.
+** <b>event0402</b>\n\nCharlie moves in to first house, second floor.
+* scenario5
+** <b>event0501</b>\n\nCharlie moves from first house to second house, fourth floor, keeps contract with first house.
+** <b>event0502</b>\n\nThe first house is destroyed. Luckily, no-one lived there anymore.
 
 @endmindmap

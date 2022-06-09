@@ -10,9 +10,9 @@ import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgBusinessEven
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgClassDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDomainDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectDescriptor;
-import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectSequenceDescriptor;
-import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectSequenceStepDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioDescriptor;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioSequenceDescriptor;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioSequenceStepDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionStateDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.repositories.DescriptorRepository;
 
@@ -46,10 +46,6 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
     return new HashSet<>(transitionStateMap().values());
   }
 
-  public OmgTransitionStateDescriptor findTransitionStateDescriptor(String transitionStateDescriptorKey) {
-    return transitionStateMap().get(transitionStateDescriptorKey);
-  }
-
   private Map<String, OmgTransitionStateDescriptor> transitionStateMap() {
     Map<String, OmgTransitionStateDescriptor> result = new HashMap<>();
 
@@ -77,10 +73,6 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
     return new HashSet<>(scenarioDescriptorsMap().values());
   }
 
-  public OmgScenarioDescriptor findScenarioDescriptor(String scenarioDescriptorKey) {
-    return scenarioDescriptorsMap().get(scenarioDescriptorKey);
-  }
-
   private Map<String, OmgScenarioDescriptor> scenarioDescriptorsMap() {
     Map<String, OmgScenarioDescriptor> result = new HashMap<>();
 
@@ -94,13 +86,12 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
       String predecessorKeysRaw = row.getCell(1).getStringCellValue().trim();
       String description = row.getCell(2).getStringCellValue().trim();
 
-      Set<String> predecessorKeys = new HashSet<>();
+      OmgScenarioDescriptor scenarioDescriptor = new OmgScenarioDescriptor(key, description);
       if (!predecessorKeysRaw.equals(PROPERTYVALUE_XLS_NOTSET)) {
         for (String predecessorKey : predecessorKeysRaw.split(",")) {
-          predecessorKeys.add(predecessorKey.trim());
+          scenarioDescriptor.getPredecessorKeys().add(predecessorKey.trim());
         }
       }
-      OmgScenarioDescriptor scenarioDescriptor = new OmgScenarioDescriptor(key, description, predecessorKeys);
       result.put(key, scenarioDescriptor);
     }
 
@@ -110,11 +101,6 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
   @Override
   public Set<OmgBusinessEventDescriptor> findBusinessEventDescriptors() {
     return new HashSet<>(businessEventDescriptorMap().values());
-  }
-
-  @Override
-  public OmgBusinessEventDescriptor findBusinessEventDescriptor(String businessDescriptorKey) {
-    return businessEventDescriptorMap().get(businessDescriptorKey);
   }
 
   private Map<String, OmgBusinessEventDescriptor> businessEventDescriptorMap() {
@@ -137,30 +123,32 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
   }
 
   @Override
-  public Set<OmgObjectSequenceDescriptor> findObjectSequenceDescriptors() {
-    Set<OmgObjectSequenceDescriptor> result = new HashSet<>();
+  public Set<OmgScenarioSequenceDescriptor> findScenarioSequenceDescriptors() {
+    Set<OmgScenarioSequenceDescriptor> result = new HashSet<>();
 
     Iterator<Sheet> sheetIterator = workbook.sheetIterator();
     while (sheetIterator.hasNext()) {
       Sheet sheet = sheetIterator.next();
       if (sheet.getSheetName().startsWith(SHEETNAME_PREFIX_OBJECTMODELSEQUENCE)) {
-        OmgObjectSequenceDescriptor objectSequenceDescriptor = objectSequenceDescriptor((XSSFSheet) sheet);
-        result.add(objectSequenceDescriptor);
+        Set<OmgScenarioSequenceDescriptor> objectSequenceDescriptors = scenarioSequenceDescriptors((XSSFSheet) sheet);
+        result.addAll(objectSequenceDescriptors);
       }
     }
 
     return result;
   }
 
-  private OmgObjectSequenceDescriptor objectSequenceDescriptor(XSSFSheet sheet) {
-    // 1. Determine the title of the sequence and the corresponding transition state
-    String sequenceTitle = null;
+  private Set<OmgScenarioSequenceDescriptor> scenarioSequenceDescriptors(XSSFSheet sheet) {
+    Set<OmgScenarioSequenceDescriptor> result = new HashSet<>();
+
+    // 1. Determine the title and the corresponding transition state
+    String title = null;
     String transitionStateDescriptorKey = null;
     String sheetNamePattern = SHEETNAME_PREFIX_OBJECTMODELSEQUENCE + "(\\w+)_(\\w+)";
     String sheetName = sheet.getSheetName();
     Matcher sheetNameMatcher = Pattern.compile(sheetNamePattern).matcher(sheetName);
     if (sheetNameMatcher.find()) {
-      sequenceTitle = sheetNameMatcher.group(1);
+      title = sheetNameMatcher.group(1);
       transitionStateDescriptorKey = sheetNameMatcher.group(2);
     }
 
@@ -175,21 +163,36 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
     Map<Integer, OmgClassDescriptor> columnIndexClassDescriptorMap = columnIndexClassDescriptorMap(sheet, maxColumnIndex,
             columnIndexDomainDescriptorMap);
 
-    // 5. find the object descriptors
-    List<OmgObjectSequenceStepDescriptor> objectSequenceStepDescriptors = objectSequenceStepDescriptors(sheet, maxColumnIndex, maxRowIndex,
-            columnIndexDomainDescriptorMap, columnIndexClassDescriptorMap);
+    // 5. find all scenario sequence steps which are contained in the complete sheet
+    List<OmgScenarioSequenceStepDescriptor> scenarioSequenceStepDescriptors = scenarioSequenceStepDescriptors(sheet, maxColumnIndex,
+            maxRowIndex, columnIndexDomainDescriptorMap, columnIndexClassDescriptorMap);
 
-    OmgObjectSequenceDescriptor result = new OmgObjectSequenceDescriptor(transitionStateDescriptorKey, sequenceTitle);
-    result.getDomainDescriptors().addAll(columnIndexDomainDescriptorMap.values());
-    result.getClassDescriptors().addAll(columnIndexClassDescriptorMap.values());
-    result.getObjectSequenceStepDescriptors().addAll(objectSequenceStepDescriptors);
+    // 6. Now that we have the complete list of scenario sequence steps, we only need to find out which ones belong to which scenarion
+    // sequence. How hard can it be?
+    Map<String, OmgBusinessEventDescriptor> businessEventDescriptorMap = businessEventDescriptorMap();
+    Map<String, OmgScenarioSequenceDescriptor> scenarioKeyScenarioSequenceDescriptorMap = new HashMap<>();
+    for (OmgScenarioSequenceStepDescriptor scenarioSequenceStepDescriptor : scenarioSequenceStepDescriptors) {
+      String businessEventDescriptorKey = scenarioSequenceStepDescriptor.getBusinessEventDescriptorKey();
+      OmgBusinessEventDescriptor businessEventDescriptor = businessEventDescriptorMap.get(businessEventDescriptorKey);
+      String scenarioKey = businessEventDescriptor.getScenarioKey();
+      OmgScenarioSequenceDescriptor scenarioSequenceDescriptor = scenarioKeyScenarioSequenceDescriptorMap.get(scenarioKey);
+      if (scenarioSequenceDescriptor == null) {
+        scenarioSequenceDescriptor = new OmgScenarioSequenceDescriptor(transitionStateDescriptorKey, title);
+        scenarioSequenceDescriptor.getDomainDescriptors().addAll(columnIndexDomainDescriptorMap.values());
+        scenarioSequenceDescriptor.getClassDescriptors().addAll(columnIndexClassDescriptorMap.values());
+        scenarioKeyScenarioSequenceDescriptorMap.put(scenarioKey, scenarioSequenceDescriptor);
+        result.add(scenarioSequenceDescriptor);
+      }
+      scenarioSequenceDescriptor.getScenarioSequenceStepDescriptors().add(scenarioSequenceStepDescriptor);
+    }
+
     return result;
   }
 
-  private List<OmgObjectSequenceStepDescriptor> objectSequenceStepDescriptors(XSSFSheet sheet, int maxColumnIndex, int maxRowIndex,
-                                                                              Map<Integer, OmgDomainDescriptor> columnIndexDomainDescriptorMap,
-                                                                              Map<Integer, OmgClassDescriptor> columnIndexClassDescriptorMap) {
-    List<OmgObjectSequenceStepDescriptor> result = new ArrayList<>();
+  private List<OmgScenarioSequenceStepDescriptor> scenarioSequenceStepDescriptors(XSSFSheet sheet, int maxColumnIndex, int maxRowIndex,
+                                                                                  Map<Integer, OmgDomainDescriptor> columnIndexDomainDescriptorMap,
+                                                                                  Map<Integer, OmgClassDescriptor> columnIndexClassDescriptorMap) {
+    List<OmgScenarioSequenceStepDescriptor> result = new ArrayList<>();
 
     // During the parsing of the concrete objects we always need direct access to this third row because this row contains the
     // corresponding property keys for the concrete property values.
@@ -281,7 +284,7 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
 
         // We reached the last column end of the row. That means we can use all collected object descriptors, the business event
         // descriptor, and the action value to create a object sequence step descriptor and add it to the result.
-        OmgObjectSequenceStepDescriptor objectSequenceStepDescriptor = new OmgObjectSequenceStepDescriptor(businessEventDescriptorKey,
+        OmgScenarioSequenceStepDescriptor objectSequenceStepDescriptor = new OmgScenarioSequenceStepDescriptor(businessEventDescriptorKey,
                 actionValue);
         objectSequenceStepDescriptor.getObjectDescriptors().addAll(objectDescriptors);
         result.add(objectSequenceStepDescriptor);

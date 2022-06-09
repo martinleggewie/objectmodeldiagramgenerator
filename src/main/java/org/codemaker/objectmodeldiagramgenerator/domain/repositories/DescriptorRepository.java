@@ -1,8 +1,8 @@
 package org.codemaker.objectmodeldiagramgenerator.domain.repositories;
 
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgBusinessEventDescriptor;
-import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectSequenceDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioDescriptor;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioSequenceDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionStateDescriptor;
 
 import java.util.Set;
@@ -17,15 +17,9 @@ public interface DescriptorRepository {
 
   Set<OmgTransitionStateDescriptor> findTransitionStateDescriptors();
 
-  OmgTransitionStateDescriptor findTransitionStateDescriptor(String transitionStateDescriptorKey);
-
   Set<OmgScenarioDescriptor> findScenarioDescriptors();
-
-  OmgScenarioDescriptor findScenarioDescriptor(String scenarioDescriptorKey);
 
   Set<OmgBusinessEventDescriptor> findBusinessEventDescriptors();
 
-  OmgBusinessEventDescriptor findBusinessEventDescriptor(String businessDescriptorKey);
-
-  Set<OmgObjectSequenceDescriptor> findObjectSequenceDescriptors();
+  Set<OmgScenarioSequenceDescriptor> findScenarioSequenceDescriptors();
 }

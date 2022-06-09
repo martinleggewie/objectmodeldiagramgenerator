@@ -2,6 +2,7 @@ package org.codemaker.objectmodeldiagramgenerator.domain.entities;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -10,10 +11,10 @@ public class OmgScenario {
   private final String description;
   private final Set<OmgScenario> predecessors;
 
-  public OmgScenario(String key, String description, Set<OmgScenario> predecessors) {
+  public OmgScenario(String key, String description) {
     this.key = key;
     this.description = description;
-    this.predecessors = predecessors;
+    this.predecessors = new HashSet<>();
   }
 
   public String getKey() {

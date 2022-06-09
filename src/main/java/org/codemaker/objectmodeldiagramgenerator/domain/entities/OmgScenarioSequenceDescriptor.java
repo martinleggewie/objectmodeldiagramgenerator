@@ -6,20 +6,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class OmgObjectSequenceDescriptor {
+public class OmgScenarioSequenceDescriptor {
 
   private final String transitionStateDescriptorKey;
   private final String title;
   private final Set<OmgDomainDescriptor> domainDescriptors;
   private final Set<OmgClassDescriptor> classDescriptors;
-  private final List<OmgObjectSequenceStepDescriptor> objectSequenceStepDescriptors;
+  private final List<OmgScenarioSequenceStepDescriptor> scenarioSequenceStepDescriptors;
 
-  public OmgObjectSequenceDescriptor(String transitionStateDescriptorKey, String title) {
+  public OmgScenarioSequenceDescriptor(String transitionStateDescriptorKey, String title) {
     this.transitionStateDescriptorKey = transitionStateDescriptorKey;
     this.title = title;
     this.domainDescriptors = new HashSet<>();
     this.classDescriptors = new HashSet<>();
-    this.objectSequenceStepDescriptors = new ArrayList<>();
+    this.scenarioSequenceStepDescriptors = new ArrayList<>();
   }
 
   public String getTransitionStateDescriptorKey() {
@@ -38,30 +38,30 @@ public class OmgObjectSequenceDescriptor {
     return classDescriptors;
   }
 
-  public List<OmgObjectSequenceStepDescriptor> getObjectSequenceStepDescriptors() {
-    return objectSequenceStepDescriptors;
+  public List<OmgScenarioSequenceStepDescriptor> getScenarioSequenceStepDescriptors() {
+    return scenarioSequenceStepDescriptors;
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o)
       return true;
-    if (!(o instanceof OmgObjectSequenceDescriptor))
+    if (!(o instanceof OmgScenarioSequenceDescriptor))
       return false;
-    OmgObjectSequenceDescriptor that = (OmgObjectSequenceDescriptor) o;
+    OmgScenarioSequenceDescriptor that = (OmgScenarioSequenceDescriptor) o;
     return getTransitionStateDescriptorKey().equals(that.getTransitionStateDescriptorKey()) && getTitle().equals(
             that.getTitle()) && getDomainDescriptors().equals(that.getDomainDescriptors()) && getClassDescriptors().equals(
-            that.getClassDescriptors()) && getObjectSequenceStepDescriptors().equals(that.getObjectSequenceStepDescriptors());
+            that.getClassDescriptors()) && getScenarioSequenceStepDescriptors().equals(that.getScenarioSequenceStepDescriptors());
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(getTransitionStateDescriptorKey(), getTitle(), getDomainDescriptors(), getClassDescriptors(),
-            getObjectSequenceStepDescriptors());
+            getScenarioSequenceStepDescriptors());
   }
 
   @Override
   public String toString() {
-    return "OmgObjectSequenceDescriptor{" + "transitionStateDescriptorKey='" + transitionStateDescriptorKey + '\'' + ", title='" + title + '\'' + ", domainDescriptors=" + domainDescriptors + ", classDescriptors=" + classDescriptors + ", objectSequenceStepDescriptors=" + objectSequenceStepDescriptors + '}';
+    return "OmgScenarioSequenceDescriptor{" + "transitionStateDescriptorKey='" + transitionStateDescriptorKey + '\'' + ", title='" + title + '\'' + ", domainDescriptors=" + domainDescriptors + ", classDescriptors=" + classDescriptors + ", objectSequenceStepDescriptors=" + scenarioSequenceStepDescriptors + '}';
   }
 }

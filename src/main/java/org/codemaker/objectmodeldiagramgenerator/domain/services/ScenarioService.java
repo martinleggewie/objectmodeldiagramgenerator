@@ -6,7 +6,6 @@ import org.codemaker.objectmodeldiagramgenerator.domain.repositories.DescriptorR
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +24,7 @@ public class ScenarioService {
 
     // Pass 1: Create all OmgScenario instances and store them in the result, but leave the predecessor references empty.
     for (OmgScenarioDescriptor scenarioDescriptor : scenarioDescriptors) {
-      OmgScenario scenario = new OmgScenario(scenarioDescriptor.getKey(), scenarioDescriptor.getDescription(), new HashSet<>());
+      OmgScenario scenario = new OmgScenario(scenarioDescriptor.getKey(), scenarioDescriptor.getDescription());
       result.put(scenario.getKey(), scenario);
     }
 

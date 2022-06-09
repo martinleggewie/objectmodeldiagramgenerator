@@ -6,11 +6,11 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OldOmgObject;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgBusinessEvent;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgClass;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDefinition;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDomain;
-import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObject;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModel;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModelSequence;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenario;
@@ -152,7 +152,7 @@ public class OmgDefinitionReader {
       Row row = rowIteratorFirstPass.next();
       String key = row.getCell(0).getStringCellValue().trim();
       String description = row.getCell(2).getStringCellValue().trim();
-      result.put(key, new OmgScenario(key, description, new HashSet<>()));
+      result.put(key, new OmgScenario(key, description));
     }
 
     // Second pass: Now that we have found all the defined scenarios, we can add the referenced predecessor scenarios.
@@ -314,7 +314,7 @@ public class OmgDefinitionReader {
         OmgObjectModel.Action action = OmgObjectModel.Action.valueOf(actionString);
 
         // Now we can parse the rest of the row which is supposed to contain the actual object property values.
-        Set<OmgObject> objects = new HashSet<>();
+        Set<OldOmgObject> objects = new HashSet<>();
         OmgClass soFarClass = columnIndexClassMap.get(2);
         Map<String, String> soFarPropertyMap = new HashMap<>();
         for (int columnIndex = 2; columnIndex <= maxColumnIndex; columnIndex++) {
@@ -358,7 +358,7 @@ public class OmgDefinitionReader {
             if (!soFarObjectKeyValue.equals(PROPERTYVALUE_NOTSET)) {
               Map<String, String> soFarPropertyMapCopy = new HashMap<>(soFarPropertyMap);
               soFarPropertyMapCopy.remove(soFarObjectKeyRaw);
-              OmgObject soFarObject = new OmgObject(soFarObjectKeyValue, soFarClass, soFarPropertyMapCopy, new HashSet<>());
+              OldOmgObject soFarObject = new OldOmgObject(soFarObjectKeyValue, soFarClass, soFarPropertyMapCopy, new HashSet<>());
               objects.add(soFarObject);
             }
 
@@ -383,7 +383,7 @@ public class OmgDefinitionReader {
       for (OmgObjectModel objectModel : objectModelSequence.getObjectModels()) {
         OmgBusinessEvent businessEvent = objectModel.getBusinessEvent();
         OmgScenario scenario = businessEvent.getScenario();
-        for (OmgObject object : objectModel.getObjects()) {
+        for (OldOmgObject object : objectModel.getObjects()) {
           Map<String, String> propertyMap = object.getPropertyMap();
           for (String key : propertyMap.keySet()) {
             if (key.endsWith(PROPERTYNAME_SUFFIX_FOREIGNKEY)) {
@@ -392,7 +392,7 @@ public class OmgDefinitionReader {
               String foreignKeyValueRaw = propertyMap.get(key).trim();
               String[] splitresult = foreignKeyValueRaw.split("[(),]");
               Set<String> foreignKeyValues = new HashSet<>(Arrays.asList(splitresult));
-              Set<OmgObject> dependeeObjects = findObjects(foreignKeyValues, objectModelSequences, transitionState, scenario);
+              Set<OldOmgObject> dependeeObjects = findObjects(foreignKeyValues, objectModelSequences, transitionState, scenario);
               object.getDependeeObjects().addAll(dependeeObjects);
             }
           }
@@ -401,16 +401,16 @@ public class OmgDefinitionReader {
     }
   }
 
-  private Set<OmgObject> findObjects(Set<String> keys, List<OmgObjectModelSequence> objectModelSequences,
-                                     OmgTransitionState transitionState, OmgScenario scenario) {
-    Set<OmgObject> result = new HashSet<>();
+  private Set<OldOmgObject> findObjects(Set<String> keys, List<OmgObjectModelSequence> objectModelSequences,
+                                        OmgTransitionState transitionState, OmgScenario scenario) {
+    Set<OldOmgObject> result = new HashSet<>();
 
     // First search in the same scenario
     for (OmgObjectModelSequence objectModelSequence : objectModelSequences) {
       if (objectModelSequence.getTransitionState().equals(transitionState)) {
         for (OmgObjectModel objectModel : objectModelSequence.getObjectModels()) {
           if (objectModel.getBusinessEvent().getScenario().equals(scenario)) {
-            for (OmgObject object : objectModel.getObjects()) {
+            for (OldOmgObject object : objectModel.getObjects()) {
               if (keys.contains(object.getKey())) {
                 result.add(object);
               }

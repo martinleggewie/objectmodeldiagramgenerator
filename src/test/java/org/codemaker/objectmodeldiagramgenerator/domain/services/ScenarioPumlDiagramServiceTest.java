@@ -2,14 +2,13 @@ package org.codemaker.objectmodeldiagramgenerator.domain.services;
 
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenario;
 import org.codemaker.objectmodeldiagramgenerator.domain.valueobjects.PumlDiagram;
+import org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioTestDataCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -27,36 +26,7 @@ class ScenarioPumlDiagramServiceTest {
     scenarioService = new ScenarioService(null) {
       @Override
       public Map<String, OmgScenario> findScenarioMap() {
-        final String shortSentence = "One two three four five six seven eight nine ten.";
-        final String mediumSentence = shortSentence + " " + shortSentence;
-        final String longSentence = shortSentence + " " + shortSentence + " " + shortSentence;
-
-        Map<String, OmgScenario> result = new HashMap<>();
-        OmgScenario scenario1 = new OmgScenario("scenario1", "This is scenario 1.", new HashSet<>());
-        OmgScenario scenario2 = new OmgScenario("scenario2", "This is scenario 2.", new HashSet<>(Arrays.asList(scenario1)));
-        OmgScenario scenario3 = new OmgScenario("scenario3", "This is scenario 3. " + shortSentence,
-                new HashSet<>(Arrays.asList(scenario1, scenario2)));
-        OmgScenario scenario4 = new OmgScenario("scenario4", "This is scenario 4. " + mediumSentence,
-                new HashSet<>(Arrays.asList(scenario1, scenario2, scenario3)));
-        OmgScenario scenario5 = new OmgScenario("scenario5", "This is scenario 5. " + longSentence,
-                new HashSet<>(Arrays.asList(scenario3, scenario4)));
-        OmgScenario scenario6 = new OmgScenario("scenario6", "This is scenario 6.", new HashSet<>());
-        OmgScenario scenario7 = new OmgScenario("scenario7", "This is scenario 7. " + mediumSentence,
-                new HashSet<>(Arrays.asList(scenario1, scenario3, scenario5)));
-        OmgScenario scenario8 = new OmgScenario("scenario8", "This is scenario 8. " + shortSentence,
-                new HashSet<>(Arrays.asList(scenario5, scenario6, scenario7)));
-        OmgScenario scenario9 = new OmgScenario("scenario9", "This is scenario 9. " + longSentence,
-                new HashSet<>(Arrays.asList(scenario1, scenario2, scenario3, scenario4, scenario5, scenario6, scenario7, scenario8)));
-        result.put(scenario1.getKey(), scenario1);
-        result.put(scenario2.getKey(), scenario2);
-        result.put(scenario3.getKey(), scenario3);
-        result.put(scenario4.getKey(), scenario4);
-        result.put(scenario5.getKey(), scenario5);
-        result.put(scenario6.getKey(), scenario6);
-        result.put(scenario7.getKey(), scenario7);
-        result.put(scenario8.getKey(), scenario8);
-        result.put(scenario9.getKey(), scenario9);
-        return result;
+        return ScenarioTestDataCreator.createScenarioMap();
       }
     };
 

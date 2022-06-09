@@ -4,16 +4,16 @@ import java.util.Set;
 
 public class OmgObjectModel {
 
-  public static enum Action {
+  public enum Action {
     create,
     delete
   }
 
   private final OmgBusinessEvent businessEvent;
-  private final Set<OmgObject> objects;
+  private final Set<OldOmgObject> objects;
   private final Action action;
 
-  public OmgObjectModel(OmgBusinessEvent businessEvent, Set<OmgObject> objects, Action action) {
+  public OmgObjectModel(OmgBusinessEvent businessEvent, Set<OldOmgObject> objects, Action action) {
     this.businessEvent = businessEvent;
     this.objects = objects;
     this.action = action;
@@ -23,7 +23,7 @@ public class OmgObjectModel {
     return businessEvent;
   }
 
-  public Set<OmgObject> getObjects() {
+  public Set<OldOmgObject> getObjects() {
     return objects;
   }
 

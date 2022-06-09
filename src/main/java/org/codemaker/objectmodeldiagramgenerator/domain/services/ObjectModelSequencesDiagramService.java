@@ -1,8 +1,8 @@
 package org.codemaker.objectmodeldiagramgenerator.domain.services;
 
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OldOmgObject;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgBusinessEvent;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDefinition;
-import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObject;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModel;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModel.Action;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObjectModelSequence;
@@ -18,12 +18,12 @@ import java.util.Objects;
 
 public class ObjectModelSequencesDiagramService {
 
-  public static enum Mode {
+  public enum Mode {
     gradually,
-    everything;
+    everything
   }
 
-  public static enum Phase {
+  public enum Phase {
     pastCreate,
     pastRemove,
     currentCreate,
@@ -33,19 +33,19 @@ public class ObjectModelSequencesDiagramService {
   }
 
   public static class RelationDescriptor {
-    private final OmgObject from;
-    private final OmgObject to;
+    private final OldOmgObject from;
+    private final OldOmgObject to;
 
-    public RelationDescriptor(OmgObject from, OmgObject to) {
+    public RelationDescriptor(OldOmgObject from, OldOmgObject to) {
       this.from = from;
       this.to = to;
     }
 
-    public OmgObject getFrom() {
+    public OldOmgObject getFrom() {
       return from;
     }
 
-    public OmgObject getTo() {
+    public OldOmgObject getTo() {
       return to;
     }
 
@@ -207,12 +207,12 @@ public class ObjectModelSequencesDiagramService {
   private String objects(OmgObjectModel objectModel, List<OmgObjectModel> previousObjectModels, List<OmgObjectModel> futureObjectModels,
                          Mode mode) {
     StringBuilder result = new StringBuilder();
-    List<OmgObject> dependeeObjectsSoFar = new ArrayList<>();
-    List<OmgObject> removedObjectsSoFar = new ArrayList<>();
+    List<OldOmgObject> dependeeObjectsSoFar = new ArrayList<>();
+    List<OldOmgObject> removedObjectsSoFar = new ArrayList<>();
 
     // Collect all the objects of this scenario in one flattened list so that we can later check if a given object is defined in this
     // scenario or not.
-    List<OmgObject> allObjectsInThisScenario = new ArrayList<>(objectModel.getObjects());
+    List<OldOmgObject> allObjectsInThisScenario = new ArrayList<>(objectModel.getObjects());
     for (OmgObjectModel previousObjectModel : previousObjectModels) {
       allObjectsInThisScenario.addAll(previousObjectModel.getObjects());
     }
@@ -222,12 +222,12 @@ public class ObjectModelSequencesDiagramService {
 
     // Draw the objects from the given object model, and also their dependee objects in case they are defined outside this scenario
     Action action = objectModel.getAction();
-    for (OmgObject object : objectModel.getObjects()) {
+    for (OldOmgObject object : objectModel.getObjects()) {
       result.append(object(object, action.equals(Action.create) ? Phase.currentCreate : Phase.currentRemove));
       if (action.equals(Action.delete)) {
         removedObjectsSoFar.add(object);
       }
-      for (OmgObject dependeeObject : object.getDependeeObjects()) {
+      for (OldOmgObject dependeeObject : object.getDependeeObjects()) {
         if (!allObjectsInThisScenario.contains(dependeeObject) && !dependeeObjectsSoFar.contains(dependeeObject)) {
           result.append(object(dependeeObject, Phase.outside));
           dependeeObjectsSoFar.add(dependeeObject);
@@ -238,10 +238,10 @@ public class ObjectModelSequencesDiagramService {
     // Draw the objects which had been defined in an earlier object model of the same scenario, and also their dependee objects in case
     // they are defined outside this scenario
     for (OmgObjectModel previousObjectModel : previousObjectModels) {
-      for (OmgObject previousObject : previousObjectModel.getObjects()) {
+      for (OldOmgObject previousObject : previousObjectModel.getObjects()) {
         result.append(object(previousObject, removedObjectsSoFar.contains(previousObject) ? Phase.pastRemove : Phase.pastCreate));
 
-        for (OmgObject dependeeObject : previousObject.getDependeeObjects()) {
+        for (OldOmgObject dependeeObject : previousObject.getDependeeObjects()) {
           if (!allObjectsInThisScenario.contains(dependeeObject) && !dependeeObjectsSoFar.contains(dependeeObject)) {
             result.append(object(dependeeObject, Phase.outside));
             dependeeObjectsSoFar.add(dependeeObject);
@@ -254,10 +254,10 @@ public class ObjectModelSequencesDiagramService {
       // Draw the objects which will be defined in a future object model of the same scenario, and also their dependee objects in case
       // they are defined outside this scenario
       for (OmgObjectModel futureObjectModel : futureObjectModels) {
-        for (OmgObject futureObject : futureObjectModel.getObjects()) {
+        for (OldOmgObject futureObject : futureObjectModel.getObjects()) {
           result.append(object(futureObject, Phase.future));
 
-          for (OmgObject dependeeObject : futureObject.getDependeeObjects()) {
+          for (OldOmgObject dependeeObject : futureObject.getDependeeObjects()) {
             if (!allObjectsInThisScenario.contains(dependeeObject) && !dependeeObjectsSoFar.contains(dependeeObject)) {
               result.append(object(dependeeObject, Phase.future));
               dependeeObjectsSoFar.add(dependeeObject);
@@ -270,7 +270,7 @@ public class ObjectModelSequencesDiagramService {
     return result.toString();
   }
 
-  private String object(OmgObject object, Phase phase) {
+  private String object(OldOmgObject object, Phase phase) {
     StringBuilder result = new StringBuilder();
 
     String domainDisplayName = object.getClazz().getDomain().getDisplayName();
@@ -324,12 +324,12 @@ public class ObjectModelSequencesDiagramService {
                            Mode mode) {
     StringBuilder result = new StringBuilder();
     List<RelationDescriptor> relationDescriptorsSoFar = new ArrayList<>();
-    List<OmgObject> removedObjectsSoFar = new ArrayList<>();
+    List<OldOmgObject> removedObjectsSoFar = new ArrayList<>();
 
     // Process the relations which are defined in the current objects
     Action action = objectModel.getAction();
-    for (OmgObject object : objectModel.getObjects()) {
-      for (OmgObject dependeeObject : object.getDependeeObjects()) {
+    for (OldOmgObject object : objectModel.getObjects()) {
+      for (OldOmgObject dependeeObject : object.getDependeeObjects()) {
         RelationDescriptor relationDescriptor = new RelationDescriptor(object, dependeeObject);
         if (!relationDescriptorsSoFar.contains(relationDescriptor)) {
           result.append(relation(relationDescriptor, action.equals(Action.create) ? Phase.currentCreate : Phase.currentRemove));
@@ -343,8 +343,8 @@ public class ObjectModelSequencesDiagramService {
 
     // Process the relations which are defined in the past objects
     for (OmgObjectModel previousObjectModel : previousObjectModels) {
-      for (OmgObject previousObject : previousObjectModel.getObjects()) {
-        for (OmgObject dependeeObject : previousObject.getDependeeObjects()) {
+      for (OldOmgObject previousObject : previousObjectModel.getObjects()) {
+        for (OldOmgObject dependeeObject : previousObject.getDependeeObjects()) {
           RelationDescriptor relationDescriptor = new RelationDescriptor(previousObject, dependeeObject);
           if (!relationDescriptorsSoFar.contains(relationDescriptor)) {
             result.append(relation(relationDescriptor, removedObjectsSoFar.contains(previousObject) ? Phase.pastRemove : Phase.pastCreate));
@@ -357,8 +357,8 @@ public class ObjectModelSequencesDiagramService {
     if (mode.equals(Mode.everything)) {
       // Process the relations which are defined in the future objects
       for (OmgObjectModel futureObjectModel : futureObjectModels) {
-        for (OmgObject futureObject : futureObjectModel.getObjects()) {
-          for (OmgObject dependeeObject : futureObject.getDependeeObjects()) {
+        for (OldOmgObject futureObject : futureObjectModel.getObjects()) {
+          for (OldOmgObject dependeeObject : futureObject.getDependeeObjects()) {
             RelationDescriptor relationDescriptor = new RelationDescriptor(futureObject, dependeeObject);
             if (!relationDescriptorsSoFar.contains(relationDescriptor)) {
               result.append(relation(relationDescriptor, Phase.future));
