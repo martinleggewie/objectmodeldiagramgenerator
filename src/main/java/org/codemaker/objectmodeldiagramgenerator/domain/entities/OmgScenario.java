@@ -7,6 +7,9 @@ import java.util.Objects;
 import java.util.Set;
 
 public class OmgScenario {
+
+  public static final OmgScenario IRRELEVANT = new OmgScenario("SCENARIO_IRRELEVANT", "(The scenario is irrelevant");
+
   private final String key;
   private final String description;
   private final Set<OmgScenario> predecessors;

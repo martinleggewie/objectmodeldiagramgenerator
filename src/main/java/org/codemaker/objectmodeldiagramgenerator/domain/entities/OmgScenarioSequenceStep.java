@@ -1,22 +1,23 @@
 package org.codemaker.objectmodeldiagramgenerator.domain.entities;
 
+import org.codemaker.objectmodeldiagramgenerator.domain.valueobjects.IndexOutOfMaxIndex;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class OmgScenarioSequenceStep {
-  public enum Action {
-    create,
-    delete
-  }
 
   private final OmgBusinessEvent businessEvent;
-  private final Action action;
+  private final IndexOutOfMaxIndex scenarioStepIndex;
+  private final IndexOutOfMaxIndex businessEventStepIndex;
   private final Set<OmgObject> objects;
 
-  public OmgScenarioSequenceStep(OmgBusinessEvent businessEvent, Action action) {
+  public OmgScenarioSequenceStep(OmgBusinessEvent businessEvent, IndexOutOfMaxIndex scenarioStepIndex,
+                                 IndexOutOfMaxIndex businessEventStepIndex) {
     this.businessEvent = businessEvent;
-    this.action = action;
+    this.scenarioStepIndex = scenarioStepIndex;
+    this.businessEventStepIndex = businessEventStepIndex;
     this.objects = new HashSet<>();
   }
 
@@ -24,8 +25,12 @@ public class OmgScenarioSequenceStep {
     return businessEvent;
   }
 
-  public Action getAction() {
-    return action;
+  public IndexOutOfMaxIndex getScenarioStepIndex() {
+    return scenarioStepIndex;
+  }
+
+  public IndexOutOfMaxIndex getBusinessEventStepIndex() {
+    return businessEventStepIndex;
   }
 
   public Set<OmgObject> getObjects() {
@@ -39,16 +44,19 @@ public class OmgScenarioSequenceStep {
     if (!(o instanceof OmgScenarioSequenceStep))
       return false;
     OmgScenarioSequenceStep that = (OmgScenarioSequenceStep) o;
-    return getBusinessEvent().equals(that.getBusinessEvent()) && getAction() == that.getAction() && getObjects().equals(that.getObjects());
+    return getBusinessEvent().equals(that.getBusinessEvent()) && getScenarioStepIndex().equals(
+            that.getScenarioStepIndex()) && getBusinessEventStepIndex().equals(that.getBusinessEventStepIndex()) && getObjects().equals(
+            that.getObjects());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getBusinessEvent(), getAction(), getObjects());
+    return Objects.hash(getBusinessEvent(), getScenarioStepIndex(), getBusinessEventStepIndex(), getObjects());
   }
 
   @Override
   public String toString() {
-    return "OmgScenarioSequenceStep{" + "businessEvent=" + businessEvent + ", action=" + action + ", objects=" + objects + '}';
+    return "OmgScenarioSequenceStep{" + "businessEvent=" + businessEvent + ", scenarioStepIndex=" + scenarioStepIndex + ", " +
+            "businessEventStepIndex=" + businessEventStepIndex + ", objects=" + objects + '}';
   }
 }
