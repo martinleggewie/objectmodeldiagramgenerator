@@ -2,7 +2,6 @@ package org.codemaker.objectmodeldiagramgenerator.domain.services;
 
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionState;
 import org.codemaker.objectmodeldiagramgenerator.domain.valueobjects.PumlDiagram;
-import org.codemaker.objectmodeldiagramgenerator.testutil.TransitionStateTestDataCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.codemaker.objectmodeldiagramgenerator.testutil.TransitionStateTestDataCreator.createTransitionStateMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TransitionStatePumlDiagramServiceTest {
@@ -26,7 +26,7 @@ class TransitionStatePumlDiagramServiceTest {
     transitionStateService = new TransitionStateService(null) {
       @Override
       public Map<String, OmgTransitionState> findTransitionStateMap() {
-        return TransitionStateTestDataCreator.createTransitionStateMap();
+        return createTransitionStateMap();
       }
     };
 

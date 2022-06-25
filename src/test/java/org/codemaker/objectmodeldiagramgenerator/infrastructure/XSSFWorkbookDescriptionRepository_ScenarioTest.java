@@ -2,16 +2,16 @@ package org.codemaker.objectmodeldiagramgenerator.infrastructure;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioDescriptor;
-import org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioTestDataCreator;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioTestDataCreator.createScenarioDescriptorMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class XSSFWorkbookDescriptionRepository_ScenarioTest {
 
@@ -25,12 +25,7 @@ class XSSFWorkbookDescriptionRepository_ScenarioTest {
   @Test
   void findScenarioDescriptors() {
     // Arrange
-    OmgScenarioDescriptor descriptor1 = ScenarioTestDataCreator.createDescriptor("scenario1");
-    OmgScenarioDescriptor descriptor2 = ScenarioTestDataCreator.createDescriptor("scenario2");
-    OmgScenarioDescriptor descriptor3 = ScenarioTestDataCreator.createDescriptor("scenario3");
-    OmgScenarioDescriptor descriptor4 = ScenarioTestDataCreator.createDescriptor("scenario4");
-    OmgScenarioDescriptor descriptor5 = ScenarioTestDataCreator.createDescriptor("scenario5");
-    OmgScenarioDescriptor descriptor0 = ScenarioTestDataCreator.createDescriptor("scenario0");
+    Map<String, OmgScenarioDescriptor> scenarioDescriptorMap = createScenarioDescriptorMap();
 
     // Act
     XSSFWorkbookDescriptionRepository cut = new XSSFWorkbookDescriptionRepository(workbook);
@@ -38,11 +33,6 @@ class XSSFWorkbookDescriptionRepository_ScenarioTest {
 
     // Assert
     assertEquals(5, result.size());
-    assertTrue(result.contains(descriptor1));
-    assertTrue(result.contains(descriptor2));
-    assertTrue(result.contains(descriptor3));
-    assertTrue(result.contains(descriptor4));
-    assertTrue(result.contains(descriptor5));
-    assertFalse(result.contains(descriptor0));
+    assertEquals(new HashSet<>(scenarioDescriptorMap.values()), result);
   }
 }

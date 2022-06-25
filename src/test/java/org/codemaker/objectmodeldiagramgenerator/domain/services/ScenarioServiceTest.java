@@ -6,7 +6,6 @@ import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioDesc
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioSequenceDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionStateDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.repositories.DescriptorRepository;
-import org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioTestDataCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,9 +13,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioTestDataCreator.createScenarioDescriptorMap;
+import static org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioTestDataCreator.createScenarioMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ScenarioServiceTest {
 
@@ -32,13 +31,7 @@ class ScenarioServiceTest {
 
       @Override
       public Set<OmgScenarioDescriptor> findScenarioDescriptors() {
-        Set<OmgScenarioDescriptor> result = new HashSet<>();
-        result.add(ScenarioTestDataCreator.createDescriptor("scenario1"));
-        result.add(ScenarioTestDataCreator.createDescriptor("scenario2"));
-        result.add(ScenarioTestDataCreator.createDescriptor("scenario3"));
-        result.add(ScenarioTestDataCreator.createDescriptor("scenario4"));
-        result.add(ScenarioTestDataCreator.createDescriptor("scenario5"));
-        return result;
+        return new HashSet<>(createScenarioDescriptorMap().values());
       }
 
       @Override
@@ -56,12 +49,7 @@ class ScenarioServiceTest {
   @Test
   void findScenarioMap() {
     // Arrange
-    OmgScenario scenario1 = ScenarioTestDataCreator.create("scenario1");
-    OmgScenario scenario2 = ScenarioTestDataCreator.create("scenario2");
-    OmgScenario scenario3 = ScenarioTestDataCreator.create("scenario3");
-    OmgScenario scenario4 = ScenarioTestDataCreator.create("scenario4");
-    OmgScenario scenario5 = ScenarioTestDataCreator.create("scenario5");
-    OmgScenario scenario0 = ScenarioTestDataCreator.create("scenario0");
+    Map<String, OmgScenario> scenarioMap = createScenarioMap();
 
     // Act
     ScenarioService cut = new ScenarioService(descriptorRepository);
@@ -69,16 +57,6 @@ class ScenarioServiceTest {
 
     // Assert
     assertEquals(5, result.size());
-    assertTrue(result.containsKey(scenario1.getKey()));
-    assertTrue(result.containsKey(scenario2.getKey()));
-    assertTrue(result.containsKey(scenario3.getKey()));
-    assertTrue(result.containsKey(scenario4.getKey()));
-    assertTrue(result.containsKey(scenario5.getKey()));
-    assertFalse(result.containsKey(scenario0.getKey()));
-    assertEquals(scenario1, result.get(scenario1.getKey()));
-    assertEquals(scenario2, result.get(scenario2.getKey()));
-    assertEquals(scenario3, result.get(scenario3.getKey()));
-    assertEquals(scenario4, result.get(scenario4.getKey()));
-    assertEquals(scenario5, result.get(scenario5.getKey()));
+    assertEquals(scenarioMap, result);
   }
 }

@@ -9,15 +9,18 @@ import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioSequ
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionState;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionStateDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.repositories.DescriptorRepository;
-import org.codemaker.objectmodeldiagramgenerator.testutil.BusinessEventTestDataCreator;
-import org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioSequenceTestDataCreator;
-import org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioTestDataCreator;
-import org.codemaker.objectmodeldiagramgenerator.testutil.TransitionStateTestDataCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Set;
+
+import static org.codemaker.objectmodeldiagramgenerator.testutil.BusinessEventTestDataCreator.createBusinessEventMap;
+import static org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioSequenceTestDataCreator.createScenarioSequenceDescriptors_state1;
+import static org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioSequenceTestDataCreator.createScenarioSequences_state1;
+import static org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioSequenceTestDataCreator.createScenarioSequences_state2;
+import static org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioTestDataCreator.createScenarioMap;
+import static org.codemaker.objectmodeldiagramgenerator.testutil.TransitionStateTestDataCreator.createTransitionStateMap;
 
 class ScenarioSequenceServiceTest {
 
@@ -32,7 +35,7 @@ class ScenarioSequenceServiceTest {
     transitionStateService = new TransitionStateService(null) {
       @Override
       public Map<String, OmgTransitionState> findTransitionStateMap() {
-        return TransitionStateTestDataCreator.createTransitionStateMap();
+        return createTransitionStateMap();
       }
     };
 
@@ -40,7 +43,7 @@ class ScenarioSequenceServiceTest {
     scenarioService = new ScenarioService(null) {
       @Override
       public Map<String, OmgScenario> findScenarioMap() {
-        return ScenarioTestDataCreator.createScenarioMap();
+        return createScenarioMap();
       }
     };
 
@@ -48,7 +51,7 @@ class ScenarioSequenceServiceTest {
     businessEventService = new BusinessEventService(null, scenarioService) {
       @Override
       public Map<String, OmgBusinessEvent> findBusinessEventMap() {
-        return BusinessEventTestDataCreator.createBusinessEventMap();
+        return createBusinessEventMap();
       }
     };
 
@@ -71,7 +74,7 @@ class ScenarioSequenceServiceTest {
 
       @Override
       public Set<OmgScenarioSequenceDescriptor> findScenarioSequenceDescriptors() {
-        return ScenarioSequenceTestDataCreator.createScenarioSequenceDescriptors_state1();
+        return createScenarioSequenceDescriptors_state1();
       }
     };
   }
@@ -79,8 +82,8 @@ class ScenarioSequenceServiceTest {
   @Test
   void findScenarioSequences() {
     // Arrange
-    Set<OmgScenarioSequence> scenarioSequences = ScenarioSequenceTestDataCreator.createScenarioSequences_state1();
-    scenarioSequences.addAll(ScenarioSequenceTestDataCreator.createScenarioSequences_state2());
+    Set<OmgScenarioSequence> scenarioSequences = createScenarioSequences_state1();
+    scenarioSequences.addAll(createScenarioSequences_state2());
 
     // Act
     ScenarioSequenceService cut = new ScenarioSequenceService(businessEventService, scenarioService, transitionStateService,

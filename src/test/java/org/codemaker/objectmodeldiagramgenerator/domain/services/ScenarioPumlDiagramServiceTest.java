@@ -2,7 +2,6 @@ package org.codemaker.objectmodeldiagramgenerator.domain.services;
 
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenario;
 import org.codemaker.objectmodeldiagramgenerator.domain.valueobjects.PumlDiagram;
-import org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioTestDataCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioTestDataCreator.createScenarioMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ScenarioPumlDiagramServiceTest {
@@ -26,7 +26,7 @@ class ScenarioPumlDiagramServiceTest {
     scenarioService = new ScenarioService(null) {
       @Override
       public Map<String, OmgScenario> findScenarioMap() {
-        return ScenarioTestDataCreator.createScenarioMap();
+        return createScenarioMap();
       }
     };
 
