@@ -1,5 +1,7 @@
 package org.codemaker.objectmodeldiagramgenerator.domain.entities;
 
+import java.util.Objects;
+
 public class OmgClass {
   private final String key;
   private final String displayName;
@@ -21,5 +23,26 @@ public class OmgClass {
 
   public OmgDomain getDomain() {
     return domain;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (!(o instanceof OmgClass))
+      return false;
+    OmgClass omgClass = (OmgClass) o;
+    return getKey().equals(omgClass.getKey()) && getDisplayName().equals(omgClass.getDisplayName()) && getDomain().equals(
+            omgClass.getDomain());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getKey(), getDisplayName(), getDomain());
+  }
+
+  @Override
+  public String toString() {
+    return "OmgClass{" + "key='" + key + '\'' + ", displayName='" + displayName + '\'' + ", domain=" + domain + '}';
   }
 }

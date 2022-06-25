@@ -319,8 +319,8 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(OmgBusinessEvent.INITIAL, new IndexOutOfMaxIndex(1, 5),
               new IndexOutOfMaxIndex(1, 1));
-      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", create), create, past, outside);
+      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, future, outside);
+      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", create), create, future, outside);
       OmgObject berta = createObj(createObjDesc_state1("berta", create), create, future, inside);
       OmgObject p2p01 = createObj(createObjDesc_state1("p2p01", create), create, future, inside, anton, berta);
       OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", create), create, future, inside, berta, floor0101);
@@ -336,8 +336,8 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0201"), new IndexOutOfMaxIndex(2, 5),
               new IndexOutOfMaxIndex(1, 1));
-      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", create), create, past, outside);
+      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, future, outside);
+      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", create), create, future, outside);
       OmgObject berta = createObj(createObjDesc_state1("berta", create), create, present, inside);
       OmgObject p2p01 = createObj(createObjDesc_state1("p2p01", create), create, future, inside, anton, berta);
       OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", create), create, future, inside, berta, floor0101);
@@ -353,8 +353,8 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0202"), new IndexOutOfMaxIndex(3, 5),
               new IndexOutOfMaxIndex(1, 1));
-      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", create), create, past, outside);
+      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, present, outside);
+      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", create), create, future, outside);
       OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, inside);
       OmgObject p2p01 = createObj(createObjDesc_state1("p2p01", create), create, present, inside, anton, berta);
       OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", create), create, future, inside, berta, floor0101);
@@ -371,7 +371,7 @@ public class ScenarioSequenceTestDataCreator {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0203"), new IndexOutOfMaxIndex(4, 5),
               new IndexOutOfMaxIndex(1, 1));
       OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", create), create, past, outside);
+      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", create), create, present, outside);
       OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, inside);
       OmgObject p2p01 = createObj(createObjDesc_state1("p2p01", create), create, past, inside, anton, berta);
       OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", create), create, present, inside, berta, floor0101);
@@ -418,17 +418,17 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(OmgBusinessEvent.INITIAL, new IndexOutOfMaxIndex(1, 11),
               new IndexOutOfMaxIndex(1, 1));
-      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, outside);
-      OmgObject house02 = createObj(createObjDesc_state1("berta", create), create, future, inside);
+      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, future, outside);
+      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, future, outside);
+      OmgObject house02 = createObj(createObjDesc_state1("house02", create), create, future, inside);
       OmgObject floor0201 = createObj(createObjDesc_state1("floor0201", create), create, future, inside, house02);
       OmgObject floor0202 = createObj(createObjDesc_state1("floor0202", create), create, future, inside, house02);
       OmgObject floor0203 = createObj(createObjDesc_state1("floor0203", create), create, future, inside, house02);
       OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, future, inside, house02);
       OmgObject p2f03 = createObj(createObjDesc_state1("p2f03", create), create, future, inside, anton, floor0203);
       OmgObject p2f04 = createObj(createObjDesc_state1("p2f04", create), create, future, inside, berta, floor0203);
-      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, outside);
-      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, outside);
+      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, inside);
+      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, inside);
       step.getObjects().add(anton);
       step.getObjects().add(berta);
       step.getObjects().add(house02);
@@ -447,17 +447,17 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0301"), new IndexOutOfMaxIndex(2, 11),
               new IndexOutOfMaxIndex(1, 5));
-      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, outside);
-      OmgObject house02 = createObj(createObjDesc_state1("berta", create), create, present, inside);
+      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, future, outside);
+      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, future, outside);
+      OmgObject house02 = createObj(createObjDesc_state1("house02", create), create, present, inside);
       OmgObject floor0201 = createObj(createObjDesc_state1("floor0201", create), create, future, inside, house02);
       OmgObject floor0202 = createObj(createObjDesc_state1("floor0202", create), create, future, inside, house02);
       OmgObject floor0203 = createObj(createObjDesc_state1("floor0203", create), create, future, inside, house02);
       OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, future, inside, house02);
       OmgObject p2f03 = createObj(createObjDesc_state1("p2f03", create), create, future, inside, anton, floor0203);
       OmgObject p2f04 = createObj(createObjDesc_state1("p2f04", create), create, future, inside, berta, floor0203);
-      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, outside);
-      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, outside);
+      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, inside);
+      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, inside);
       step.getObjects().add(anton);
       step.getObjects().add(berta);
       step.getObjects().add(house02);
@@ -476,17 +476,17 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0301"), new IndexOutOfMaxIndex(3, 11),
               new IndexOutOfMaxIndex(2, 5));
-      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, outside);
-      OmgObject house02 = createObj(createObjDesc_state1("berta", create), create, past, inside);
+      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, future, outside);
+      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, future, outside);
+      OmgObject house02 = createObj(createObjDesc_state1("house02", create), create, past, inside);
       OmgObject floor0201 = createObj(createObjDesc_state1("floor0201", create), create, present, inside, house02);
       OmgObject floor0202 = createObj(createObjDesc_state1("floor0202", create), create, future, inside, house02);
       OmgObject floor0203 = createObj(createObjDesc_state1("floor0203", create), create, future, inside, house02);
       OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, future, inside, house02);
       OmgObject p2f03 = createObj(createObjDesc_state1("p2f03", create), create, future, inside, anton, floor0203);
       OmgObject p2f04 = createObj(createObjDesc_state1("p2f04", create), create, future, inside, berta, floor0203);
-      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, outside);
-      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, outside);
+      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, inside);
+      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, inside);
       step.getObjects().add(anton);
       step.getObjects().add(berta);
       step.getObjects().add(house02);
@@ -505,17 +505,17 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0301"), new IndexOutOfMaxIndex(4, 11),
               new IndexOutOfMaxIndex(3, 5));
-      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, outside);
-      OmgObject house02 = createObj(createObjDesc_state1("berta", create), create, past, inside);
+      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, future, outside);
+      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, future, outside);
+      OmgObject house02 = createObj(createObjDesc_state1("house02", create), create, past, inside);
       OmgObject floor0201 = createObj(createObjDesc_state1("floor0201", create), create, past, inside, house02);
       OmgObject floor0202 = createObj(createObjDesc_state1("floor0202", create), create, present, inside, house02);
       OmgObject floor0203 = createObj(createObjDesc_state1("floor0203", create), create, future, inside, house02);
       OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, future, inside, house02);
       OmgObject p2f03 = createObj(createObjDesc_state1("p2f03", create), create, future, inside, anton, floor0203);
       OmgObject p2f04 = createObj(createObjDesc_state1("p2f04", create), create, future, inside, berta, floor0203);
-      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, outside);
-      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, outside);
+      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, inside);
+      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, inside);
       step.getObjects().add(anton);
       step.getObjects().add(berta);
       step.getObjects().add(house02);
@@ -534,17 +534,17 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0301"), new IndexOutOfMaxIndex(5, 11),
               new IndexOutOfMaxIndex(4, 5));
-      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, outside);
-      OmgObject house02 = createObj(createObjDesc_state1("berta", create), create, past, inside);
+      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, future, outside);
+      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, future, outside);
+      OmgObject house02 = createObj(createObjDesc_state1("house02", create), create, past, inside);
       OmgObject floor0201 = createObj(createObjDesc_state1("floor0201", create), create, past, inside, house02);
       OmgObject floor0202 = createObj(createObjDesc_state1("floor0202", create), create, past, inside, house02);
       OmgObject floor0203 = createObj(createObjDesc_state1("floor0203", create), create, present, inside, house02);
       OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, future, inside, house02);
       OmgObject p2f03 = createObj(createObjDesc_state1("p2f03", create), create, future, inside, anton, floor0203);
       OmgObject p2f04 = createObj(createObjDesc_state1("p2f04", create), create, future, inside, berta, floor0203);
-      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, outside);
-      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, outside);
+      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, inside);
+      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, inside);
       step.getObjects().add(anton);
       step.getObjects().add(berta);
       step.getObjects().add(house02);
@@ -563,17 +563,17 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0301"), new IndexOutOfMaxIndex(6, 11),
               new IndexOutOfMaxIndex(5, 5));
-      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, outside);
-      OmgObject house02 = createObj(createObjDesc_state1("berta", create), create, past, inside);
+      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, future, outside);
+      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, future, outside);
+      OmgObject house02 = createObj(createObjDesc_state1("house02", create), create, past, inside);
       OmgObject floor0201 = createObj(createObjDesc_state1("floor0201", create), create, past, inside, house02);
       OmgObject floor0202 = createObj(createObjDesc_state1("floor0202", create), create, past, inside, house02);
       OmgObject floor0203 = createObj(createObjDesc_state1("floor0203", create), create, past, inside, house02);
       OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, present, inside, house02);
       OmgObject p2f03 = createObj(createObjDesc_state1("p2f03", create), create, future, inside, anton, floor0203);
       OmgObject p2f04 = createObj(createObjDesc_state1("p2f04", create), create, future, inside, berta, floor0203);
-      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, outside);
-      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, outside);
+      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, inside);
+      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, inside);
       step.getObjects().add(anton);
       step.getObjects().add(berta);
       step.getObjects().add(house02);
@@ -592,17 +592,17 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0302"), new IndexOutOfMaxIndex(7, 11),
               new IndexOutOfMaxIndex(1, 4));
-      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, outside);
-      OmgObject house02 = createObj(createObjDesc_state1("berta", create), create, past, inside);
+      OmgObject anton = createObj(createObjDesc_state1("anton", create), create, present, outside);
+      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, future, outside);
+      OmgObject house02 = createObj(createObjDesc_state1("house02", create), create, past, inside);
       OmgObject floor0201 = createObj(createObjDesc_state1("floor0201", create), create, past, inside, house02);
       OmgObject floor0202 = createObj(createObjDesc_state1("floor0202", create), create, past, inside, house02);
       OmgObject floor0203 = createObj(createObjDesc_state1("floor0203", create), create, past, inside, house02);
       OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, past, inside, house02);
       OmgObject p2f03 = createObj(createObjDesc_state1("p2f03", create), create, present, inside, anton, floor0203);
       OmgObject p2f04 = createObj(createObjDesc_state1("p2f04", create), create, future, inside, berta, floor0203);
-      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, outside);
-      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, outside);
+      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, inside);
+      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, inside);
       step.getObjects().add(anton);
       step.getObjects().add(berta);
       step.getObjects().add(house02);
@@ -622,16 +622,16 @@ public class ScenarioSequenceTestDataCreator {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0302"), new IndexOutOfMaxIndex(8, 11),
               new IndexOutOfMaxIndex(2, 4));
       OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
-      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, outside);
-      OmgObject house02 = createObj(createObjDesc_state1("berta", create), create, past, inside);
+      OmgObject berta = createObj(createObjDesc_state1("berta", create), create, present, outside);
+      OmgObject house02 = createObj(createObjDesc_state1("house02", create), create, past, inside);
       OmgObject floor0201 = createObj(createObjDesc_state1("floor0201", create), create, past, inside, house02);
       OmgObject floor0202 = createObj(createObjDesc_state1("floor0202", create), create, past, inside, house02);
       OmgObject floor0203 = createObj(createObjDesc_state1("floor0203", create), create, past, inside, house02);
       OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, past, inside, house02);
       OmgObject p2f03 = createObj(createObjDesc_state1("p2f03", create), create, past, inside, anton, floor0203);
       OmgObject p2f04 = createObj(createObjDesc_state1("p2f04", create), create, present, inside, berta, floor0203);
-      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, outside);
-      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, outside);
+      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, future, inside);
+      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, inside);
       step.getObjects().add(anton);
       step.getObjects().add(berta);
       step.getObjects().add(house02);
@@ -652,15 +652,15 @@ public class ScenarioSequenceTestDataCreator {
               new IndexOutOfMaxIndex(3, 4));
       OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
       OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, outside);
-      OmgObject house02 = createObj(createObjDesc_state1("berta", create), create, past, inside);
+      OmgObject house02 = createObj(createObjDesc_state1("house02", create), create, past, inside);
       OmgObject floor0201 = createObj(createObjDesc_state1("floor0201", create), create, past, inside, house02);
       OmgObject floor0202 = createObj(createObjDesc_state1("floor0202", create), create, past, inside, house02);
       OmgObject floor0203 = createObj(createObjDesc_state1("floor0203", create), create, past, inside, house02);
       OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, past, inside, house02);
       OmgObject p2f03 = createObj(createObjDesc_state1("p2f03", create), create, past, inside, anton, floor0203);
       OmgObject p2f04 = createObj(createObjDesc_state1("p2f04", create), create, past, inside, berta, floor0203);
-      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, present, outside);
-      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, outside);
+      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, present, inside);
+      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, future, inside);
       step.getObjects().add(anton);
       step.getObjects().add(berta);
       step.getObjects().add(house02);
@@ -681,15 +681,15 @@ public class ScenarioSequenceTestDataCreator {
               new IndexOutOfMaxIndex(4, 4));
       OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
       OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, outside);
-      OmgObject house02 = createObj(createObjDesc_state1("berta", create), create, past, inside);
+      OmgObject house02 = createObj(createObjDesc_state1("house02", create), create, past, inside);
       OmgObject floor0201 = createObj(createObjDesc_state1("floor0201", create), create, past, inside, house02);
       OmgObject floor0202 = createObj(createObjDesc_state1("floor0202", create), create, past, inside, house02);
       OmgObject floor0203 = createObj(createObjDesc_state1("floor0203", create), create, past, inside, house02);
       OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, past, inside, house02);
       OmgObject p2f03 = createObj(createObjDesc_state1("p2f03", create), create, past, inside, anton, floor0203);
       OmgObject p2f04 = createObj(createObjDesc_state1("p2f04", create), create, past, inside, berta, floor0203);
-      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, past, outside);
-      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, present, outside);
+      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, past, inside);
+      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, present, inside);
       step.getObjects().add(anton);
       step.getObjects().add(berta);
       step.getObjects().add(house02);
@@ -710,15 +710,15 @@ public class ScenarioSequenceTestDataCreator {
               new IndexOutOfMaxIndex(1, 1));
       OmgObject anton = createObj(createObjDesc_state1("anton", create), create, past, outside);
       OmgObject berta = createObj(createObjDesc_state1("berta", create), create, past, outside);
-      OmgObject house02 = createObj(createObjDesc_state1("berta", create), create, past, inside);
+      OmgObject house02 = createObj(createObjDesc_state1("house02", create), create, past, inside);
       OmgObject floor0201 = createObj(createObjDesc_state1("floor0201", create), create, past, inside, house02);
       OmgObject floor0202 = createObj(createObjDesc_state1("floor0202", create), create, past, inside, house02);
       OmgObject floor0203 = createObj(createObjDesc_state1("floor0203", create), create, past, inside, house02);
       OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, past, inside, house02);
       OmgObject p2f03 = createObj(createObjDesc_state1("p2f03", create), create, past, inside, anton, floor0203);
       OmgObject p2f04 = createObj(createObjDesc_state1("p2f04", create), create, past, inside, berta, floor0203);
-      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, past, outside);
-      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, past, outside);
+      OmgObject p2f01 = createObj(createObjDesc_state1("p2f01", delete), delete, past, inside);
+      OmgObject p2f02 = createObj(createObjDesc_state1("p2f02", delete), delete, past, inside);
       step.getObjects().add(anton);
       step.getObjects().add(berta);
       step.getObjects().add(house02);
@@ -751,7 +751,7 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(OmgBusinessEvent.INITIAL, new IndexOutOfMaxIndex(1, 4),
               new IndexOutOfMaxIndex(1, 1));
-      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", create), create, past, outside);
+      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", create), create, future, outside);
       OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, future, inside);
       OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", create), create, future, inside, charlie, floor0102);
       step.getObjects().add(floor0102);
@@ -764,7 +764,7 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0401"), new IndexOutOfMaxIndex(2, 4),
               new IndexOutOfMaxIndex(1, 1));
-      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", create), create, past, outside);
+      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", create), create, future, outside);
       OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, present, inside);
       OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", create), create, future, inside, charlie, floor0102);
       step.getObjects().add(floor0102);
@@ -777,7 +777,7 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0402"), new IndexOutOfMaxIndex(3, 4),
               new IndexOutOfMaxIndex(1, 1));
-      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", create), create, past, outside);
+      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", create), create, present, outside);
       OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, past, inside);
       OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", create), create, present, inside, charlie, floor0102);
       step.getObjects().add(floor0102);
@@ -817,13 +817,15 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(OmgBusinessEvent.INITIAL, new IndexOutOfMaxIndex(1, 7),
               new IndexOutOfMaxIndex(1, 1));
-      OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, past, outside);
-      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, future, inside);
-      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, future, outside);
-      OmgObject floor0101 = createObj(createObjDesc_state1("floor0102", delete), delete, future, outside);
-      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, future, outside);
-      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, future, outside);
+      OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, future, outside);
+      OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, future, outside);
+      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, future, inside, charlie, floor0204);
+      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, future, inside);
+      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", delete), delete, future, inside);
+      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, future, inside);
+      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, future, inside);
       step.getObjects().add(charlie);
+      step.getObjects().add(floor0204);
       step.getObjects().add(p2f06);
       step.getObjects().add(p2f05);
       step.getObjects().add(floor0101);
@@ -836,13 +838,15 @@ public class ScenarioSequenceTestDataCreator {
     {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0501"), new IndexOutOfMaxIndex(2, 7),
               new IndexOutOfMaxIndex(1, 1));
-      OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, past, outside);
-      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, present, inside);
-      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, future, outside);
-      OmgObject floor0101 = createObj(createObjDesc_state1("floor0102", delete), delete, future, outside);
-      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, future, outside);
-      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, future, outside);
+      OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, present, outside);
+      OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, present, outside);
+      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, present, inside, charlie, floor0204);
+      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, future, inside);
+      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", delete), delete, future, inside);
+      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, future, inside);
+      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, future, inside);
       step.getObjects().add(charlie);
+      step.getObjects().add(floor0204);
       step.getObjects().add(p2f06);
       step.getObjects().add(p2f05);
       step.getObjects().add(floor0101);
@@ -856,12 +860,14 @@ public class ScenarioSequenceTestDataCreator {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0502"), new IndexOutOfMaxIndex(3, 7),
               new IndexOutOfMaxIndex(1, 4));
       OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, past, outside);
-      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, past, inside);
-      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, present, outside);
-      OmgObject floor0101 = createObj(createObjDesc_state1("floor0102", delete), delete, future, outside);
-      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, future, outside);
-      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, future, outside);
+      OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, past, outside);
+      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, past, inside, charlie, floor0204);
+      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, present, inside);
+      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", delete), delete, future, inside);
+      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, future, inside);
+      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, future, inside);
       step.getObjects().add(charlie);
+      step.getObjects().add(floor0204);
       step.getObjects().add(p2f06);
       step.getObjects().add(p2f05);
       step.getObjects().add(floor0101);
@@ -875,12 +881,14 @@ public class ScenarioSequenceTestDataCreator {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0502"), new IndexOutOfMaxIndex(4, 7),
               new IndexOutOfMaxIndex(2, 4));
       OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, past, outside);
-      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, past, inside);
-      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, past, outside);
-      OmgObject floor0101 = createObj(createObjDesc_state1("floor0102", delete), delete, present, outside);
-      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, future, outside);
-      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, future, outside);
+      OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, past, outside);
+      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, past, inside, charlie, floor0204);
+      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, past, inside);
+      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", delete), delete, present, inside);
+      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, future, inside);
+      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, future, inside);
       step.getObjects().add(charlie);
+      step.getObjects().add(floor0204);
       step.getObjects().add(p2f06);
       step.getObjects().add(p2f05);
       step.getObjects().add(floor0101);
@@ -894,12 +902,14 @@ public class ScenarioSequenceTestDataCreator {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0502"), new IndexOutOfMaxIndex(5, 7),
               new IndexOutOfMaxIndex(3, 4));
       OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, past, outside);
-      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, past, inside);
-      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, past, outside);
-      OmgObject floor0101 = createObj(createObjDesc_state1("floor0102", delete), delete, past, outside);
-      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, present, outside);
-      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, future, outside);
+      OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, past, outside);
+      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, past, inside, charlie, floor0204);
+      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, past, inside);
+      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", delete), delete, past, inside);
+      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, present, inside);
+      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, future, inside);
       step.getObjects().add(charlie);
+      step.getObjects().add(floor0204);
       step.getObjects().add(p2f06);
       step.getObjects().add(p2f05);
       step.getObjects().add(floor0101);
@@ -913,12 +923,14 @@ public class ScenarioSequenceTestDataCreator {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(businessEventMap.get("event0502"), new IndexOutOfMaxIndex(6, 7),
               new IndexOutOfMaxIndex(4, 4));
       OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, past, outside);
-      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, past, inside);
-      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, past, outside);
-      OmgObject floor0101 = createObj(createObjDesc_state1("floor0102", delete), delete, past, outside);
-      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, past, outside);
-      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, present, outside);
+      OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, past, outside);
+      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, past, inside, charlie, floor0204);
+      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, past, inside);
+      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", delete), delete, past, inside);
+      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, past, inside);
+      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, present, inside);
       step.getObjects().add(charlie);
+      step.getObjects().add(floor0204);
       step.getObjects().add(p2f06);
       step.getObjects().add(p2f05);
       step.getObjects().add(floor0101);
@@ -932,12 +944,14 @@ public class ScenarioSequenceTestDataCreator {
       OmgScenarioSequenceStep step = new OmgScenarioSequenceStep(OmgBusinessEvent.FINAL, new IndexOutOfMaxIndex(7, 7),
               new IndexOutOfMaxIndex(1, 1));
       OmgObject charlie = createObj(createObjDesc_state1("charlie", create), create, past, outside);
-      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, past, inside);
-      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, past, outside);
-      OmgObject floor0101 = createObj(createObjDesc_state1("floor0102", delete), delete, past, outside);
-      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, past, outside);
-      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, past, outside);
+      OmgObject floor0204 = createObj(createObjDesc_state1("floor0204", create), create, past, outside);
+      OmgObject p2f06 = createObj(createObjDesc_state1("p2f06", create), create, past, inside, charlie, floor0204);
+      OmgObject p2f05 = createObj(createObjDesc_state1("p2f05", delete), delete, past, inside);
+      OmgObject floor0101 = createObj(createObjDesc_state1("floor0101", delete), delete, past, inside);
+      OmgObject floor0102 = createObj(createObjDesc_state1("floor0102", delete), delete, past, inside);
+      OmgObject house01 = createObj(createObjDesc_state1("house01", delete), delete, past, inside);
       step.getObjects().add(charlie);
+      step.getObjects().add(floor0204);
       step.getObjects().add(p2f06);
       step.getObjects().add(p2f05);
       step.getObjects().add(floor0101);

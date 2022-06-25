@@ -1,5 +1,7 @@
 package org.codemaker.objectmodeldiagramgenerator.domain.entities;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -63,7 +65,7 @@ public class OmgObject {
     OmgObject object = (OmgObject) o;
     return getKey().equals(object.getKey()) && getClazz().equals(
             object.getClazz()) && getAction() == object.getAction() && getEra() == object.getEra() && getOrigin() == object.getOrigin() && getPropertyMap().equals(
-            object.getPropertyMap()) && getDependeeObjects().equals(object.getDependeeObjects());
+            object.getPropertyMap()) && CollectionUtils.isEqualCollection(getDependeeObjects(), object.getDependeeObjects());
   }
 
   @Override

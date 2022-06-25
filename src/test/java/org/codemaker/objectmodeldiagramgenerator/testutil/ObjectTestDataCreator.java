@@ -211,16 +211,8 @@ public class ObjectTestDataCreator {
   public static OmgObject createObj(OmgObjectDescriptor objectDescriptor, OmgAction action, OmgEra era, OmgOrigin origin,
                                     OmgObject... dependeeObjects) {
     OmgObject result = new OmgObject(objectDescriptor.getKey(), createClassMap().get(objectDescriptor.getClassKey()), action, era, origin);
-
-    Map<String, String> propertyMap = objectDescriptor.getPropertyMap();
-    for (String key : propertyMap.keySet()) {
-      String value = propertyMap.get(key);
-      if (!value.equals(PROPERTYVALUE_NOTSET)) {
-        result.getPropertyMap().put(key, value);
-      }
-    }
+    result.getPropertyMap().putAll(objectDescriptor.getPropertyMap());
     result.getDependeeObjects().addAll(new HashSet<>(Arrays.asList(dependeeObjects)));
-
     return result;
   }
 }

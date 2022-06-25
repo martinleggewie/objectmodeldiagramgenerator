@@ -26,6 +26,7 @@ public class ScenarioTestDataCreator {
     descriptor3.getPredecessorKeys().add("scenario2");
     descriptor4.getPredecessorKeys().add("scenario1");
     descriptor5.getPredecessorKeys().add("scenario1");
+    descriptor5.getPredecessorKeys().add("scenario3");
     descriptor5.getPredecessorKeys().add("scenario4");
     Map<String, OmgScenarioDescriptor> result = new HashMap<>();
     result.put(descriptor1.getKey(), descriptor1);
@@ -46,6 +47,7 @@ public class ScenarioTestDataCreator {
     scenario3.getPredecessors().add(scenario2);
     scenario4.getPredecessors().add(scenario1);
     scenario5.getPredecessors().add(scenario1);
+    scenario5.getPredecessors().add(scenario3);
     scenario5.getPredecessors().add(scenario4);
 
     Map<String, OmgScenario> result = new HashMap<>();

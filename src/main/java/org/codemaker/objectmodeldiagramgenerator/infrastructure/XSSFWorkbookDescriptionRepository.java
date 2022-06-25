@@ -130,8 +130,8 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
     while (sheetIterator.hasNext()) {
       Sheet sheet = sheetIterator.next();
       if (sheet.getSheetName().startsWith(SHEETNAME_PREFIX_OBJECTMODELSEQUENCE)) {
-        Set<OmgScenarioSequenceDescriptor> objectSequenceDescriptors = scenarioSequenceDescriptors((XSSFSheet) sheet);
-        result.addAll(objectSequenceDescriptors);
+        Set<OmgScenarioSequenceDescriptor> scenarioSequenceDescriptors = scenarioSequenceDescriptors((XSSFSheet) sheet);
+        result.addAll(scenarioSequenceDescriptors);
       }
     }
 
@@ -167,7 +167,7 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
     List<OmgScenarioSequenceStepDescriptor> scenarioSequenceStepDescriptors = scenarioSequenceStepDescriptors(sheet, maxColumnIndex,
             maxRowIndex, columnIndexDomainDescriptorMap, columnIndexClassDescriptorMap);
 
-    // 6. Now that we have the complete list of scenario sequence steps, we only need to find out which ones belong to which scenarion
+    // 6. Now that we have the complete list of scenario sequence steps, we only need to find out which ones belong to which scenario
     // sequence. How hard can it be?
     Map<String, OmgBusinessEventDescriptor> businessEventDescriptorMap = businessEventDescriptorMap();
     Map<String, OmgScenarioSequenceDescriptor> scenarioKeyScenarioSequenceDescriptorMap = new HashMap<>();

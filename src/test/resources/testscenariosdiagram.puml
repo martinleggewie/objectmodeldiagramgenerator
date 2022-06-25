@@ -41,6 +41,7 @@ scenario2 ---> scenario1
 scenario3 ---> scenario2
 scenario4 ---> scenario1
 scenario5 ---> scenario1
+scenario5 ---> scenario3
 scenario5 ---> scenario4
 
 @enduml
