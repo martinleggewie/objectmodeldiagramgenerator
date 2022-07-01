@@ -1,0 +1,53 @@
+@startuml PersonsAndHouses_scenario1_state2_002_event0101_001
+
+<style>
+    Shadowing false
+    Rectangle {
+        FontSize 18
+        FontStyle bold
+        HorizontalAlignment left
+        LineThickness 0
+        RoundCorner 20
+    }
+    Object {
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor white
+        LineThickness 3
+        RoundCorner 20
+    }
+    Arrow {
+        LineThickness 3
+    }
+    Title {
+        BackgroundColor white
+        FontColor darkblue
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor darkblue
+        LineThickness 2
+        Margin 50
+        Padding 20
+    }
+</style>
+
+title \
+<b>Sequence:</b> PersonsAndHouses\n\
+<b>Scenario:</b> scenario1 - The first house is built, and then Anton moves in to the first floor.\n\
+<b>Transition State:</b> state2 - The second transition state. Here some more text.\n\n\
+<b>Business Event:</b> event0101 - The first house is built with in total two floors. (Step 001 of 001)\n\n\
+Diagram 002 of 003
+
+rectangle "The House Domain" as housedomain #DDDDDD {
+    rectangle "House" as housedomain_houseclass #white {
+        object "<color:black><b>house01</b></color>" as housedomain_houseclass_house01 #palegreen {
+            <color:black>address = "First Street 1"</color>
+            <color:black>name = "The First House"</color>
+        }
+    }
+}
+
+
+@enduml

@@ -173,7 +173,7 @@ public class ScenarioSequenceService {
     return result;
   }
 
-  Set<HelperObject> relevantOutsideHelperObjects(Set<HelperObject> insideHelperObjects, Set<HelperObject> outsideHelperObjects) {
+  private Set<HelperObject> relevantOutsideHelperObjects(Set<HelperObject> insideHelperObjects, Set<HelperObject> outsideHelperObjects) {
     Set<HelperObject> result = new HashSet<>();
 
     for (HelperObject insideHelperObject : insideHelperObjects) {

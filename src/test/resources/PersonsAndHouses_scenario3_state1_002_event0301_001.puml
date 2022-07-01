@@ -1,0 +1,113 @@
+@startuml PersonsAndHouses_scenario3_state1_002_event0301_001
+
+<style>
+    Shadowing false
+    Rectangle {
+        FontSize 18
+        FontStyle bold
+        HorizontalAlignment left
+        LineThickness 0
+        RoundCorner 20
+    }
+    Object {
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor white
+        LineThickness 3
+        RoundCorner 20
+    }
+    Arrow {
+        LineThickness 3
+    }
+    Title {
+        BackgroundColor white
+        FontColor darkblue
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor darkblue
+        LineThickness 2
+        Margin 50
+        Padding 20
+    }
+</style>
+
+title \
+<b>Sequence:</b> PersonsAndHouses\n\
+<b>Scenario:</b> scenario3 - The second house is built, and Anton and Berta move from first house to second house, third floor.\n\
+<b>Transition State:</b> state1 - The first transition state. Let's add some more text to force line breaks in diagrams.\n\n\
+<b>Business Event:</b> event0301 - The second house is built with in total four floors. (Step 001 of 005)\n\n\
+Diagram 002 of 011
+
+rectangle "The House Domain" as housedomain #DDDDDD {
+    rectangle "Floor" as housedomain_floorclass #white {
+        object "<color:white><b>floor0201</b></color>" as housedomain_floorclass_floor0201 #white {
+            <color:white>house_fk = "house02"</color>
+            <color:white>name = "The First Floor"</color>
+        }
+        object "<color:white><b>floor0202</b></color>" as housedomain_floorclass_floor0202 #white {
+            <color:white>house_fk = "house02"</color>
+            <color:white>name = "The Second Floor"</color>
+        }
+        object "<color:white><b>floor0203</b></color>" as housedomain_floorclass_floor0203 #white {
+            <color:white>house_fk = "house02"</color>
+            <color:white>name = "The Third Floor"</color>
+        }
+        object "<color:white><b>floor0204</b></color>" as housedomain_floorclass_floor0204 #white {
+            <color:white>house_fk = "house02"</color>
+            <color:white>name = "The Fourth Floor"</color>
+        }
+    }
+    rectangle "House" as housedomain_houseclass #white {
+        object "<color:black><b>house02</b></color>" as housedomain_houseclass_house02 #palegreen {
+            <color:black>address = "Second Street 2"</color>
+            <color:black>name = "The Second House"</color>
+        }
+    }
+}
+rectangle "The Person Domain" as persondomain #DDDDDD {
+    rectangle "Person-to-Floor Relation" as persondomain_p2fclass #white {
+        object "<color:white><b>p2f01</b></color>" as persondomain_p2fclass_p2f01 #white {
+            <color:white>floor_fk = "NA"</color>
+            <color:white>person_fk = "NA"</color>
+            <color:white>type = "NA"</color>
+        }
+        object "<color:white><b>p2f02</b></color>" as persondomain_p2fclass_p2f02 #white {
+            <color:white>floor_fk = "NA"</color>
+            <color:white>person_fk = "NA"</color>
+            <color:white>type = "NA"</color>
+        }
+        object "<color:white><b>p2f03</b></color>" as persondomain_p2fclass_p2f03 #white {
+            <color:white>floor_fk = "floor0203"</color>
+            <color:white>person_fk = "anton"</color>
+            <color:white>type = "tenant"</color>
+        }
+        object "<color:white><b>p2f04</b></color>" as persondomain_p2fclass_p2f04 #white {
+            <color:white>floor_fk = "floor0203"</color>
+            <color:white>person_fk = "berta"</color>
+            <color:white>type = "tenant"</color>
+        }
+    }
+    rectangle "Person" as persondomain_personclass #white {
+        object "<color:white><b>anton</b></color>" as persondomain_personclass_anton #white {
+            <color:white>age = "23"</color>
+            <color:white>name = "Anton A"</color>
+        }
+        object "<color:white><b>berta</b></color>" as persondomain_personclass_berta #white {
+            <color:white>age = "34"</color>
+            <color:white>name = "Berta B"</color>
+        }
+    }
+}
+
+housedomain_floorclass_floor0201 --[hidden]--> housedomain_houseclass_house02
+housedomain_floorclass_floor0202 --[hidden]--> housedomain_houseclass_house02
+housedomain_floorclass_floor0203 --[hidden]--> housedomain_houseclass_house02
+housedomain_floorclass_floor0204 --[hidden]--> housedomain_houseclass_house02
+persondomain_p2fclass_p2f03 --[hidden]--> housedomain_floorclass_floor0203
+persondomain_p2fclass_p2f03 --[hidden]--> persondomain_personclass_anton
+persondomain_p2fclass_p2f04 --[hidden]--> housedomain_floorclass_floor0203
+persondomain_p2fclass_p2f04 --[hidden]--> persondomain_personclass_berta
+
+@enduml

@@ -1,0 +1,82 @@
+@startuml PersonsAndHouses_scenario2_state1_004_event0203_001
+
+<style>
+    Shadowing false
+    Rectangle {
+        FontSize 18
+        FontStyle bold
+        HorizontalAlignment left
+        LineThickness 0
+        RoundCorner 20
+    }
+    Object {
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor white
+        LineThickness 3
+        RoundCorner 20
+    }
+    Arrow {
+        LineThickness 3
+    }
+    Title {
+        BackgroundColor white
+        FontColor darkblue
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor darkblue
+        LineThickness 2
+        Margin 50
+        Padding 20
+    }
+</style>
+
+title \
+<b>Sequence:</b> PersonsAndHouses\n\
+<b>Scenario:</b> scenario2 - Anton marries Berta, and Berta moves into the first house to the first floor as well.\n\
+<b>Transition State:</b> state1 - The first transition state. Let's add some more text to force line breaks in diagrams.\n\n\
+<b>Business Event:</b> event0203 - Berta moves in to first house, first floor, as well. (Step 001 of 001)\n\n\
+Diagram 004 of 005
+
+rectangle "The House Domain" as housedomain #DDDDDD {
+    rectangle "Floor" as housedomain_floorclass #white {
+        object "<color:black><b>floor0101</b></color>" as housedomain_floorclass_floor0101 #grey {
+            <color:black>house_fk = "house01"</color>
+            <color:black>name = "The First Floor"</color>
+        }
+    }
+}
+rectangle "The Person Domain" as persondomain #DDDDDD {
+    rectangle "Person-to-Floor Relation" as persondomain_p2fclass #white {
+        object "<color:black><b>p2f02</b></color>" as persondomain_p2fclass_p2f02 #palegreen {
+            <color:black>floor_fk = "floor0101"</color>
+            <color:black>person_fk = "berta"</color>
+            <color:black>type = "tenant"</color>
+        }
+    }
+    rectangle "Person-to-Person Relation" as persondomain_p2pclass #white {
+        object "<color:black><b>p2p01</b></color>" as persondomain_p2pclass_p2p01 #cornsilk {
+            <color:black>person_fk = "(anton, berta)"</color>
+            <color:black>type = "marriage"</color>
+        }
+    }
+    rectangle "Person" as persondomain_personclass #white {
+        object "<color:black><b>anton</b></color>" as persondomain_personclass_anton #grey {
+            <color:black>age = "23"</color>
+            <color:black>name = "Anton A"</color>
+        }
+        object "<color:black><b>berta</b></color>" as persondomain_personclass_berta #cornsilk {
+            <color:black>age = "34"</color>
+            <color:black>name = "Berta B"</color>
+        }
+    }
+}
+
+persondomain_p2fclass_p2f02 ----> housedomain_floorclass_floor0101 #green
+persondomain_p2fclass_p2f02 ----> persondomain_personclass_berta #green
+persondomain_p2pclass_p2p01 ----> persondomain_personclass_anton #black
+persondomain_p2pclass_p2p01 ----> persondomain_personclass_berta #black
+
+@enduml

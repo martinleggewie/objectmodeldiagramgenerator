@@ -1,0 +1,113 @@
+@startuml PersonsAndHouses_scenario3_state1_011_final
+
+<style>
+    Shadowing false
+    Rectangle {
+        FontSize 18
+        FontStyle bold
+        HorizontalAlignment left
+        LineThickness 0
+        RoundCorner 20
+    }
+    Object {
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor white
+        LineThickness 3
+        RoundCorner 20
+    }
+    Arrow {
+        LineThickness 3
+    }
+    Title {
+        BackgroundColor white
+        FontColor darkblue
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor darkblue
+        LineThickness 2
+        Margin 50
+        Padding 20
+    }
+</style>
+
+title \
+<b>Sequence:</b> PersonsAndHouses\n\
+<b>Scenario:</b> scenario3 - The second house is built, and Anton and Berta move from first house to second house, third floor.\n\
+<b>Transition State:</b> state1 - The first transition state. Let's add some more text to force line breaks in diagrams.\n\n\
+<b>Final object model</b>\n\n\
+Diagram 011 of 011
+
+rectangle "The House Domain" as housedomain #DDDDDD {
+    rectangle "Floor" as housedomain_floorclass #white {
+        object "<color:black><b>floor0201</b></color>" as housedomain_floorclass_floor0201 #cornsilk {
+            <color:black>house_fk = "house02"</color>
+            <color:black>name = "The First Floor"</color>
+        }
+        object "<color:black><b>floor0202</b></color>" as housedomain_floorclass_floor0202 #cornsilk {
+            <color:black>house_fk = "house02"</color>
+            <color:black>name = "The Second Floor"</color>
+        }
+        object "<color:black><b>floor0203</b></color>" as housedomain_floorclass_floor0203 #cornsilk {
+            <color:black>house_fk = "house02"</color>
+            <color:black>name = "The Third Floor"</color>
+        }
+        object "<color:black><b>floor0204</b></color>" as housedomain_floorclass_floor0204 #cornsilk {
+            <color:black>house_fk = "house02"</color>
+            <color:black>name = "The Fourth Floor"</color>
+        }
+    }
+    rectangle "House" as housedomain_houseclass #white {
+        object "<color:black><b>house02</b></color>" as housedomain_houseclass_house02 #cornsilk {
+            <color:black>address = "Second Street 2"</color>
+            <color:black>name = "The Second House"</color>
+        }
+    }
+}
+rectangle "The Person Domain" as persondomain #DDDDDD {
+    rectangle "Person-to-Floor Relation" as persondomain_p2fclass #white {
+        object "<color:black><b>p2f01</b></color>" as persondomain_p2fclass_p2f01 #darkred {
+            <color:black>floor_fk = "NA"</color>
+            <color:black>person_fk = "NA"</color>
+            <color:black>type = "NA"</color>
+        }
+        object "<color:black><b>p2f02</b></color>" as persondomain_p2fclass_p2f02 #darkred {
+            <color:black>floor_fk = "NA"</color>
+            <color:black>person_fk = "NA"</color>
+            <color:black>type = "NA"</color>
+        }
+        object "<color:black><b>p2f03</b></color>" as persondomain_p2fclass_p2f03 #cornsilk {
+            <color:black>floor_fk = "floor0203"</color>
+            <color:black>person_fk = "anton"</color>
+            <color:black>type = "tenant"</color>
+        }
+        object "<color:black><b>p2f04</b></color>" as persondomain_p2fclass_p2f04 #cornsilk {
+            <color:black>floor_fk = "floor0203"</color>
+            <color:black>person_fk = "berta"</color>
+            <color:black>type = "tenant"</color>
+        }
+    }
+    rectangle "Person" as persondomain_personclass #white {
+        object "<color:black><b>anton</b></color>" as persondomain_personclass_anton #grey {
+            <color:black>age = "23"</color>
+            <color:black>name = "Anton A"</color>
+        }
+        object "<color:black><b>berta</b></color>" as persondomain_personclass_berta #grey {
+            <color:black>age = "34"</color>
+            <color:black>name = "Berta B"</color>
+        }
+    }
+}
+
+housedomain_floorclass_floor0201 ----> housedomain_houseclass_house02 #black
+housedomain_floorclass_floor0202 ----> housedomain_houseclass_house02 #black
+housedomain_floorclass_floor0203 ----> housedomain_houseclass_house02 #black
+housedomain_floorclass_floor0204 ----> housedomain_houseclass_house02 #black
+persondomain_p2fclass_p2f03 ----> housedomain_floorclass_floor0203 #black
+persondomain_p2fclass_p2f03 ----> persondomain_personclass_anton #black
+persondomain_p2fclass_p2f04 ----> housedomain_floorclass_floor0203 #black
+persondomain_p2fclass_p2f04 ----> persondomain_personclass_berta #black
+
+@enduml

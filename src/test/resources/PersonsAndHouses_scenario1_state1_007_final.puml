@@ -1,0 +1,82 @@
+@startuml PersonsAndHouses_scenario1_state1_007_final
+
+<style>
+    Shadowing false
+    Rectangle {
+        FontSize 18
+        FontStyle bold
+        HorizontalAlignment left
+        LineThickness 0
+        RoundCorner 20
+    }
+    Object {
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor white
+        LineThickness 3
+        RoundCorner 20
+    }
+    Arrow {
+        LineThickness 3
+    }
+    Title {
+        BackgroundColor white
+        FontColor darkblue
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor darkblue
+        LineThickness 2
+        Margin 50
+        Padding 20
+    }
+</style>
+
+title \
+<b>Sequence:</b> PersonsAndHouses\n\
+<b>Scenario:</b> scenario1 - The first house is built, and then Anton moves in to the first floor.\n\
+<b>Transition State:</b> state1 - The first transition state. Let's add some more text to force line breaks in diagrams.\n\n\
+<b>Final object model</b>\n\n\
+Diagram 007 of 007
+
+rectangle "The House Domain" as housedomain #DDDDDD {
+    rectangle "Floor" as housedomain_floorclass #white {
+        object "<color:black><b>floor0101</b></color>" as housedomain_floorclass_floor0101 #cornsilk {
+            <color:black>house_fk = "house01"</color>
+            <color:black>name = "The First Floor"</color>
+        }
+        object "<color:black><b>floor0102</b></color>" as housedomain_floorclass_floor0102 #cornsilk {
+            <color:black>house_fk = "house01"</color>
+            <color:black>name = "The Second Floor"</color>
+        }
+    }
+    rectangle "House" as housedomain_houseclass #white {
+        object "<color:black><b>house01</b></color>" as housedomain_houseclass_house01 #cornsilk {
+            <color:black>address = "First Street 1"</color>
+            <color:black>name = "The First House"</color>
+        }
+    }
+}
+rectangle "The Person Domain" as persondomain #DDDDDD {
+    rectangle "Person-to-Floor Relation" as persondomain_p2fclass #white {
+        object "<color:black><b>p2f01</b></color>" as persondomain_p2fclass_p2f01 #cornsilk {
+            <color:black>floor_fk = "floor0101"</color>
+            <color:black>person_fk = "anton"</color>
+            <color:black>type = "tenant"</color>
+        }
+    }
+    rectangle "Person" as persondomain_personclass #white {
+        object "<color:black><b>anton</b></color>" as persondomain_personclass_anton #cornsilk {
+            <color:black>age = "23"</color>
+            <color:black>name = "Anton A"</color>
+        }
+    }
+}
+
+housedomain_floorclass_floor0101 ----> housedomain_houseclass_house01 #black
+housedomain_floorclass_floor0102 ----> housedomain_houseclass_house01 #black
+persondomain_p2fclass_p2f01 ----> housedomain_floorclass_floor0101 #black
+persondomain_p2fclass_p2f01 ----> persondomain_personclass_anton #black
+
+@enduml
