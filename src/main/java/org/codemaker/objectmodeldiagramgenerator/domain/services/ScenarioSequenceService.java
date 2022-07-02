@@ -54,11 +54,34 @@ public class ScenarioSequenceService {
   public Set<OmgScenarioSequence> findScenarioSequences() {
     Set<OmgScenarioSequence> result = new HashSet<>();
 
-    Set<OmgScenarioSequenceDescriptor> scenSeqDescriptors = descriptorRepository.findScenarioSequenceDescriptors();
+    Set<OmgScenarioSequenceDescriptor> allScenSeqDescriptors = descriptorRepository.findScenarioSequenceDescriptors();
 
-    // Pass 1: As a preparation step, iterate over all steps from all scenario sequence descriptods, collect all the somehow defined or
-    // referenced information, and store them as helper objects for later use.
-    Set<HelperObject> helperObjects = new HashSet<>();
+    // We process all scenario sequence descriptors grouped by their transition state. Otherwise we would have multiple objects which
+    // completely look the same, just because they were defined identically on purpose, but for different transition states.
+    for (String transitionStateKey : transitionStateService.findTransitionStateMap().keySet()) {
+      Set<OmgScenarioSequenceDescriptor> scenSeqDescriptors = allScenSeqDescriptors.stream()
+              .filter(d -> d.getTransitionStateDescriptorKey().equals(transitionStateKey)).collect(Collectors.toSet());
+
+      // Fetch all the information available from all scenario sequence descriptors, do some post-processing, and then store all of it in a
+      // set of helper objects. This set is the basis for all the coming business logic (besides the information from the other services).
+      Set<HelperObject> allHelperObjects = allHelperObjects(scenSeqDescriptors);
+
+      // Now do the real work. For each defined scenario sequence create all the steps plus the initial and final step.
+      for (OmgScenarioSequenceDescriptor scenSeqDescriptor : scenSeqDescriptors) {
+        result.add(findScenarioSequence(scenSeqDescriptor, allHelperObjects));
+      }
+    }
+
+    return result;
+  }
+
+  private Set<HelperObject> allHelperObjects(Set<OmgScenarioSequenceDescriptor> scenSeqDescriptors) {
+    // Collect all the information stored in the scenario sequence descriptors, do some post-processing, and store them in a set of
+    // helper objects.
+    Set<HelperObject> result = new HashSet<>();
+
+    // 1. Collect all the information which is directly accessible in the different scenario sequence descriptors. In addition already
+    // calculate the different index values.
     for (OmgScenarioSequenceDescriptor scenSeqDescriptor : scenSeqDescriptors) {
       OmgTransitionState transitionState = transitionStateService.findTransitionStateMap()
               .get(scenSeqDescriptor.getTransitionStateDescriptorKey());
@@ -70,20 +93,29 @@ public class ScenarioSequenceService {
         for (OmgObjectDescriptor objDescriptor : scenSeqStepDesc.getObjectDescriptors()) {
           int scenarioStepIndex = i + 2; // +1 because the index counting starts at 1, and another +1 because of the initial step
           HelperObject helperObject = new HelperObject(objDescriptor, action, transitionState, scenario, scenarioStepIndex);
-          helperObjects.add(helperObject);
+          result.add(helperObject);
         }
       }
     }
 
-    // Pass 2: Now do the real work. For each defined scenario sequence create all the steps plus the initial and final step.
-    for (OmgScenarioSequenceDescriptor scenSeqDescriptor : scenSeqDescriptors) {
-      result.add(findScenarioSequence(scenSeqDescriptor, helperObjects));
+    // 2. Do some more post-processing: For all the helper objects which represent an object which is to be deleted, we need to collect
+    // the properties from the original object when it was created.
+    for (HelperObject toBeDeletedHelperObject : result.stream().filter(o -> o.action.equals(delete)).collect(Collectors.toSet())) {
+      Set<HelperObject> originalHelperObjects = result.stream().filter(o -> o.action.equals(create))
+              .filter(o -> o.key().equals(toBeDeletedHelperObject.key())).collect(Collectors.toSet());
+      if (originalHelperObjects.size() == 1) {
+        HelperObject originalHelperObject = originalHelperObjects.stream().findFirst().get();
+        toBeDeletedHelperObject.setOriginalObjectDescriptor(originalHelperObject.objectDescriptor);
+      } else {
+        throw new RuntimeException(String.format("Error! Could not find exactly one original object for the one which is to be deleted: %s",
+                toBeDeletedHelperObject));
+      }
     }
 
     return result;
   }
 
-  private OmgScenarioSequence findScenarioSequence(OmgScenarioSequenceDescriptor scenSeqDescriptor, Set<HelperObject> helperObjects) {
+  private OmgScenarioSequence findScenarioSequence(OmgScenarioSequenceDescriptor scenSeqDescriptor, Set<HelperObject> allHelperObjects) {
     OmgTransitionState transitionState = transitionStateService.findTransitionStateMap()
             .get(scenSeqDescriptor.getTransitionStateDescriptorKey());
     OmgScenario scenario = businessEventService.findBusinessEventMap()
@@ -91,22 +123,17 @@ public class ScenarioSequenceService {
 
     // Find all the helper objects which represent objects which are explicitly defined (either as being created or deleted) in the
     // current scenario.
-    Set<HelperObject> insideHelperObjects = helperObjects.stream()
-            .filter(o -> o.transitionState.equals(transitionState) && o.scenario.equals(scenario)).collect(Collectors.toSet());
+    Set<HelperObject> insideHelperObjects = allHelperObjects.stream().filter(o -> o.scenario.equals(scenario)).collect(Collectors.toSet());
 
     // In addition to the objects which are explicitly defined in this scenario, we now have to find all the other objects which are
     // defined elsewhere and to which the explicitly defined objects could have a dependency. For this we transitively collect all the
     // other scenarios to which the current scenario depend on, and then collect all the helper objects from these other scenarios.
-    Set<OmgScenario> transitiveDependeeScenarios = findTransitiveDependees(scenario, new HashSet<>());
-    Set<HelperObject> allOutsideHelperObjects = helperObjects.stream()
-            .filter(o -> o.transitionState.equals(transitionState) && transitiveDependeeScenarios.contains(o.scenario))
+    Set<OmgScenario> transitiveDependeeScenarios = findTransitiveDependeeScenarios(scenario, new HashSet<>());
+    Set<HelperObject> allOutsideHelperObjects = allHelperObjects.stream().filter(o -> transitiveDependeeScenarios.contains(o.scenario))
             .collect(Collectors.toSet());
 
     // So far we have collected all the helper objects which could become relevant for the current scenario sequence. But we still need
-    // to narrow the set of all these helper objects down because a) maybe some of the helper objects are being referenced at all,
-    // and b) there might still be conflicts like a reference leads to a deleted object, or the reference leads to an object which is
-    // only defined later in the sequence. I think I could have also modeled all of this in the two sets filtered out of the complete
-    // set of helper objects, but I am not sure if the resulting code would still be comprehensible later.
+    // to narrow the set of all these helper objects down because maybe some of the helper objects are not being referenced at all.
     Set<HelperObject> outsideHelperObjects = relevantOutsideHelperObjects(insideHelperObjects, allOutsideHelperObjects);
 
     // Now that we have collected all the needed objects for the given scenario, we can start creating the scenario and its steps. In
@@ -177,47 +204,43 @@ public class ScenarioSequenceService {
     Set<HelperObject> result = new HashSet<>();
 
     for (HelperObject insideHelperObject : insideHelperObjects) {
-      // Dependees are only relevant when the current inside object is about to be created. If the inside object is to be deleted, then we
-      // don't care of its dependees anymore.
-      if (insideHelperObject.action.equals(create)) {
-        for (String dependeeKey : insideHelperObject.dependeeKeys()) {
-          // First check if the current dependee belongs to the inside objects. For this the dependee object must have the correct key,
-          // must have been created, and it must have been defined in an earlier step.
-          Set<HelperObject> insideDependeeHelperObjects = insideHelperObjects.stream()
-                  .filter(o -> o.key().equals(dependeeKey) && o.action.equals(create) && o.stepIndex < insideHelperObject.stepIndex)
-                  .collect(Collectors.toSet());
-          if (insideDependeeHelperObjects.size() == 1) {
-            continue;
-          }
-
-          // Ok, the dependee is not part of the inside objects. That means it must have been defined in one of the outside objects.
-          Set<HelperObject> outsideDependeeHelperObjects = outsideHelperObjects.stream()
-                  .filter(o -> o.key().equals(dependeeKey) && o.action.equals(create)).collect(Collectors.toSet());
-          if (outsideDependeeHelperObjects.size() == 0) {
-            throw new RuntimeException(
-                    String.format("Error! Could not find any valid dependee object with foreign key \"%s\": %s", dependeeKey,
-                            insideHelperObject));
-          }
-          if (outsideDependeeHelperObjects.size() > 1) {
-            throw new RuntimeException(
-                    String.format("Error! Found more than one valid dependee object with foreign key \"%s\": %s", dependeeKey,
-                            insideHelperObject));
-          }
-          result.addAll(outsideDependeeHelperObjects);
+      for (String dependeeKey : insideHelperObject.dependeeKeys()) {
+        // First check if the current dependee belongs to the inside objects. For this the dependee object must have the correct key,
+        // must have been created, and it must have been defined in an earlier step.
+        Set<HelperObject> insideDependeeHelperObjects = insideHelperObjects.stream()
+                .filter(o -> o.key().equals(dependeeKey) && o.action.equals(create) && o.stepIndex < insideHelperObject.stepIndex)
+                .collect(Collectors.toSet());
+        if (insideDependeeHelperObjects.size() == 1) {
+          continue;
         }
+
+        // Ok, the dependee is not part of the inside objects. That means it must have been defined in one of the outside objects.
+        Set<HelperObject> outsideDependeeHelperObjects = outsideHelperObjects.stream()
+                .filter(o -> o.key().equals(dependeeKey) && o.action.equals(create)).collect(Collectors.toSet());
+        if (outsideDependeeHelperObjects.size() == 0) {
+          throw new RuntimeException(
+                  String.format("Error! Could not find any valid dependee object with foreign key \"%s\": %s", dependeeKey,
+                          insideHelperObject));
+        }
+        if (outsideDependeeHelperObjects.size() > 1) {
+          throw new RuntimeException(
+                  String.format("Error! Found more than one valid dependee object with foreign key \"%s\": %s", dependeeKey,
+                          insideHelperObject));
+        }
+        result.addAll(outsideDependeeHelperObjects);
       }
     }
     return result;
   }
 
-  private Set<OmgScenario> findTransitiveDependees(OmgScenario scenario, Set<OmgScenario> scenariosFoundSoFar) {
+  private Set<OmgScenario> findTransitiveDependeeScenarios(OmgScenario scenario, Set<OmgScenario> scenariosFoundSoFar) {
     if (scenario.getPredecessors().size() == 0) {
       return scenariosFoundSoFar;
     } else {
       Set<OmgScenario> result = null;
       for (OmgScenario predecessorScenario : scenario.getPredecessors()) {
         scenariosFoundSoFar.add(predecessorScenario);
-        result = findTransitiveDependees(predecessorScenario, scenariosFoundSoFar);
+        result = findTransitiveDependeeScenarios(predecessorScenario, scenariosFoundSoFar);
       }
       return result;
     }
@@ -231,23 +254,22 @@ public class ScenarioSequenceService {
 
     Map<HelperObject, OmgObject> helperObjectObjectMap = new HashMap<>();
 
-    // 1. Create all the objects, but don't care for the dependee objects for the moment.
+    // 1. Create all the objects, but don't care for the properties and the dependee objects for the moment.
     for (HelperObject insideHelperObject : insideHelperObjects) {
       OmgClass clazz = classMap.get(insideHelperObject.classKey());
       OmgObject insideObject = new OmgObject(insideHelperObject.key(), clazz, insideHelperObject.action, era, inside);
-      insideObject.getPropertyMap().putAll(insideHelperObject.objectDescriptor.getPropertyMap());
+      insideObject.getPropertyMap().putAll(insideHelperObject.propertyMap());
       helperObjectObjectMap.put(insideHelperObject, insideObject);
     }
     for (HelperObject outsideHelperObject : outsideHelperObjects) {
       OmgClass clazz = classMap.get(outsideHelperObject.classKey());
       OmgObject outsideObject = new OmgObject(outsideHelperObject.key(), clazz, outsideHelperObject.action, era, outside);
-      outsideObject.getPropertyMap().putAll(outsideHelperObject.objectDescriptor.getPropertyMap());
+      outsideObject.getPropertyMap().putAll(outsideHelperObject.propertyMap());
       helperObjectObjectMap.put(outsideHelperObject, outsideObject);
     }
 
-    // 2. Now that we have created all the objects, we can take care of the dependee objects. We only need to take care of the objects
-    // which are inside and are being created.
-    for (HelperObject insideHelperObject : insideHelperObjects.stream().filter(o -> o.action.equals(create)).collect(Collectors.toSet())) {
+    // 2. Now that we have created all the objects, we can take care of the dependee objects. We start with the inside helper objects.
+    for (HelperObject insideHelperObject : insideHelperObjects) {
       OmgObject insideObject = helperObjectObjectMap.get(insideHelperObject);
       for (String dependeeKey : insideHelperObject.dependeeKeys()) {
         Set<OmgObject> dependeeObjects = helperObjectObjectMap.values().stream()
@@ -263,7 +285,25 @@ public class ScenarioSequenceService {
       }
     }
 
-    // 3. We have collected and connected all the objects and have them still stored in the helperObjectObjectMap. The only thing which
+    // 3. We continue with the outside objects and set the dependee objects, but only in a special situation: We only set the dependee
+    // objects for an outside object if this very outside object is about to be deleted via a corresponding inside object. This is needed
+    // to keep the two objects (the deleted inside and the created outside) consistent in the diagrams.
+    for (HelperObject outsideHelperObject : outsideHelperObjects) {
+      // Check if the outside helper object is about to be deleted in the inside. Only then do we need to take care of the dependees.
+      Set<HelperObject> toBeDeletedInsideHelperObjects = insideHelperObjects.stream().filter(o -> o.action.equals(delete))
+              .filter(o -> o.key().equals(outsideHelperObject.key())).collect(Collectors.toSet());
+      if (toBeDeletedInsideHelperObjects.size() == 1) {
+        HelperObject toBeDeletedInsideHelperObject = toBeDeletedInsideHelperObjects.stream().findFirst().get();
+        OmgObject toBeDeletedInsideObject = helperObjectObjectMap.get(toBeDeletedInsideHelperObject);
+        OmgObject outsideObject = helperObjectObjectMap.get(outsideHelperObject);
+        outsideObject.getDependeeObjects().addAll(toBeDeletedInsideObject.getDependeeObjects());
+      } else if (toBeDeletedInsideHelperObjects.size() > 1) {
+        throw new RuntimeException(String.format("Error! Found more than one to-be-deleted inside objects for outside helper object: %s",
+                outsideHelperObject));
+      }
+    }
+
+    // 4. We have collected and connected all the objects and have them still stored in the helperObjectObjectMap. The only thing which
     // is left is to add all these objects to the current scenario sequence step.
     result.getObjects().addAll(helperObjectObjectMap.values());
     return result;
@@ -327,7 +367,7 @@ public class ScenarioSequenceService {
     objectHelperObjectMap.putAll(objectHelperObjectMap(presentOutsideHelperObjects, classMap, present, outside));
     objectHelperObjectMap.putAll(objectHelperObjectMap(futureOutsideHelperObjects, classMap, future, outside));
 
-    // But even with the dependees set correctly, we are already sure that our current step needs to have all the created objects.
+    // But even without the dependees set correctly, we are already sure that our current step needs to have all the created objects.
     // Therefore we can already add all of them to the resulting scenario sequence step.
     result.getObjects().addAll(objectHelperObjectMap.keySet());
 
@@ -337,12 +377,10 @@ public class ScenarioSequenceService {
     // keys are the OmgObjects, and I had changed them by adding dependee objects to them already while I was still looking for more
     // dependee objects).
     Map<OmgObject, Set<OmgObject>> objectDependeeObjectsMap = new HashMap<>();
-    for (OmgObject object : result.getObjects()) {
-      if (!(object.getAction().equals(create) && object.getOrigin().equals(inside))) {
-        // We only need to find dependee objects for objects which are inside and created.
-        continue;
-      }
-      HelperObject helperObject = objectHelperObjectMap.get(object);
+
+    // Pass 1: We process the inside objects first and search for their dependee objects.
+    for (OmgObject insideObject : result.getObjects().stream().filter(o -> o.getOrigin().equals(inside)).collect(Collectors.toSet())) {
+      HelperObject helperObject = objectHelperObjectMap.get(insideObject);
       for (String dependeeKey : helperObject.dependeeKeys()) {
         boolean dependeeFound = false;
         OmgObject dependeeObject = null;
@@ -371,12 +409,34 @@ public class ScenarioSequenceService {
           throw new RuntimeException(String.format(
                   "Error! Could not find exactly one valid dependee object with key \"%s\" while trying to set dependee objects for " +
                           "object %s in step %s",
-                  dependeeKey, object, result));
+                  dependeeKey, insideObject, result));
         }
 
         // Ok, the current potential dependee object really is a match. We store it for later use.
-        Set<OmgObject> dependeeObjects = objectDependeeObjectsMap.computeIfAbsent(object, s -> new HashSet<>());
+        Set<OmgObject> dependeeObjects = objectDependeeObjectsMap.computeIfAbsent(insideObject, s -> new HashSet<>());
         dependeeObjects.add(dependeeObject);
+      }
+    }
+
+    // Pass 2: We process all the outside objects and set their dependees if a) they are to be created, and b) if there is an inside
+    // object which is to be deleted.
+    for (OmgObject outsideCreatedObject : result.getObjects().stream().filter(o -> o.getOrigin().equals(outside))
+            .filter(o -> o.getAction().equals(create)).collect(Collectors.toSet())) {
+      Set<OmgObject> insideDeletedObjects = result.getObjects().stream().filter(o -> o.getOrigin().equals(inside))
+              .filter(o -> o.getAction().equals(delete)).filter(o -> o.getKey().equals(outsideCreatedObject.getKey()))
+              .collect(Collectors.toSet());
+      if (insideDeletedObjects.size() == 1) {
+        // We found one object which is to be deleted inside which matches to the currently outside to be created object. In this case we
+        // need to copy all the dependee objects from the inside to be deleted object to the list of dependees of the current outside to
+        // be created object. We store this list for later use.
+        OmgObject insideDeletedObject = insideDeletedObjects.stream().findFirst().get();
+        Set<OmgObject> insideDeletedObjectDependees = objectDependeeObjectsMap.computeIfAbsent(insideDeletedObject, s -> new HashSet<>());
+        Set<OmgObject> outsideCreatedObjectDependees = objectDependeeObjectsMap.computeIfAbsent(outsideCreatedObject, s -> new HashSet<>());
+        outsideCreatedObjectDependees.addAll(insideDeletedObjectDependees);
+      } else if (insideDeletedObjects.size() > 1) {
+        throw new RuntimeException(
+                String.format("Error! Found more than one to-be-deleted inside objects for outside to-be-created object: %s",
+                        outsideCreatedObject));
       }
     }
 
@@ -393,7 +453,7 @@ public class ScenarioSequenceService {
     Map<OmgObject, HelperObject> result = new HashMap<>();
     for (HelperObject helperObject : helperObjects) {
       OmgObject object = new OmgObject(helperObject.key(), classMap.get(helperObject.classKey()), helperObject.action, era, origin);
-      object.getPropertyMap().putAll(helperObject.objectDescriptor.getPropertyMap());
+      object.getPropertyMap().putAll(helperObject.propertyMap());
       result.put(object, helperObject);
     }
     return result;
@@ -432,6 +492,8 @@ public class ScenarioSequenceService {
      */
     final int stepIndex;
 
+    OmgObjectDescriptor originalObjectDescriptor;
+
     public HelperObject(OmgObjectDescriptor objectDescriptor, OmgAction action, OmgTransitionState transitionState, OmgScenario scenario,
                         int stepIndex) {
       this.objectDescriptor = objectDescriptor;
@@ -439,6 +501,10 @@ public class ScenarioSequenceService {
       this.transitionState = transitionState;
       this.scenario = scenario;
       this.stepIndex = stepIndex;
+    }
+
+    void setOriginalObjectDescriptor(OmgObjectDescriptor originalObjectDescriptor) {
+      this.originalObjectDescriptor = originalObjectDescriptor;
     }
 
     public String key() {
@@ -450,7 +516,19 @@ public class ScenarioSequenceService {
     }
 
     public Set<String> dependeeKeys() {
-      return objectDescriptor.getDependeeKeys();
+      if (action.equals(create)) {
+        return objectDescriptor.getDependeeKeys();
+      } else {
+        return originalObjectDescriptor.getDependeeKeys();
+      }
+    }
+
+    public Map<String, String> propertyMap() {
+      if (action.equals(create)) {
+        return objectDescriptor.getPropertyMap();
+      } else {
+        return originalObjectDescriptor.getPropertyMap();
+      }
     }
 
     @Override

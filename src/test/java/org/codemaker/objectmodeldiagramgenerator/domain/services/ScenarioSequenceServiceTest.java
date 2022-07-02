@@ -3,19 +3,24 @@ package org.codemaker.objectmodeldiagramgenerator.domain.services;
 import org.apache.commons.collections4.CollectionUtils;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgBusinessEvent;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgBusinessEventDescriptor;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObject;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenario;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioSequence;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioSequenceDescriptor;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioSequenceStep;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionState;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgTransitionStateDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.repositories.DescriptorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.codemaker.objectmodeldiagramgenerator.testutil.BusinessEventTestDataCreator.createBusinessEventMap;
 import static org.codemaker.objectmodeldiagramgenerator.testutil.ScenarioSequenceTestDataCreator.createScenarioSequenceDescriptors_state1;
@@ -155,8 +160,34 @@ class ScenarioSequenceServiceTest {
     assertEquals(state1Scen2Seq.getScenarioSequenceSteps().get(3), resultState1Scen2Seq.getScenarioSequenceSteps().get(3));
     assertEquals(state1Scen2Seq.getScenarioSequenceSteps().get(4), resultState1Scen2Seq.getScenarioSequenceSteps().get(4));
 
+    {
+      OmgScenarioSequenceStep expectedStep = state1Scen3Seq.getScenarioSequenceSteps().get(0);
+      OmgScenarioSequenceStep actualStep = resultState1Scen3Seq.getScenarioSequenceSteps().get(0);
+      List<OmgObject> sortedExpectedObjects = expectedStep.getObjects().stream().sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
+              .collect(Collectors.toList());
+      List<OmgObject> sortedActualObjects = actualStep.getObjects().stream().sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
+              .collect(Collectors.toList());
+
+      OmgObject p2f01Expected = sortedExpectedObjects.stream().filter(o -> o.getKey().equals("p2f01")).findFirst().get();
+      OmgObject p2f01Actual = sortedActualObjects.stream().filter(o -> o.getKey().equals("p2f01")).findFirst().get();
+      assertEquals(p2f01Expected, p2f01Actual);
+
+      assertEquals(sortedExpectedObjects, sortedActualObjects);
+    }
     assertEquals(state1Scen3Seq.getScenarioSequenceSteps().get(0), resultState1Scen3Seq.getScenarioSequenceSteps().get(0));
+
+    {
+      OmgScenarioSequenceStep expectedStep = state1Scen3Seq.getScenarioSequenceSteps().get(1);
+      OmgScenarioSequenceStep actualStep = resultState1Scen3Seq.getScenarioSequenceSteps().get(1);
+      List<OmgObject> sortedExpectedObjects = expectedStep.getObjects().stream().sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
+              .collect(Collectors.toList());
+      List<OmgObject> sortedActualObjects = actualStep.getObjects().stream().sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
+              .collect(Collectors.toList());
+
+      assertEquals(sortedExpectedObjects, sortedActualObjects);
+    }
     assertEquals(state1Scen3Seq.getScenarioSequenceSteps().get(1), resultState1Scen3Seq.getScenarioSequenceSteps().get(1));
+
     assertEquals(state1Scen3Seq.getScenarioSequenceSteps().get(2), resultState1Scen3Seq.getScenarioSequenceSteps().get(2));
     assertEquals(state1Scen3Seq.getScenarioSequenceSteps().get(3), resultState1Scen3Seq.getScenarioSequenceSteps().get(3));
     assertEquals(state1Scen3Seq.getScenarioSequenceSteps().get(4), resultState1Scen3Seq.getScenarioSequenceSteps().get(4));
@@ -172,12 +203,61 @@ class ScenarioSequenceServiceTest {
     assertEquals(state1Scen4Seq.getScenarioSequenceSteps().get(2), resultState1Scen4Seq.getScenarioSequenceSteps().get(2));
     assertEquals(state1Scen4Seq.getScenarioSequenceSteps().get(3), resultState1Scen4Seq.getScenarioSequenceSteps().get(3));
 
+    {
+      OmgScenarioSequenceStep expectedStep = state1Scen5Seq.getScenarioSequenceSteps().get(0);
+      OmgScenarioSequenceStep actualStep = resultState1Scen5Seq.getScenarioSequenceSteps().get(0);
+      List<OmgObject> sortedExpectedObjects = expectedStep.getObjects().stream().sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
+              .collect(Collectors.toList());
+      List<OmgObject> sortedActualObjects = actualStep.getObjects().stream().sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
+              .collect(Collectors.toList());
+
+      assertEquals(sortedExpectedObjects, sortedActualObjects);
+    }
+
     assertEquals(state1Scen5Seq.getScenarioSequenceSteps().get(0), resultState1Scen5Seq.getScenarioSequenceSteps().get(0));
+
+    {
+      Comparator<OmgObject> comparator = new Comparator<OmgObject>() {
+        @Override
+        public int compare(OmgObject o1, OmgObject o2) {
+          String o1Value = o1.getKey() + o1.getAction().name();
+          String o2Value = o2.getKey() + o2.getAction().name();
+          return o1Value.compareTo(o2Value);
+        }
+      };
+
+      OmgScenarioSequenceStep expectedStep = state1Scen5Seq.getScenarioSequenceSteps().get(1);
+      OmgScenarioSequenceStep actualStep = resultState1Scen5Seq.getScenarioSequenceSteps().get(1);
+      List<OmgObject> sortedExpectedObjects = expectedStep.getObjects().stream().sorted(comparator).collect(Collectors.toList());
+      List<OmgObject> sortedActualObjects = actualStep.getObjects().stream().sorted(comparator).collect(Collectors.toList());
+
+      assertEquals(sortedExpectedObjects, sortedActualObjects);
+    }
+
     assertEquals(state1Scen5Seq.getScenarioSequenceSteps().get(1), resultState1Scen5Seq.getScenarioSequenceSteps().get(1));
     assertEquals(state1Scen5Seq.getScenarioSequenceSteps().get(2), resultState1Scen5Seq.getScenarioSequenceSteps().get(2));
     assertEquals(state1Scen5Seq.getScenarioSequenceSteps().get(3), resultState1Scen5Seq.getScenarioSequenceSteps().get(3));
     assertEquals(state1Scen5Seq.getScenarioSequenceSteps().get(4), resultState1Scen5Seq.getScenarioSequenceSteps().get(4));
     assertEquals(state1Scen5Seq.getScenarioSequenceSteps().get(5), resultState1Scen5Seq.getScenarioSequenceSteps().get(5));
+
+    {
+      Comparator<OmgObject> comparator = new Comparator<OmgObject>() {
+        @Override
+        public int compare(OmgObject o1, OmgObject o2) {
+          String o1Value = o1.getKey() + o1.getAction().name();
+          String o2Value = o2.getKey() + o2.getAction().name();
+          return o1Value.compareTo(o2Value);
+        }
+      };
+
+      OmgScenarioSequenceStep expectedStep = state1Scen5Seq.getScenarioSequenceSteps().get(6);
+      OmgScenarioSequenceStep actualStep = resultState1Scen5Seq.getScenarioSequenceSteps().get(6);
+      List<OmgObject> sortedExpectedObjects = expectedStep.getObjects().stream().sorted(comparator).collect(Collectors.toList());
+      List<OmgObject> sortedActualObjects = actualStep.getObjects().stream().sorted(comparator).collect(Collectors.toList());
+
+      assertEquals(sortedExpectedObjects, sortedActualObjects);
+    }
+
     assertEquals(state1Scen5Seq.getScenarioSequenceSteps().get(6), resultState1Scen5Seq.getScenarioSequenceSteps().get(6));
 
     assertEquals(state2Scen1Seq.getScenarioSequenceSteps().get(0), resultState2Scen1Seq.getScenarioSequenceSteps().get(0));
