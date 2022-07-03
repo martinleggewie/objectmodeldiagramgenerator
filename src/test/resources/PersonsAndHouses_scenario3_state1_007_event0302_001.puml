@@ -46,25 +46,25 @@ rectangle "The House Domain" as housedomain #DDDDDD {
             <color:white>house_fk = "house01"</color>
             <color:white>name = "The First Floor"</color>
         }
-        object "<color:black><b>floor0201</b></color>" as housedomain_floorclass_floor0201 #cornsilk {
+        object "<color:black><b>floor0201</b></color>" as housedomain_floorclass_floor0201 #DDFFCC {
             <color:black>house_fk = "house02"</color>
             <color:black>name = "The First Floor"</color>
         }
-        object "<color:black><b>floor0202</b></color>" as housedomain_floorclass_floor0202 #cornsilk {
+        object "<color:black><b>floor0202</b></color>" as housedomain_floorclass_floor0202 #DDFFCC {
             <color:black>house_fk = "house02"</color>
             <color:black>name = "The Second Floor"</color>
         }
-        object "<color:black><b>floor0203</b></color>" as housedomain_floorclass_floor0203 #cornsilk {
+        object "<color:black><b>floor0203</b></color>" as housedomain_floorclass_floor0203 #DDFFCC {
             <color:black>house_fk = "house02"</color>
             <color:black>name = "The Third Floor"</color>
         }
-        object "<color:black><b>floor0204</b></color>" as housedomain_floorclass_floor0204 #cornsilk {
+        object "<color:black><b>floor0204</b></color>" as housedomain_floorclass_floor0204 #DDFFCC {
             <color:black>house_fk = "house02"</color>
             <color:black>name = "The Fourth Floor"</color>
         }
     }
     rectangle "House" as housedomain_houseclass #white {
-        object "<color:black><b>house02</b></color>" as housedomain_houseclass_house02 #cornsilk {
+        object "<color:black><b>house02</b></color>" as housedomain_houseclass_house02 #DDFFCC {
             <color:black>address = "Second Street 2"</color>
             <color:black>name = "The Second House"</color>
         }
@@ -82,7 +82,7 @@ rectangle "The Person Domain" as persondomain #DDDDDD {
             <color:white>person_fk = "berta"</color>
             <color:white>type = "tenant"</color>
         }
-        object "<color:black><b>p2f03</b></color>" as persondomain_p2fclass_p2f03 #palegreen {
+        object "<color:black><b>p2f03</b></color>" as persondomain_p2fclass_p2f03 #55EE00 {
             <color:black>floor_fk = "floor0203"</color>
             <color:black>person_fk = "anton"</color>
             <color:black>type = "tenant"</color>
@@ -94,7 +94,7 @@ rectangle "The Person Domain" as persondomain #DDDDDD {
         }
     }
     rectangle "Person" as persondomain_personclass #white {
-        object "<color:black><b>anton</b></color>" as persondomain_personclass_anton #grey {
+        object "<color:black><b>anton</b></color>" as persondomain_personclass_anton #EEEEEE {
             <color:black>age = "23"</color>
             <color:black>name = "Anton A"</color>
         }
@@ -105,16 +105,16 @@ rectangle "The Person Domain" as persondomain #DDDDDD {
     }
 }
 
-housedomain_floorclass_floor0201 ----> housedomain_houseclass_house02 #black
-housedomain_floorclass_floor0202 ----> housedomain_houseclass_house02 #black
-housedomain_floorclass_floor0203 ----> housedomain_houseclass_house02 #black
-housedomain_floorclass_floor0204 ----> housedomain_houseclass_house02 #black
+housedomain_floorclass_floor0201 ----> housedomain_houseclass_house02 #555555
+housedomain_floorclass_floor0202 ----> housedomain_houseclass_house02 #555555
+housedomain_floorclass_floor0203 ----> housedomain_houseclass_house02 #555555
+housedomain_floorclass_floor0204 ----> housedomain_houseclass_house02 #555555
 persondomain_p2fclass_p2f01 --[hidden]--> housedomain_floorclass_floor0101
 persondomain_p2fclass_p2f01 --[hidden]--> persondomain_personclass_anton
 persondomain_p2fclass_p2f02 --[hidden]--> housedomain_floorclass_floor0101
 persondomain_p2fclass_p2f02 --[hidden]--> persondomain_personclass_berta
-persondomain_p2fclass_p2f03 ----> housedomain_floorclass_floor0203 #green
-persondomain_p2fclass_p2f03 ----> persondomain_personclass_anton #green
+persondomain_p2fclass_p2f03 ----> housedomain_floorclass_floor0203 #44BB00
+persondomain_p2fclass_p2f03 ----> persondomain_personclass_anton #44BB00
 persondomain_p2fclass_p2f04 --[hidden]--> housedomain_floorclass_floor0203
 persondomain_p2fclass_p2f04 --[hidden]--> persondomain_personclass_berta
 

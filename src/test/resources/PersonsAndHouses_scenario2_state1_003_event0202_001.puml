@@ -57,17 +57,17 @@ rectangle "The Person Domain" as persondomain #DDDDDD {
         }
     }
     rectangle "Person-to-Person Relation" as persondomain_p2pclass #white {
-        object "<color:black><b>p2p01</b></color>" as persondomain_p2pclass_p2p01 #palegreen {
+        object "<color:black><b>p2p01</b></color>" as persondomain_p2pclass_p2p01 #55EE00 {
             <color:black>person_fk = "(anton, berta)"</color>
             <color:black>type = "marriage"</color>
         }
     }
     rectangle "Person" as persondomain_personclass #white {
-        object "<color:black><b>anton</b></color>" as persondomain_personclass_anton #grey {
+        object "<color:black><b>anton</b></color>" as persondomain_personclass_anton #EEEEEE {
             <color:black>age = "23"</color>
             <color:black>name = "Anton A"</color>
         }
-        object "<color:black><b>berta</b></color>" as persondomain_personclass_berta #cornsilk {
+        object "<color:black><b>berta</b></color>" as persondomain_personclass_berta #DDFFCC {
             <color:black>age = "34"</color>
             <color:black>name = "Berta B"</color>
         }
@@ -76,7 +76,7 @@ rectangle "The Person Domain" as persondomain #DDDDDD {
 
 persondomain_p2fclass_p2f02 --[hidden]--> housedomain_floorclass_floor0101
 persondomain_p2fclass_p2f02 --[hidden]--> persondomain_personclass_berta
-persondomain_p2pclass_p2p01 ----> persondomain_personclass_anton #green
-persondomain_p2pclass_p2p01 ----> persondomain_personclass_berta #green
+persondomain_p2pclass_p2p01 ----> persondomain_personclass_anton #44BB00
+persondomain_p2pclass_p2p01 ----> persondomain_personclass_berta #44BB00
 
 @enduml

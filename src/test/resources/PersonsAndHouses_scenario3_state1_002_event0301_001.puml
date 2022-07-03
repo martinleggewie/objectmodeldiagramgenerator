@@ -64,7 +64,7 @@ rectangle "The House Domain" as housedomain #DDDDDD {
         }
     }
     rectangle "House" as housedomain_houseclass #white {
-        object "<color:black><b>house02</b></color>" as housedomain_houseclass_house02 #palegreen {
+        object "<color:black><b>house02</b></color>" as housedomain_houseclass_house02 #55EE00 {
             <color:black>address = "Second Street 2"</color>
             <color:black>name = "The Second House"</color>
         }

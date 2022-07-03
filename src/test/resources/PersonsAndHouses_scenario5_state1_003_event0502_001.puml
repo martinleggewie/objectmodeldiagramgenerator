@@ -46,11 +46,11 @@ rectangle "The House Domain" as housedomain #DDDDDD {
             <color:white>house_fk = "house01"</color>
             <color:white>name = "The First Floor"</color>
         }
-        object "<color:black><b>floor0102</b></color>" as housedomain_floorclass_floor0102 #grey {
+        object "<color:black><b>floor0102</b></color>" as housedomain_floorclass_floor0102 #EEEEEE {
             <color:black>house_fk = "house01"</color>
             <color:black>name = "The Second Floor"</color>
         }
-        object "<color:black><b>floor0204</b></color>" as housedomain_floorclass_floor0204 #grey {
+        object "<color:black><b>floor0204</b></color>" as housedomain_floorclass_floor0204 #EEEEEE {
             <color:black>house_fk = "house02"</color>
             <color:black>name = "The Fourth Floor"</color>
         }
@@ -64,19 +64,19 @@ rectangle "The House Domain" as housedomain #DDDDDD {
 }
 rectangle "The Person Domain" as persondomain #DDDDDD {
     rectangle "Person-to-Floor Relation" as persondomain_p2fclass #white {
-        object "<color:black><b>p2f05</b></color>" as persondomain_p2fclass_p2f05 #red {
+        object "<color:black><b>p2f05</b></color>" as persondomain_p2fclass_p2f05 #FF7766 {
             <color:black>floor_fk = "floor0102"</color>
             <color:black>person_fk = "charlie"</color>
             <color:black>type = "tenant"</color>
         }
-        object "<color:black><b>p2f06</b></color>" as persondomain_p2fclass_p2f06 #cornsilk {
+        object "<color:black><b>p2f06</b></color>" as persondomain_p2fclass_p2f06 #DDFFCC {
             <color:black>floor_fk = "floor0204"</color>
             <color:black>person_fk = "charlie"</color>
             <color:black>type = "tenant"</color>
         }
     }
     rectangle "Person" as persondomain_personclass #white {
-        object "<color:black><b>charlie</b></color>" as persondomain_personclass_charlie #grey {
+        object "<color:black><b>charlie</b></color>" as persondomain_personclass_charlie #EEEEEE {
             <color:black>age = "45"</color>
             <color:black>name = "Charlie C"</color>
         }
@@ -85,9 +85,9 @@ rectangle "The Person Domain" as persondomain #DDDDDD {
 
 housedomain_floorclass_floor0101 --[hidden]--> housedomain_houseclass_house01
 housedomain_floorclass_floor0102 --[hidden]--> housedomain_houseclass_house01
-persondomain_p2fclass_p2f05 ----> housedomain_floorclass_floor0102 #red
-persondomain_p2fclass_p2f05 ----> persondomain_personclass_charlie #red
-persondomain_p2fclass_p2f06 ----> housedomain_floorclass_floor0204 #black
-persondomain_p2fclass_p2f06 ----> persondomain_personclass_charlie #black
+persondomain_p2fclass_p2f05 ----> housedomain_floorclass_floor0102 #FF7766
+persondomain_p2fclass_p2f05 ----> persondomain_personclass_charlie #FF7766
+persondomain_p2fclass_p2f06 ----> housedomain_floorclass_floor0204 #555555
+persondomain_p2fclass_p2f06 ----> persondomain_personclass_charlie #555555
 
 @enduml

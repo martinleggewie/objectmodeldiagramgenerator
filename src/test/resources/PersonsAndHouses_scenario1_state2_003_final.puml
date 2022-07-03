@@ -42,7 +42,7 @@ Diagram 003 of 003
 
 rectangle "The House Domain" as housedomain #DDDDDD {
     rectangle "House" as housedomain_houseclass #white {
-        object "<color:black><b>house01</b></color>" as housedomain_houseclass_house01 #cornsilk {
+        object "<color:black><b>house01</b></color>" as housedomain_houseclass_house01 #DDFFCC {
             <color:black>address = "First Street 1"</color>
             <color:black>name = "The First House"</color>
         }

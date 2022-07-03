@@ -57,7 +57,7 @@ rectangle "The Person Domain" as persondomain #DDDDDD {
         }
     }
     rectangle "Person" as persondomain_personclass #white {
-        object "<color:black><b>charlie</b></color>" as persondomain_personclass_charlie #palegreen {
+        object "<color:black><b>charlie</b></color>" as persondomain_personclass_charlie #55EE00 {
             <color:black>age = "45"</color>
             <color:black>name = "Charlie C"</color>
         }

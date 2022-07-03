@@ -42,29 +42,29 @@ Diagram 011 of 011
 
 rectangle "The House Domain" as housedomain #DDDDDD {
     rectangle "Floor" as housedomain_floorclass #white {
-        object "<color:black><b>floor0101</b></color>" as housedomain_floorclass_floor0101 #grey {
+        object "<color:black><b>floor0101</b></color>" as housedomain_floorclass_floor0101 #EEEEEE {
             <color:black>house_fk = "house01"</color>
             <color:black>name = "The First Floor"</color>
         }
-        object "<color:black><b>floor0201</b></color>" as housedomain_floorclass_floor0201 #cornsilk {
+        object "<color:black><b>floor0201</b></color>" as housedomain_floorclass_floor0201 #DDFFCC {
             <color:black>house_fk = "house02"</color>
             <color:black>name = "The First Floor"</color>
         }
-        object "<color:black><b>floor0202</b></color>" as housedomain_floorclass_floor0202 #cornsilk {
+        object "<color:black><b>floor0202</b></color>" as housedomain_floorclass_floor0202 #DDFFCC {
             <color:black>house_fk = "house02"</color>
             <color:black>name = "The Second Floor"</color>
         }
-        object "<color:black><b>floor0203</b></color>" as housedomain_floorclass_floor0203 #cornsilk {
+        object "<color:black><b>floor0203</b></color>" as housedomain_floorclass_floor0203 #DDFFCC {
             <color:black>house_fk = "house02"</color>
             <color:black>name = "The Third Floor"</color>
         }
-        object "<color:black><b>floor0204</b></color>" as housedomain_floorclass_floor0204 #cornsilk {
+        object "<color:black><b>floor0204</b></color>" as housedomain_floorclass_floor0204 #DDFFCC {
             <color:black>house_fk = "house02"</color>
             <color:black>name = "The Fourth Floor"</color>
         }
     }
     rectangle "House" as housedomain_houseclass #white {
-        object "<color:black><b>house02</b></color>" as housedomain_houseclass_house02 #cornsilk {
+        object "<color:black><b>house02</b></color>" as housedomain_houseclass_house02 #DDFFCC {
             <color:black>address = "Second Street 2"</color>
             <color:black>name = "The Second House"</color>
         }
@@ -72,50 +72,50 @@ rectangle "The House Domain" as housedomain #DDDDDD {
 }
 rectangle "The Person Domain" as persondomain #DDDDDD {
     rectangle "Person-to-Floor Relation" as persondomain_p2fclass #white {
-        object "<color:black><b>p2f01</b></color>" as persondomain_p2fclass_p2f01 #darkred {
+        object "<color:black><b>p2f01</b></color>" as persondomain_p2fclass_p2f01 #FFE0E0 {
             <color:black>floor_fk = "floor0101"</color>
             <color:black>person_fk = "anton"</color>
             <color:black>type = "tenant"</color>
         }
-        object "<color:black><b>p2f02</b></color>" as persondomain_p2fclass_p2f02 #darkred {
+        object "<color:black><b>p2f02</b></color>" as persondomain_p2fclass_p2f02 #FFE0E0 {
             <color:black>floor_fk = "floor0101"</color>
             <color:black>person_fk = "berta"</color>
             <color:black>type = "tenant"</color>
         }
-        object "<color:black><b>p2f03</b></color>" as persondomain_p2fclass_p2f03 #cornsilk {
+        object "<color:black><b>p2f03</b></color>" as persondomain_p2fclass_p2f03 #DDFFCC {
             <color:black>floor_fk = "floor0203"</color>
             <color:black>person_fk = "anton"</color>
             <color:black>type = "tenant"</color>
         }
-        object "<color:black><b>p2f04</b></color>" as persondomain_p2fclass_p2f04 #cornsilk {
+        object "<color:black><b>p2f04</b></color>" as persondomain_p2fclass_p2f04 #DDFFCC {
             <color:black>floor_fk = "floor0203"</color>
             <color:black>person_fk = "berta"</color>
             <color:black>type = "tenant"</color>
         }
     }
     rectangle "Person" as persondomain_personclass #white {
-        object "<color:black><b>anton</b></color>" as persondomain_personclass_anton #grey {
+        object "<color:black><b>anton</b></color>" as persondomain_personclass_anton #EEEEEE {
             <color:black>age = "23"</color>
             <color:black>name = "Anton A"</color>
         }
-        object "<color:black><b>berta</b></color>" as persondomain_personclass_berta #grey {
+        object "<color:black><b>berta</b></color>" as persondomain_personclass_berta #EEEEEE {
             <color:black>age = "34"</color>
             <color:black>name = "Berta B"</color>
         }
     }
 }
 
-housedomain_floorclass_floor0201 ----> housedomain_houseclass_house02 #black
-housedomain_floorclass_floor0202 ----> housedomain_houseclass_house02 #black
-housedomain_floorclass_floor0203 ----> housedomain_houseclass_house02 #black
-housedomain_floorclass_floor0204 ----> housedomain_houseclass_house02 #black
-persondomain_p2fclass_p2f01 ----> housedomain_floorclass_floor0101 #pink
-persondomain_p2fclass_p2f01 ----> persondomain_personclass_anton #pink
-persondomain_p2fclass_p2f02 ----> housedomain_floorclass_floor0101 #pink
-persondomain_p2fclass_p2f02 ----> persondomain_personclass_berta #pink
-persondomain_p2fclass_p2f03 ----> housedomain_floorclass_floor0203 #black
-persondomain_p2fclass_p2f03 ----> persondomain_personclass_anton #black
-persondomain_p2fclass_p2f04 ----> housedomain_floorclass_floor0203 #black
-persondomain_p2fclass_p2f04 ----> persondomain_personclass_berta #black
+housedomain_floorclass_floor0201 ----> housedomain_houseclass_house02 #555555
+housedomain_floorclass_floor0202 ----> housedomain_houseclass_house02 #555555
+housedomain_floorclass_floor0203 ----> housedomain_houseclass_house02 #555555
+housedomain_floorclass_floor0204 ----> housedomain_houseclass_house02 #555555
+persondomain_p2fclass_p2f01 ----> housedomain_floorclass_floor0101 #EEB3B3
+persondomain_p2fclass_p2f01 ----> persondomain_personclass_anton #EEB3B3
+persondomain_p2fclass_p2f02 ----> housedomain_floorclass_floor0101 #EEB3B3
+persondomain_p2fclass_p2f02 ----> persondomain_personclass_berta #EEB3B3
+persondomain_p2fclass_p2f03 ----> housedomain_floorclass_floor0203 #555555
+persondomain_p2fclass_p2f03 ----> persondomain_personclass_anton #555555
+persondomain_p2fclass_p2f04 ----> housedomain_floorclass_floor0203 #555555
+persondomain_p2fclass_p2f04 ----> persondomain_personclass_berta #555555
 
 @enduml

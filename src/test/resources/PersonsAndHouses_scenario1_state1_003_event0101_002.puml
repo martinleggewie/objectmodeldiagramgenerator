@@ -42,7 +42,7 @@ Diagram 003 of 007
 
 rectangle "The House Domain" as housedomain #DDDDDD {
     rectangle "Floor" as housedomain_floorclass #white {
-        object "<color:black><b>floor0101</b></color>" as housedomain_floorclass_floor0101 #palegreen {
+        object "<color:black><b>floor0101</b></color>" as housedomain_floorclass_floor0101 #55EE00 {
             <color:black>house_fk = "house01"</color>
             <color:black>name = "The First Floor"</color>
         }
@@ -52,7 +52,7 @@ rectangle "The House Domain" as housedomain #DDDDDD {
         }
     }
     rectangle "House" as housedomain_houseclass #white {
-        object "<color:black><b>house01</b></color>" as housedomain_houseclass_house01 #cornsilk {
+        object "<color:black><b>house01</b></color>" as housedomain_houseclass_house01 #DDFFCC {
             <color:black>address = "First Street 1"</color>
             <color:black>name = "The First House"</color>
         }
@@ -74,7 +74,7 @@ rectangle "The Person Domain" as persondomain #DDDDDD {
     }
 }
 
-housedomain_floorclass_floor0101 ----> housedomain_houseclass_house01 #green
+housedomain_floorclass_floor0101 ----> housedomain_houseclass_house01 #44BB00
 housedomain_floorclass_floor0102 --[hidden]--> housedomain_houseclass_house01
 persondomain_p2fclass_p2f01 --[hidden]--> housedomain_floorclass_floor0101
 persondomain_p2fclass_p2f01 --[hidden]--> persondomain_personclass_anton

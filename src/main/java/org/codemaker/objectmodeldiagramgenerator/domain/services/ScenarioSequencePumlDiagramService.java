@@ -42,15 +42,15 @@ public class ScenarioSequencePumlDiagramService {
     this.scenarioSequenceService = scenarioSequenceService;
 
     objectBackgroundColorMap = new HashMap<>();
-    objectBackgroundColorMap.put(actionEraOriginKey(create, past, inside), "cornsilk");
-    objectBackgroundColorMap.put(actionEraOriginKey(create, past, outside), "grey");
-    objectBackgroundColorMap.put(actionEraOriginKey(create, present, inside), "palegreen");
-    objectBackgroundColorMap.put(actionEraOriginKey(create, present, outside), "grey");
+    objectBackgroundColorMap.put(actionEraOriginKey(create, past, inside), "DDFFCC");
+    objectBackgroundColorMap.put(actionEraOriginKey(create, past, outside), "EEEEEE");
+    objectBackgroundColorMap.put(actionEraOriginKey(create, present, inside), "55EE00");
+    objectBackgroundColorMap.put(actionEraOriginKey(create, present, outside), "EEEEEE");
     objectBackgroundColorMap.put(actionEraOriginKey(create, future, inside), "white");
     objectBackgroundColorMap.put(actionEraOriginKey(create, future, outside), "white");
-    objectBackgroundColorMap.put(actionEraOriginKey(delete, past, inside), "darkred");
+    objectBackgroundColorMap.put(actionEraOriginKey(delete, past, inside), "FFE0E0");
     objectBackgroundColorMap.put(actionEraOriginKey(delete, past, outside), "darkgrey");
-    objectBackgroundColorMap.put(actionEraOriginKey(delete, present, inside), "red");
+    objectBackgroundColorMap.put(actionEraOriginKey(delete, present, inside), "FF7766");
     objectBackgroundColorMap.put(actionEraOriginKey(delete, present, outside), "pink");
     objectBackgroundColorMap.put(actionEraOriginKey(delete, future, inside), "white");
     objectBackgroundColorMap.put(actionEraOriginKey(delete, future, outside), "white");
@@ -70,15 +70,15 @@ public class ScenarioSequencePumlDiagramService {
     objectTextColorMap.put(actionEraOriginKey(delete, future, outside), "white");
 
     relationColorMap = new HashMap<>();
-    relationColorMap.put(actionEraOriginKey(create, past, inside), "black");
+    relationColorMap.put(actionEraOriginKey(create, past, inside), "555555");
     relationColorMap.put(actionEraOriginKey(create, past, outside), "pink");
-    relationColorMap.put(actionEraOriginKey(create, present, inside), "green");
+    relationColorMap.put(actionEraOriginKey(create, present, inside), "44BB00");
     relationColorMap.put(actionEraOriginKey(create, present, outside), "pink");
     relationColorMap.put(actionEraOriginKey(create, future, inside), "white");
     relationColorMap.put(actionEraOriginKey(create, future, outside), "pink");
-    relationColorMap.put(actionEraOriginKey(delete, past, inside), "pink");
+    relationColorMap.put(actionEraOriginKey(delete, past, inside), "EEB3B3");
     relationColorMap.put(actionEraOriginKey(delete, past, outside), "pink");
-    relationColorMap.put(actionEraOriginKey(delete, present, inside), "red");
+    relationColorMap.put(actionEraOriginKey(delete, present, inside), "FF7766");
     relationColorMap.put(actionEraOriginKey(delete, present, outside), "pink");
     relationColorMap.put(actionEraOriginKey(delete, future, inside), "pink");
     relationColorMap.put(actionEraOriginKey(delete, future, outside), "pink");
