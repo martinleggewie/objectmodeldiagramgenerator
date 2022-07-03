@@ -11,6 +11,8 @@ import org.codemaker.objectmodeldiagramgenerator.domain.repositories.DescriptorR
 import org.codemaker.objectmodeldiagramgenerator.domain.services.BusinessEventPumlDiagramService;
 import org.codemaker.objectmodeldiagramgenerator.domain.services.BusinessEventService;
 import org.codemaker.objectmodeldiagramgenerator.domain.services.ScenarioPumlDiagramService;
+import org.codemaker.objectmodeldiagramgenerator.domain.services.ScenarioSequencePumlDiagramService;
+import org.codemaker.objectmodeldiagramgenerator.domain.services.ScenarioSequenceService;
 import org.codemaker.objectmodeldiagramgenerator.domain.services.ScenarioService;
 import org.codemaker.objectmodeldiagramgenerator.domain.services.TransitionStatePumlDiagramService;
 import org.codemaker.objectmodeldiagramgenerator.domain.services.TransitionStateService;
@@ -93,6 +95,8 @@ public class Main {
     TransitionStateService transitionStateService = new TransitionStateService(descriptorRepository);
     ScenarioService scenarioService = new ScenarioService(descriptorRepository);
     BusinessEventService businessEventService = new BusinessEventService(descriptorRepository, scenarioService);
+    ScenarioSequenceService scenarioSequenceService = new ScenarioSequenceService(businessEventService, scenarioService,
+            transitionStateService, descriptorRepository);
     System.out.println();
     System.out.println("Writing the diagrams:");
     if (!Files.exists(outputFolderPath)) {
@@ -101,10 +105,12 @@ public class Main {
     TransitionStatePumlDiagramService transitionStatePumlDiagramService = new TransitionStatePumlDiagramService(transitionStateService);
     ScenarioPumlDiagramService scenarioPumlDiagramService = new ScenarioPumlDiagramService(scenarioService);
     BusinessEventPumlDiagramService businessEventPumlDiagramService = new BusinessEventPumlDiagramService(businessEventService);
+    ScenarioSequencePumlDiagramService scenarioSequencePumlDiagramService = new ScenarioSequencePumlDiagramService(scenarioSequenceService);
     List<PumlDiagram> pumlDiagrams = new ArrayList<>();
     pumlDiagrams.add(scenarioPumlDiagramService.createDiagram());
     pumlDiagrams.add(transitionStatePumlDiagramService.createDiagram());
     pumlDiagrams.add(businessEventPumlDiagramService.createDiagram());
+    pumlDiagrams.addAll(scenarioSequencePumlDiagramService.createDiagrams());
     for (PumlDiagram pumlDiagram : pumlDiagrams) {
       String diagramName = pumlDiagram.getName();
       Path outputFilePath = null;
@@ -114,12 +120,11 @@ public class Main {
         Matcher diagramNameMatcher = Pattern.compile(diagramNamePattern).matcher(diagramName);
         if (diagramNameMatcher.find()) {
           String folderName = diagramNameMatcher.group(1);
-          String fileName = diagramNameMatcher.group(2);
           Path subFolderPath = Paths.get(outputFolderPath.toAbsolutePath() + "/" + folderName);
           if (!Files.exists(subFolderPath)) {
             Files.createDirectory(subFolderPath);
           }
-          outputFilePath = Paths.get(outputFolderPath + "/" + folderName + "/" + fileName + ".puml");
+          outputFilePath = Paths.get(outputFolderPath + "/" + folderName + "/" + diagramName + ".puml");
         }
       } else {
         outputFilePath = Paths.get(outputFolderPath + "/" + diagramName + ".puml");
@@ -129,48 +134,5 @@ public class Main {
       fileWriter.write(pumlDiagram.getContent());
       fileWriter.close();
     }
-
-/*
-    if (false) {
-      System.out.println();
-      System.out.println("Reading the Excel sheet:");
-      OmgDefinitionReader definitionReader = new OmgDefinitionReader(Files.newInputStream(inputFilePath.toFile().toPath()));
-      OmgDefinition definition = definitionReader.read();
-      System.out.println();
-      System.out.println("Writing the diagrams:");
-      if (!Files.exists(outputFolderPath)) {
-        Files.createDirectory(outputFolderPath);
-      }
-      ObjectModelSequencesDiagramService objectModelSequencesDiagramService = new ObjectModelSequencesDiagramService(definition);
-      ScenarioPumlDiagramService scenarioPumlDiagramService = new ScenarioPumlDiagramService(null);
-      List<PumlDiagram> pumlDiagrams = new ArrayList<>();
-      pumlDiagrams.add(scenarioPumlDiagramService.createDiagram());
-      pumlDiagrams.addAll(objectModelSequencesDiagramService.createDiagrams(ObjectModelSequencesDiagramService.Mode.gradually));
-      pumlDiagrams.addAll(objectModelSequencesDiagramService.createDiagrams(ObjectModelSequencesDiagramService.Mode.everything));
-      for (PumlDiagram pumlDiagram : pumlDiagrams) {
-        String diagramName = pumlDiagram.getName();
-        Path outputFilePath = null;
-        String diagramNamePattern = "(\\w+?)_(\\S+)"; // mind the reluctant regex quantifier, that is the "?" in "\w+?".
-        if (diagramName.matches(diagramNamePattern)) {
-          // If the diagram name contains an underscore, we interprete what is left from that underscore as a folder name.
-          Matcher diagramNameMatcher = Pattern.compile(diagramNamePattern).matcher(diagramName);
-          if (diagramNameMatcher.find()) {
-            String folderName = diagramNameMatcher.group(1);
-            String fileName = diagramNameMatcher.group(2);
-            Path subFolderPath = Paths.get(outputFolderPath.toAbsolutePath() + "/" + folderName);
-            if (!Files.exists(subFolderPath)) {
-              Files.createDirectory(subFolderPath);
-            }
-            outputFilePath = Paths.get(outputFolderPath + "/" + folderName + "/" + fileName + ".puml");
-          }
-        } else {
-          outputFilePath = Paths.get(outputFolderPath + "/" + diagramName + ".puml");
-        }
-        System.out.println("    " + outputFilePath);
-        FileWriter fileWriter = new FileWriter(outputFilePath.toFile(), false);
-        fileWriter.write(pumlDiagram.getContent());
-        fileWriter.close();
-      }
-    }*/
   }
 }
