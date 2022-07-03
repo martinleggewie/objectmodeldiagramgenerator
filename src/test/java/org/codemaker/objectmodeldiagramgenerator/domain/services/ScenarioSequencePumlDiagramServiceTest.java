@@ -60,16 +60,13 @@ class ScenarioSequencePumlDiagramServiceTest {
     expectedDiagramNames.add("PersonsAndHouses_scenario4_state1_002_event0401_001");
     expectedDiagramNames.add("PersonsAndHouses_scenario4_state1_003_event0402_001");
     expectedDiagramNames.add("PersonsAndHouses_scenario4_state1_004_final");
-
-/*
     expectedDiagramNames.add("PersonsAndHouses_scenario5_state1_001_initial");
-    expectedDiagramNames.add("PersonsAndHouses_scenario5_state1_002_event0401_001");
+    expectedDiagramNames.add("PersonsAndHouses_scenario5_state1_002_event0501_001");
     expectedDiagramNames.add("PersonsAndHouses_scenario5_state1_003_event0502_001");
     expectedDiagramNames.add("PersonsAndHouses_scenario5_state1_004_event0502_002");
     expectedDiagramNames.add("PersonsAndHouses_scenario5_state1_005_event0502_003");
     expectedDiagramNames.add("PersonsAndHouses_scenario5_state1_006_event0502_004");
     expectedDiagramNames.add("PersonsAndHouses_scenario5_state1_007_final");
-*/
 
     expectedDiagramContentMap = new HashMap<>();
     for (String expectedDiagramName : expectedDiagramNames) {
@@ -98,19 +95,11 @@ class ScenarioSequencePumlDiagramServiceTest {
 
     // Assert
     assertEquals(37, resultPumlDiagrams.size());
-    int counter = 0; // I can remove this once I have all 37 test diagrams created
     for (PumlDiagram resultPumlDiagram : resultPumlDiagrams) {
       String resultDiagramName = resultPumlDiagram.getName();
-      //      if (resultDiagramName.contains("scenario1") || resultDiagramName.contains("scenario2") || resultDiagramName.contains(
-      //        "scenario3_state1_001_initial")) {
-      if (resultDiagramName.contains("scenario4_state1_004")) {
-        // I need to remove this filter once I have all 37 puml test files created
-        List<String> expectedContent = expectedDiagramContentMap.get(resultDiagramName);
-        List<String> actualContent = Arrays.asList(resultPumlDiagram.getContent().split("\n"));
-        assertEquals(expectedContent, actualContent);
-        counter++;
-      }
+      List<String> expectedContent = expectedDiagramContentMap.get(resultDiagramName);
+      List<String> actualContent = Arrays.asList(resultPumlDiagram.getContent().split("\n"));
+      assertEquals(expectedContent, actualContent);
     }
-    assertEquals(1, counter);
   }
 }

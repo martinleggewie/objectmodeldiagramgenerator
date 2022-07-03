@@ -147,6 +147,67 @@ public class ScenarioSequencePumlDiagramService {
     return result.toString();
   }
 
+  /**
+   * Filters out all the objects from a set which are duplicates, at least when only looking at the objects' keys. That we can have
+   * duplicates is not a bug, but a feature. Depending on the original object definition provided by the repositories it can happen that we
+   * have both an object representing that this object is to be created as well as to be deleted as well. And this happens if we first add
+   * an object (typically outside the current scenario, but in an earlier scenario), and then we delete this very object inside the current
+   * scenario. Depending on the other attributes "era" and "origin" this method decides which objects becomes the "winner".
+   */
+  private Set<OmgObject> filterDuplicatesFromObjects(Set<OmgObject> objects) {
+    Set<OmgObject> result = new HashSet<>(objects);
+
+    for (OmgObject object : objects) {
+      for (OmgObject otherObject : objects) {
+        if (object != otherObject && object.getKey().equals(otherObject.getKey())) {
+          // We found a duplicate. Now we have to decide which object we need to remove from the result.
+          OmgObject toBeRemovedObject = null; // also needed for the consistency check at the end of this if-else cascade
+          if (object.getEra().equals(past) && otherObject.getEra().equals(past)) {
+            if (object.getAction().equals(create) && otherObject.getAction().equals(delete)) {
+              toBeRemovedObject = object;
+            } else if (object.getAction().equals(delete) && otherObject.getAction().equals(create)) {
+              toBeRemovedObject = otherObject;
+            }
+          } else if (object.getEra().equals(past) && otherObject.getEra().equals(present)) {
+            toBeRemovedObject = object;
+          } else if (object.getEra().equals(past) && otherObject.getEra().equals(future)) {
+            toBeRemovedObject = otherObject;
+          } else if (object.getEra().equals(present) && otherObject.getEra().equals(past)) {
+            toBeRemovedObject = otherObject;
+          } else if (object.getEra().equals(present) && otherObject.getEra().equals(present)) {
+            if (object.getAction().equals(create) && otherObject.getAction().equals(delete)) {
+              toBeRemovedObject = object;
+            } else if (object.getAction().equals(delete) && otherObject.getAction().equals(create)) {
+              toBeRemovedObject = otherObject;
+            }
+          } else if (object.getEra().equals(present) && otherObject.getEra().equals(future)) {
+            toBeRemovedObject = otherObject;
+          } else if (object.getEra().equals(future) && otherObject.getEra().equals(past)) {
+            toBeRemovedObject = object;
+          } else if (object.getEra().equals(future) && otherObject.getEra().equals(present)) {
+            toBeRemovedObject = object;
+          } else if (object.getEra().equals(future) && otherObject.getEra().equals(future)) {
+            if (object.getAction().equals(create) && otherObject.getAction().equals(delete)) {
+              toBeRemovedObject = otherObject;
+            } else if (object.getAction().equals(delete) && otherObject.getAction().equals(create)) {
+              toBeRemovedObject = object;
+            }
+          }
+          // Do some consistency check
+          if (toBeRemovedObject != null) {
+            result.remove(toBeRemovedObject);
+          } else {
+            throw new RuntimeException(
+                    String.format("Error. Could not decide on which object with same key to remove. Object 1: %s, " + "object 2: %s",
+                            object, otherObject));
+          }
+        }
+      }
+    }
+
+    return result;
+  }
+
   private String header(String diagramName) {
     StringBuilder result = new StringBuilder();
 
@@ -216,11 +277,13 @@ public class ScenarioSequencePumlDiagramService {
 
   private String entities(OmgScenarioSequenceStep scenarioSequenceStep) {
     StringBuilder result = new StringBuilder();
-    Set<OmgObject> allObjects = scenarioSequenceStep.getObjects();
+
+    //    Set<OmgObject> allObjects = scenarioSequenceStep.getObjects();
+    Set<OmgObject> relevantObjects = filterDuplicatesFromObjects(scenarioSequenceStep.getObjects());
 
     // 1. Find all the domains, sort them by their key, and then store them in a list so that we can iterate over it.
     Set<OmgDomain> domains = new HashSet<>();
-    for (OmgObject object : allObjects) {
+    for (OmgObject object : relevantObjects) {
       domains.add(object.getClazz().getDomain());
     }
     List<OmgDomain> sortedDomains = domains.stream().sorted((d1, d2) -> d1.getKey().compareTo(d2.getKey())).collect(Collectors.toList());
@@ -233,7 +296,7 @@ public class ScenarioSequencePumlDiagramService {
       // 3. Find all the classes relevant for the current domain, sort them by their class key, and then them in a list so that we can
       // iterate over it as well.
       Set<OmgClass> classes = new HashSet<>();
-      for (OmgObject object : allObjects) {
+      for (OmgObject object : relevantObjects) {
         if (object.getClazz().getDomain().equals(domain)) {
           classes.add(object.getClazz());
         }
@@ -247,7 +310,7 @@ public class ScenarioSequencePumlDiagramService {
 
         // 5. Find all the objects which belong to the current class (and thus also domain), sort them by their object key, and then
         // store them in a list so that can - you guessed it already - iterate over it as well.
-        Set<OmgObject> objects = allObjects.stream().filter(o -> o.getClazz().equals(clazz))
+        Set<OmgObject> objects = relevantObjects.stream().filter(o -> o.getClazz().equals(clazz))
                 .filter(o -> o.getClazz().getDomain().equals(domain)).collect(Collectors.toSet());
         List<OmgObject> sortedObjects = objects.stream().sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
                 .collect(Collectors.toList());
@@ -290,16 +353,17 @@ public class ScenarioSequencePumlDiagramService {
 
   private String relations(OmgScenarioSequenceStep scenarioSequenceStep) {
     StringBuilder result = new StringBuilder();
-    List<OmgObject> sortedObjects = scenarioSequenceStep.getObjects().stream().sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
+    Set<OmgObject> relevantObjects = filterDuplicatesFromObjects(scenarioSequenceStep.getObjects());
+    List<OmgObject> sortedRelevantObjects = relevantObjects.stream().sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
             .collect(Collectors.toList());
 
     // Iterate over the sorted list of objects and then over the sorted list of dependee objects and then create the corresponding puml
     // output for their relations to their dependees.
-    for (OmgObject object : sortedObjects) {
+    for (OmgObject object : sortedRelevantObjects) {
       List<OmgObject> sortedDependeeObjects = object.getDependeeObjects().stream()
               .sorted((o1, o2) -> fullObjectKey(o1).compareTo(fullObjectKey(o2))).collect(Collectors.toList());
       for (OmgObject dependeeObject : sortedDependeeObjects) {
-        boolean hidden = object.getEra().equals(future);
+        boolean hidden = object.getEra().equals(future) || object.getOrigin().equals(outside);
         String relationArrow = hidden ? " --[hidden]--> " : " ----> ";
         String relationColor = relationColorMap.get(actionEraOriginKey(object.getAction(), object.getEra(), object.getOrigin()));
         result.append(fullObjectKey(object) + relationArrow + fullObjectKey(dependeeObject));
