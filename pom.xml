@@ -6,7 +6,7 @@
 
   <groupId>org.codemaker</groupId>
   <artifactId>objectmodeldiagramgenerator</artifactId>
-  <version>2.2.0</version>
+  <version>3.0.0</version>
   <packaging>jar</packaging>
 
   <properties>

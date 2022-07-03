@@ -20,17 +20,16 @@ To start the diagram generation you need to have a Java runtime environment inst
 Then try the following on the command line in the main folder:
 
 ```
-java -jar releases/objectmodeldiagramgenerator-2.2.0.jar -i objectmodeldefinitions.xlsx -o martinstest
+java -jar releases/objectmodeldiagramgenerator-3.0.0.jar -i src/test/resources/testobjectmodeldefinition.xlsx -o myfirsttest
 ```
 
-If the generator run was successful, you will find a bunch of puml files in the folder "martinstest".
+If the generator run was successful, you will find a bunch of puml files in the folder "myfirsttest".
 
-If you now want to also generate PNG files, change to the folder "martinstest" on the command line and try the following command (assuming that you have the PlantUML jar file stored in ~/tools/plantuml.jar):
+If you now want to also generate PNG files to directly look at the diagrams in a normal image viewer, then try the following two commands (assuming that you have the PlantUML jar file stored in ~/tools/plantuml.jar):
 
 ```
-mkdir png
-java -DPLANTUML_LIMIT_SIZE=15000 -jar ~/tools/plantuml.jar *.puml png -o png
+java -DPLANTUML_LIMIT_SIZE=15000 -jar ~/tools/plantuml.jar myfirsttest/*.puml png -o ./png
+java -DPLANTUML_LIMIT_SIZE=15000 -jar ~/tools/plantuml.jar myfirsttest/PersonsAndHouses/*.puml png -o png
 ```
 
-Depending on the number of business events you have defined in the Excel file, generating all the PNG files out of that can take several minutes.
-So please be patient.
+After the two commands have run without problems you will find the generated PNG files in the two corresponding "png" subfolders.
