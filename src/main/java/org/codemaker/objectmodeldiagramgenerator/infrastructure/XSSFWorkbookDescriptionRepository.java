@@ -56,6 +56,10 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
     while (rowIterator.hasNext()) {
       Row row = rowIterator.next();
       String key = row.getCell(0).getStringCellValue().trim();
+      if (key.length() == 0) {
+        // Current row has a null value for the transition state key. Let's ignore this complete row.
+        continue;
+      }
       String predecessorKey = row.getCell(1).getStringCellValue().trim();
       if (predecessorKey.equals(PROPERTYVALUE_XLS_NOTSET)) {
         predecessorKey = PROPERTYVALUE_NOTSET;
@@ -83,6 +87,10 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
     while (rowIterator.hasNext()) {
       Row row = rowIterator.next();
       String key = row.getCell(0).getStringCellValue().trim();
+      if (key.length() == 0) {
+        // Current row has a null value for the scenario key. Let's ignore this complete row.
+        continue;
+      }
       String predecessorKeysRaw = row.getCell(1).getStringCellValue().trim();
       String description = row.getCell(2).getStringCellValue().trim();
 
@@ -113,6 +121,10 @@ public class XSSFWorkbookDescriptionRepository implements DescriptorRepository {
     while (rowIterator.hasNext()) {
       Row row = rowIterator.next();
       String key = row.getCell(0).getStringCellValue().trim();
+      if (key.length() == 0) {
+        // Current row has a null value for the event key. Let's ignore this complete row.
+        continue;
+      }
       String description = row.getCell(1).getStringCellValue().trim();
       String scenarioKey = row.getCell(2).getStringCellValue().trim();
       OmgBusinessEventDescriptor businessEventDescriptor = new OmgBusinessEventDescriptor(key, description, scenarioKey);
