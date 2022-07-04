@@ -20,7 +20,7 @@ To start the diagram generation you need to have a Java runtime environment inst
 Then try the following on the command line in the main folder:
 
 ```
-java -jar releases/objectmodeldiagramgenerator-3.0.0.jar -i src/test/resources/testobjectmodeldefinition.xlsx -o myfirsttest
+java -jar releases/objectmodeldiagramgenerator-3.0.1.jar -i src/test/resources/testobjectmodeldefinition.xlsx -o myfirsttest
 ```
 
 If the generator run was successful, you will find a bunch of puml files in the folder "myfirsttest".
