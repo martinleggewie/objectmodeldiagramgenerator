@@ -1,14 +1,20 @@
+
 # objectmodeldiagramgenerator
-Generates PlantUML files which represent certain aspects of a collection of object models.
-The generator expects the definition of these object models in one Excel file with specific proprietary format.
-With this proprietary format you (the reader and modeler) can define the following domain model:
+
+Generates sequences of object model diagams in the form of PlantUML files.
+
+You can define the object model in on Excel file following a specific proprietary structure.
+The underlying domain model allows you to define:
 - There are scenarios. Each scenario has a key and can relate to other scenarios.
 - There are business events. Each business event has a key and must relate to one scenario.
 - There are domains. Each domain has a key.
 - There are classes. Each class has a name and must relate to one domain.
 - There are objects. Each object has a key and must relate to one business event and one class. Each object can relate to other objects. Each object can have properties (that is, a tupel of a name and and value).
+- To bring everything together there are object model sequences and their contained steps. Each step defines which objects are to be created or deleted, and to which business event this it belongs to.
 
-**Check file "/src/main/resources/domainmodel.puml" for the complete domain model which the generator currently supports/expects.**
+Following domain model diagram shows how the various entities are connected, and what you can describe in the Excel file to later get the object diagrams generated out of.
+![domain model to describe the objects which you want to have diagrams generated out of](src/main/resources/domainmodel_descriptor.png)
+
 
 Based on this information defined following this domain model the generator creates a list of text files.
 Each text file contains the definition of one diagram using the PlantUML DSL.
