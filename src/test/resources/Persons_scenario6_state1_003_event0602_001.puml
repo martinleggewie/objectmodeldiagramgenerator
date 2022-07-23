@@ -1,0 +1,76 @@
+@startuml Persons_scenario6_state1_003_event0602_001
+
+<style>
+    Shadowing false
+    Rectangle {
+        FontSize 18
+        FontStyle bold
+        HorizontalAlignment left
+        LineThickness 0
+        RoundCorner 20
+    }
+    Object {
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor white
+        LineThickness 3
+        RoundCorner 20
+    }
+    Arrow {
+        LineThickness 3
+    }
+    Title {
+        BackgroundColor white
+        FontColor darkblue
+        FontSize 20
+        FontStyle normal
+        HorizontalAlignment left
+        LineColor darkblue
+        LineThickness 2
+        Margin 50
+        Padding 20
+    }
+</style>
+
+title \
+<b>Sequence:</b> Persons\n\
+<b>Scenario:</b> scenario6 - Anton, Berta, and Charlie become friends and get older. Then the situation changes again.\n\
+<b>Transition State:</b> state1 - The first transition state. Let's add some more text to force line breaks in diagrams.\n\n\
+<b>Business Event:</b> event0602 - Anton and Charlie get one year older. (Step 001 of 002)\n\n\
+Diagram 003 of 009
+
+rectangle "The Person Domain" as persondomain #DDDDDD {
+    rectangle "Person-to-Person Relation" as persondomain_p2pclass #white {
+        object "<color:white><b>p2p01</b></color>" as persondomain_p2pclass_p2p01 #white {
+            <color:white>person_fk = "(anton, berta)"</color>
+            <color:white>type = "marriage"</color>
+        }
+        object "<color:black><b>p2p02</b></color>" as persondomain_p2pclass_p2p02 #DDFFCC {
+            <color:black>person_fk = "(berta, charlie)"</color>
+            <color:black>type = "friendship"</color>
+        }
+    }
+    rectangle "Person" as persondomain_personclass #white {
+        object "<color:black><b>anton</b></color>" as persondomain_personclass_anton #EEEEEE {
+            <color:black>age = </color><color:0088FF><b>"24"</b></color>
+            <color:black>name = "Anton A"</color>
+        }
+        object "<color:black><b>berta</b></color>" as persondomain_personclass_berta #EEEEEE {
+            <color:black>age = "34"</color>
+            <color:black>name = "Berta B"</color>
+        }
+        object "<color:black><b>charlie</b></color>" as persondomain_personclass_charlie #EEEEEE {
+            <color:black>age = "45"</color>
+            <color:black>name = "Charlie C"</color>
+        }
+    }
+}
+
+persondomain_p2pclass_p2p01 --[hidden]--> persondomain_personclass_anton
+persondomain_p2pclass_p2p01 --[hidden]--> persondomain_personclass_berta
+persondomain_p2pclass_p2p02 --[hidden]--> persondomain_personclass_anton
+persondomain_p2pclass_p2p02 ----> persondomain_personclass_berta #black
+persondomain_p2pclass_p2p02 ----> persondomain_personclass_charlie #black
+
+@enduml

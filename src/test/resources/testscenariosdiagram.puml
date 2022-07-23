@@ -36,7 +36,7 @@ rectangle "<b>scenario2</b>\n\nAnton marries Berta, and Berta\nmoves into the fi
 rectangle "<b>scenario3</b>\n\nThe second house is built, and\nAnton and Berta move from\nfirst house to second house,\nthird floor." as scenario3
 rectangle "<b>scenario4</b>\n\nCharlie moves in to the first\nhouse, second floor." as scenario4
 rectangle "<b>scenario5</b>\n\nThe first house is destroyed,\nbut before that, Charlie\nluckily also moves to the\nsecond house, fourth floor,\nbut kept tenant contract with\nfirst house." as scenario5
-rectangle "<b>scenario6</b>\n\nAnton, Berta, and Charlie\nbecome friends and get older." as scenario6
+rectangle "<b>scenario6</b>\n\nAnton, Berta, and Charlie\nbecome friends and get older.\nThen the situation changes\nagain." as scenario6
 
 scenario2 ---> scenario1
 scenario3 ---> scenario2

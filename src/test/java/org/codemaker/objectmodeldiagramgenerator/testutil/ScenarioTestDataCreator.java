@@ -13,9 +13,9 @@ public class ScenarioTestDataCreator {
   private static final String DESCRIPTION3 = "The second house is built, and Anton and Berta move from first house to second house, " +
           "third floor.";
   private static final String DESCRIPTION4 = "Charlie moves in to the first house, second floor.";
-  private static final String DESCRIPTION5 =
-          "The first house is destroyed, but before that, Charlie luckily also moves to the second " + "house, fourth floor, but kept " + "tenant contract with first house.";
-  private static final String DESCRIPTION6 = "Anton, Berta, and Charlie become friends and get older.";
+  private static final String DESCRIPTION5 = "The first house is destroyed, but before that, Charlie luckily also moves to the second " +
+          "house, fourth floor, but kept tenant contract with first house.";
+  private static final String DESCRIPTION6 = "Anton, Berta, and Charlie become friends and get older. Then the situation changes again.";
 
   public static Map<String, OmgScenarioDescriptor> createScenarioDescriptorMap() {
     OmgScenarioDescriptor descriptor1 = new OmgScenarioDescriptor("scenario1", DESCRIPTION1);
