@@ -32,7 +32,7 @@ class XSSFWorkbookDescriptionRepository_BusinessEventTest {
     Set<OmgBusinessEventDescriptor> result = cut.findBusinessEventDescriptors();
 
     // Assert
-    assertEquals(12, result.size());
+    assertEquals(17, result.size());
     assertEquals(new HashSet<>(businessEventDescriptorMap.values()), result);
   }
 }

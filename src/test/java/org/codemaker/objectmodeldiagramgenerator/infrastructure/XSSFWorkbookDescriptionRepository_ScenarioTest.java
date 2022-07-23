@@ -32,7 +32,7 @@ class XSSFWorkbookDescriptionRepository_ScenarioTest {
     Set<OmgScenarioDescriptor> result = cut.findScenarioDescriptors();
 
     // Assert
-    assertEquals(5, result.size());
+    assertEquals(6, result.size());
     assertEquals(new HashSet<>(scenarioDescriptorMap.values()), result);
   }
 }

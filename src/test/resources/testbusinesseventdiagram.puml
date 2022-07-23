@@ -64,5 +64,11 @@ title Business events and the scenarios they belong to
 * scenario5
 ** <b>event0501</b>\n\nCharlie moves from first house to second house, fourth floor, keeps contract with first house.
 ** <b>event0502</b>\n\nThe first house is destroyed. Luckily, no-one lived there anymore.
+* scenario6
+** <b>event0601</b>\n\nBerta and Charlie become friends.
+** <b>event0602</b>\n\nAnton and Charlie get one year older.
+** <b>event0603</b>\n\nAnton joins Berta and Charlie's friendship.
+** <b>event0604</b>\n\nAfter Anton, Berta, and Charlie celebrated a party, Anton and Charlie are not friends anymore.
+** <b>event0605</b>\n\nAnton and Berta get divorced.
 
 @endmindmap

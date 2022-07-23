@@ -56,7 +56,7 @@ class ScenarioServiceTest {
     Map<String, OmgScenario> result = cut.findScenarioMap();
 
     // Assert
-    assertEquals(5, result.size());
+    assertEquals(6, result.size());
     assertEquals(scenarioMap, result);
   }
 }
