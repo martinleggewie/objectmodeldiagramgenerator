@@ -27,8 +27,7 @@ public class BusinessEventTestDataCreator {
   private static final String DESCRIPTION0601 = "Berta and Charlie become friends.";
   private static final String DESCRIPTION0602 = "Anton and Charlie get one year older.";
   private static final String DESCRIPTION0603 = "Anton joins Berta and Charlie's friendship.";
-  private static final String DESCRIPTION0604 =
-          "After Anton, Berta, and Charlie celebrated a party, Anton and Charlie are not friends " + "anymore.";
+  private static final String DESCRIPTION0604 = "After Anton, Berta, and Charlie celebrated a party, Berta leaves the friendship.";
   private static final String DESCRIPTION0605 = "Anton and Berta get divorced.";
 
   public static Map<String, OmgBusinessEventDescriptor> createBusinessEventDescriptorMap() {
