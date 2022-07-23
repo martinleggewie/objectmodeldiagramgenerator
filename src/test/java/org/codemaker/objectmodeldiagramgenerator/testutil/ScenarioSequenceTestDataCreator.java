@@ -2,6 +2,8 @@ package org.codemaker.objectmodeldiagramgenerator.testutil;
 
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgAction;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgBusinessEvent;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgClassDescriptor;
+import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgDomainDescriptor;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgObject;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenario;
 import org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgScenarioSequence;
@@ -17,6 +19,7 @@ import java.util.Set;
 
 import static org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgAction.create;
 import static org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgAction.delete;
+import static org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgAction.update;
 import static org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgEra.future;
 import static org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgEra.past;
 import static org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgEra.present;
@@ -36,108 +39,164 @@ public class ScenarioSequenceTestDataCreator {
     Set<OmgScenarioSequenceDescriptor> result = new HashSet<>();
 
     // 1. Create the first scenario sequence descriptor
-    OmgScenarioSequenceDescriptor scenSeqDesc1 = new OmgScenarioSequenceDescriptor("state1", "PersonsAndHouses");
-    scenSeqDesc1.getDomainDescriptors().addAll(createDomainDescriptorMap().values());
-    scenSeqDesc1.getClassDescriptors().addAll(createClassDescriptorMap().values());
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc11 = new OmgScenarioSequenceStepDescriptor("event0101", create.name());
-    scenSeqStepDesc11.getObjectDescriptors().add(createObjDesc_state1("house01", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc12 = new OmgScenarioSequenceStepDescriptor("event0101", create.name());
-    scenSeqStepDesc12.getObjectDescriptors().add(createObjDesc_state1("floor0101", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc13 = new OmgScenarioSequenceStepDescriptor("event0101", create.name());
-    scenSeqStepDesc13.getObjectDescriptors().add(createObjDesc_state1("floor0102", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc14 = new OmgScenarioSequenceStepDescriptor("event0102", create.name());
-    scenSeqStepDesc14.getObjectDescriptors().add(createObjDesc_state1("anton", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc15 = new OmgScenarioSequenceStepDescriptor("event0103", create.name());
-    scenSeqStepDesc15.getObjectDescriptors().add(createObjDesc_state1("p2f01", create));
-    scenSeqDesc1.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc11);
-    scenSeqDesc1.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc12);
-    scenSeqDesc1.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc13);
-    scenSeqDesc1.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc14);
-    scenSeqDesc1.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc15);
+    {
+      OmgScenarioSequenceDescriptor scenSeqDesc = new OmgScenarioSequenceDescriptor("state1", "PersonsAndHouses");
+      scenSeqDesc.getDomainDescriptors().addAll(createDomainDescriptorMap().values());
+      scenSeqDesc.getClassDescriptors().addAll(createClassDescriptorMap().values());
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc1 = new OmgScenarioSequenceStepDescriptor("event0101", create.name());
+      scenSeqStepDesc1.getObjectDescriptors().add(createObjDesc_state1("house01", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc2 = new OmgScenarioSequenceStepDescriptor("event0101", create.name());
+      scenSeqStepDesc2.getObjectDescriptors().add(createObjDesc_state1("floor0101", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc3 = new OmgScenarioSequenceStepDescriptor("event0101", create.name());
+      scenSeqStepDesc3.getObjectDescriptors().add(createObjDesc_state1("floor0102", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc4 = new OmgScenarioSequenceStepDescriptor("event0102", create.name());
+      scenSeqStepDesc4.getObjectDescriptors().add(createObjDesc_state1("anton", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc5 = new OmgScenarioSequenceStepDescriptor("event0103", create.name());
+      scenSeqStepDesc5.getObjectDescriptors().add(createObjDesc_state1("p2f01", create));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc1);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc2);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc3);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc4);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc5);
+
+      result.add(scenSeqDesc);
+    }
 
     // 2. Create the second scenario sequence descriptor
-    OmgScenarioSequenceDescriptor scenSeqDesc2 = new OmgScenarioSequenceDescriptor("state1", "PersonsAndHouses");
-    scenSeqDesc2.getDomainDescriptors().addAll(createDomainDescriptorMap().values());
-    scenSeqDesc2.getClassDescriptors().addAll(createClassDescriptorMap().values());
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc21 = new OmgScenarioSequenceStepDescriptor("event0201", create.name());
-    scenSeqStepDesc21.getObjectDescriptors().add(createObjDesc_state1("berta", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc22 = new OmgScenarioSequenceStepDescriptor("event0202", create.name());
-    scenSeqStepDesc22.getObjectDescriptors().add(createObjDesc_state1("p2p01", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc23 = new OmgScenarioSequenceStepDescriptor("event0203", create.name());
-    scenSeqStepDesc23.getObjectDescriptors().add(createObjDesc_state1("p2f02", create));
-    scenSeqDesc2.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc21);
-    scenSeqDesc2.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc22);
-    scenSeqDesc2.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc23);
+    {
+      OmgScenarioSequenceDescriptor scenSeqDesc = new OmgScenarioSequenceDescriptor("state1", "PersonsAndHouses");
+      scenSeqDesc.getDomainDescriptors().addAll(createDomainDescriptorMap().values());
+      scenSeqDesc.getClassDescriptors().addAll(createClassDescriptorMap().values());
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc1 = new OmgScenarioSequenceStepDescriptor("event0201", create.name());
+      scenSeqStepDesc1.getObjectDescriptors().add(createObjDesc_state1("berta", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc2 = new OmgScenarioSequenceStepDescriptor("event0202", create.name());
+      scenSeqStepDesc2.getObjectDescriptors().add(createObjDesc_state1("p2p01", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc3 = new OmgScenarioSequenceStepDescriptor("event0203", create.name());
+      scenSeqStepDesc3.getObjectDescriptors().add(createObjDesc_state1("p2f02", create));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc1);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc2);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc3);
+
+      result.add(scenSeqDesc);
+    }
 
     // 3. Create the third scenario sequence descriptor
-    OmgScenarioSequenceDescriptor scenSeqDesc3 = new OmgScenarioSequenceDescriptor("state1", "PersonsAndHouses");
-    scenSeqDesc3.getDomainDescriptors().addAll(createDomainDescriptorMap().values());
-    scenSeqDesc3.getClassDescriptors().addAll(createClassDescriptorMap().values());
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc31 = new OmgScenarioSequenceStepDescriptor("event0301", create.name());
-    scenSeqStepDesc31.getObjectDescriptors().add(createObjDesc_state1("house02", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc32 = new OmgScenarioSequenceStepDescriptor("event0301", create.name());
-    scenSeqStepDesc32.getObjectDescriptors().add(createObjDesc_state1("floor0201", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc33 = new OmgScenarioSequenceStepDescriptor("event0301", create.name());
-    scenSeqStepDesc33.getObjectDescriptors().add(createObjDesc_state1("floor0202", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc34 = new OmgScenarioSequenceStepDescriptor("event0301", create.name());
-    scenSeqStepDesc34.getObjectDescriptors().add(createObjDesc_state1("floor0203", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc35 = new OmgScenarioSequenceStepDescriptor("event0301", create.name());
-    scenSeqStepDesc35.getObjectDescriptors().add(createObjDesc_state1("floor0204", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc36 = new OmgScenarioSequenceStepDescriptor("event0302", create.name());
-    scenSeqStepDesc36.getObjectDescriptors().add(createObjDesc_state1("p2f03", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc37 = new OmgScenarioSequenceStepDescriptor("event0302", create.name());
-    scenSeqStepDesc37.getObjectDescriptors().add(createObjDesc_state1("p2f04", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc38 = new OmgScenarioSequenceStepDescriptor("event0302", OmgAction.delete.name());
-    scenSeqStepDesc38.getObjectDescriptors().add(createObjDesc_state1("p2f01", OmgAction.delete));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc39 = new OmgScenarioSequenceStepDescriptor("event0302", OmgAction.delete.name());
-    scenSeqStepDesc39.getObjectDescriptors().add(createObjDesc_state1("p2f02", OmgAction.delete));
-    scenSeqDesc3.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc31);
-    scenSeqDesc3.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc32);
-    scenSeqDesc3.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc33);
-    scenSeqDesc3.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc34);
-    scenSeqDesc3.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc35);
-    scenSeqDesc3.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc36);
-    scenSeqDesc3.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc37);
-    scenSeqDesc3.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc38);
-    scenSeqDesc3.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc39);
+    {
+      OmgScenarioSequenceDescriptor scenSeqDesc = new OmgScenarioSequenceDescriptor("state1", "PersonsAndHouses");
+      scenSeqDesc.getDomainDescriptors().addAll(createDomainDescriptorMap().values());
+      scenSeqDesc.getClassDescriptors().addAll(createClassDescriptorMap().values());
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc1 = new OmgScenarioSequenceStepDescriptor("event0301", create.name());
+      scenSeqStepDesc1.getObjectDescriptors().add(createObjDesc_state1("house02", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc2 = new OmgScenarioSequenceStepDescriptor("event0301", create.name());
+      scenSeqStepDesc2.getObjectDescriptors().add(createObjDesc_state1("floor0201", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc3 = new OmgScenarioSequenceStepDescriptor("event0301", create.name());
+      scenSeqStepDesc3.getObjectDescriptors().add(createObjDesc_state1("floor0202", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc4 = new OmgScenarioSequenceStepDescriptor("event0301", create.name());
+      scenSeqStepDesc4.getObjectDescriptors().add(createObjDesc_state1("floor0203", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc5 = new OmgScenarioSequenceStepDescriptor("event0301", create.name());
+      scenSeqStepDesc5.getObjectDescriptors().add(createObjDesc_state1("floor0204", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc6 = new OmgScenarioSequenceStepDescriptor("event0302", create.name());
+      scenSeqStepDesc6.getObjectDescriptors().add(createObjDesc_state1("p2f03", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc7 = new OmgScenarioSequenceStepDescriptor("event0302", create.name());
+      scenSeqStepDesc7.getObjectDescriptors().add(createObjDesc_state1("p2f04", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc8 = new OmgScenarioSequenceStepDescriptor("event0302", OmgAction.delete.name());
+      scenSeqStepDesc8.getObjectDescriptors().add(createObjDesc_state1("p2f01", OmgAction.delete));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc9 = new OmgScenarioSequenceStepDescriptor("event0302", OmgAction.delete.name());
+      scenSeqStepDesc9.getObjectDescriptors().add(createObjDesc_state1("p2f02", OmgAction.delete));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc1);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc2);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc3);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc4);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc5);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc6);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc7);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc8);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc9);
+
+      result.add(scenSeqDesc);
+    }
 
     // 4. Create the fourth scenario sequence descriptor
-    OmgScenarioSequenceDescriptor scenSeqDesc4 = new OmgScenarioSequenceDescriptor("state1", "PersonsAndHouses");
-    scenSeqDesc4.getDomainDescriptors().addAll(createDomainDescriptorMap().values());
-    scenSeqDesc4.getClassDescriptors().addAll(createClassDescriptorMap().values());
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc41 = new OmgScenarioSequenceStepDescriptor("event0401", create.name());
-    scenSeqStepDesc41.getObjectDescriptors().add(createObjDesc_state1("charlie", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc42 = new OmgScenarioSequenceStepDescriptor("event0402", create.name());
-    scenSeqStepDesc42.getObjectDescriptors().add(createObjDesc_state1("p2f05", create));
-    scenSeqDesc4.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc41);
-    scenSeqDesc4.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc42);
+    {
+      OmgScenarioSequenceDescriptor scenSeqDesc = new OmgScenarioSequenceDescriptor("state1", "PersonsAndHouses");
+      scenSeqDesc.getDomainDescriptors().addAll(createDomainDescriptorMap().values());
+      scenSeqDesc.getClassDescriptors().addAll(createClassDescriptorMap().values());
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc1 = new OmgScenarioSequenceStepDescriptor("event0401", create.name());
+      scenSeqStepDesc1.getObjectDescriptors().add(createObjDesc_state1("charlie", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc2 = new OmgScenarioSequenceStepDescriptor("event0402", create.name());
+      scenSeqStepDesc2.getObjectDescriptors().add(createObjDesc_state1("p2f05", create));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc1);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc2);
+
+      result.add(scenSeqDesc);
+    }
 
     // 5. Create the fifth scenario sequence descriptor
-    OmgScenarioSequenceDescriptor scenSeqDesc5 = new OmgScenarioSequenceDescriptor("state1", "PersonsAndHouses");
-    scenSeqDesc5.getDomainDescriptors().addAll(createDomainDescriptorMap().values());
-    scenSeqDesc5.getClassDescriptors().addAll(createClassDescriptorMap().values());
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc51 = new OmgScenarioSequenceStepDescriptor("event0501", create.name());
-    scenSeqStepDesc51.getObjectDescriptors().add(createObjDesc_state1("p2f06", create));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc52 = new OmgScenarioSequenceStepDescriptor("event0502", OmgAction.delete.name());
-    scenSeqStepDesc52.getObjectDescriptors().add(createObjDesc_state1("p2f05", OmgAction.delete));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc53 = new OmgScenarioSequenceStepDescriptor("event0502", OmgAction.delete.name());
-    scenSeqStepDesc53.getObjectDescriptors().add(createObjDesc_state1("floor0101", OmgAction.delete));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc54 = new OmgScenarioSequenceStepDescriptor("event0502", OmgAction.delete.name());
-    scenSeqStepDesc54.getObjectDescriptors().add(createObjDesc_state1("floor0102", OmgAction.delete));
-    OmgScenarioSequenceStepDescriptor scenSeqStepDesc55 = new OmgScenarioSequenceStepDescriptor("event0502", OmgAction.delete.name());
-    scenSeqStepDesc55.getObjectDescriptors().add(createObjDesc_state1("house01", OmgAction.delete));
-    scenSeqDesc5.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc51);
-    scenSeqDesc5.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc52);
-    scenSeqDesc5.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc53);
-    scenSeqDesc5.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc54);
-    scenSeqDesc5.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc55);
+    {
+      OmgScenarioSequenceDescriptor scenSeqDesc = new OmgScenarioSequenceDescriptor("state1", "PersonsAndHouses");
+      scenSeqDesc.getDomainDescriptors().addAll(createDomainDescriptorMap().values());
+      scenSeqDesc.getClassDescriptors().addAll(createClassDescriptorMap().values());
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc1 = new OmgScenarioSequenceStepDescriptor("event0501", create.name());
+      scenSeqStepDesc1.getObjectDescriptors().add(createObjDesc_state1("p2f06", create));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc2 = new OmgScenarioSequenceStepDescriptor("event0502", OmgAction.delete.name());
+      scenSeqStepDesc2.getObjectDescriptors().add(createObjDesc_state1("p2f05", OmgAction.delete));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc3 = new OmgScenarioSequenceStepDescriptor("event0502", OmgAction.delete.name());
+      scenSeqStepDesc3.getObjectDescriptors().add(createObjDesc_state1("floor0101", OmgAction.delete));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc4 = new OmgScenarioSequenceStepDescriptor("event0502", OmgAction.delete.name());
+      scenSeqStepDesc4.getObjectDescriptors().add(createObjDesc_state1("floor0102", OmgAction.delete));
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc5 = new OmgScenarioSequenceStepDescriptor("event0502", OmgAction.delete.name());
+      scenSeqStepDesc5.getObjectDescriptors().add(createObjDesc_state1("house01", OmgAction.delete));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc1);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc2);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc3);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc4);
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc5);
 
-    // And now finish it: Add the five scenario sequence descriptors to the result
-    result.add(scenSeqDesc1);
-    result.add(scenSeqDesc2);
-    result.add(scenSeqDesc3);
-    result.add(scenSeqDesc4);
-    result.add(scenSeqDesc5);
+      result.add(scenSeqDesc);
+    }
+
+    // 6. Create the sixth scenario sequence descriptor
+    {
+      OmgScenarioSequenceDescriptor scenSeqDesc = new OmgScenarioSequenceDescriptor("state1", "Persons");
+      Map<String, OmgDomainDescriptor> domainDescriptorMap = createDomainDescriptorMap();
+      domainDescriptorMap.remove("housedomain");
+      scenSeqDesc.getDomainDescriptors().addAll(domainDescriptorMap.values());
+      Map<String, OmgClassDescriptor> classDescriptorMap = createClassDescriptorMap();
+      classDescriptorMap.remove("houseclass");
+      classDescriptorMap.remove("floorclass");
+      classDescriptorMap.remove("p2fclass");
+      scenSeqDesc.getClassDescriptors().addAll(classDescriptorMap.values());
+
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc1 = new OmgScenarioSequenceStepDescriptor("event0601", create.name());
+      scenSeqStepDesc1.getObjectDescriptors().add(createObjDesc_state1("p2p02", create));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc1);
+
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc2 = new OmgScenarioSequenceStepDescriptor("event0602", update.name());
+      scenSeqStepDesc2.getObjectDescriptors().add(createObjDesc_state1("anton", update));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc2);
+
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc3 = new OmgScenarioSequenceStepDescriptor("event0602", update.name());
+      scenSeqStepDesc3.getObjectDescriptors().add(createObjDesc_state1("charlie", update));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc3);
+
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc4 = new OmgScenarioSequenceStepDescriptor("event0603", update.name());
+      scenSeqStepDesc4.getObjectDescriptors().add(createObjDesc_state1("p2p02_01", update));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc4);
+
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc5 = new OmgScenarioSequenceStepDescriptor("event0604", update.name());
+      scenSeqStepDesc5.getObjectDescriptors().add(createObjDesc_state1("p2p02_02", update));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc5);
+
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc6 = new OmgScenarioSequenceStepDescriptor("event0604", update.name());
+      scenSeqStepDesc6.getObjectDescriptors().add(createObjDesc_state1("p2p01", update));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc6);
+
+      OmgScenarioSequenceStepDescriptor scenSeqStepDesc7 = new OmgScenarioSequenceStepDescriptor("event0605", delete.name());
+      scenSeqStepDesc7.getObjectDescriptors().add(createObjDesc_state1("p2p01", delete));
+      scenSeqDesc.getScenarioSequenceStepDescriptors().add(scenSeqStepDesc7);
+
+      result.add(scenSeqDesc);
+    }
 
     return result;
   }
