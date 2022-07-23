@@ -66,7 +66,7 @@ class BusinessEventServiceTest {
     Map<String, OmgBusinessEvent> result = cut.findBusinessEventMap();
 
     // Assert
-    assertEquals(12, result.size());
+    assertEquals(17, result.size());
     assertEquals(businessEventMap, result);
   }
 }

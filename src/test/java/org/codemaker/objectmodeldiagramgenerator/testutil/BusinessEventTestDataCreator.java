@@ -24,6 +24,12 @@ public class BusinessEventTestDataCreator {
   private static final String DESCRIPTION0501 = "Charlie moves from first house to second house, fourth floor, keeps contract with first "
           + "house.";
   private static final String DESCRIPTION0502 = "The first house is destroyed. Luckily, no-one lived there anymore.";
+  private static final String DESCRIPTION0601 = "Berta and Charlie become friends.";
+  private static final String DESCRIPTION0602 = "Anton and Charlie get one year older.";
+  private static final String DESCRIPTION0603 = "Anton joins Berta and Charlie's friendship.";
+  private static final String DESCRIPTION0604 =
+          "After Anton, Berta, and Charlie celebrated a party, Anton and Charlie are not friends " + "anymore.";
+  private static final String DESCRIPTION0605 = "Anton and Berta get divorced.";
 
   public static Map<String, OmgBusinessEventDescriptor> createBusinessEventDescriptorMap() {
     Map<String, OmgBusinessEventDescriptor> result = new HashMap<>();
@@ -39,6 +45,11 @@ public class BusinessEventTestDataCreator {
     result.put("event0402", new OmgBusinessEventDescriptor("event0402", DESCRIPTION0402, "scenario4"));
     result.put("event0501", new OmgBusinessEventDescriptor("event0501", DESCRIPTION0501, "scenario5"));
     result.put("event0502", new OmgBusinessEventDescriptor("event0502", DESCRIPTION0502, "scenario5"));
+    result.put("event0601", new OmgBusinessEventDescriptor("event0601", DESCRIPTION0601, "scenario6"));
+    result.put("event0602", new OmgBusinessEventDescriptor("event0602", DESCRIPTION0602, "scenario6"));
+    result.put("event0603", new OmgBusinessEventDescriptor("event0603", DESCRIPTION0603, "scenario6"));
+    result.put("event0604", new OmgBusinessEventDescriptor("event0604", DESCRIPTION0604, "scenario6"));
+    result.put("event0605", new OmgBusinessEventDescriptor("event0605", DESCRIPTION0605, "scenario6"));
     return result;
   }
 
@@ -57,6 +68,11 @@ public class BusinessEventTestDataCreator {
     result.put("event0402", new OmgBusinessEvent("event0402", DESCRIPTION0402, scenarioMap.get("scenario4")));
     result.put("event0501", new OmgBusinessEvent("event0501", DESCRIPTION0501, scenarioMap.get("scenario5")));
     result.put("event0502", new OmgBusinessEvent("event0502", DESCRIPTION0502, scenarioMap.get("scenario5")));
+    result.put("event0601", new OmgBusinessEvent("event0601", DESCRIPTION0601, scenarioMap.get("scenario6")));
+    result.put("event0602", new OmgBusinessEvent("event0602", DESCRIPTION0602, scenarioMap.get("scenario6")));
+    result.put("event0603", new OmgBusinessEvent("event0603", DESCRIPTION0603, scenarioMap.get("scenario6")));
+    result.put("event0604", new OmgBusinessEvent("event0604", DESCRIPTION0604, scenarioMap.get("scenario6")));
+    result.put("event0605", new OmgBusinessEvent("event0605", DESCRIPTION0605, scenarioMap.get("scenario6")));
     return result;
   }
 }
