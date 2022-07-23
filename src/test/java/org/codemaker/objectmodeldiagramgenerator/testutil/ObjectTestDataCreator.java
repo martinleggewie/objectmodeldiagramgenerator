@@ -12,75 +12,107 @@ import java.util.HashSet;
 import java.util.Map;
 
 import static org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgAction.create;
+import static org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgAction.delete;
+import static org.codemaker.objectmodeldiagramgenerator.domain.entities.OmgAction.update;
 import static org.codemaker.objectmodeldiagramgenerator.domain.repositories.DescriptorRepository.PROPERTYVALUE_NOTSET;
 import static org.codemaker.objectmodeldiagramgenerator.testutil.ClassTestDataCreator.createClassMap;
 
 public class ObjectTestDataCreator {
+
   public static OmgObjectDescriptor createObjDesc_state1(String objectDescriptorKey, OmgAction action) {
+
+    Map<String, OmgObjectDescriptor> objectDescriptorMap_create = new HashMap<>();
+    Map<String, OmgObjectDescriptor> objectDescriptorMap_delete = new HashMap<>();
+    Map<String, OmgObjectDescriptor> objectDescriptorMap_update = new HashMap<>();
+
     // The houses
     OmgObjectDescriptor objectDescriptorHouse01_create = new OmgObjectDescriptor("housedomain", "houseclass", "house01");
     objectDescriptorHouse01_create.getPropertyMap().put("name", "The First House");
     objectDescriptorHouse01_create.getPropertyMap().put("address", "First Street 1");
+    objectDescriptorMap_create.put(objectDescriptorHouse01_create.getKey(), objectDescriptorHouse01_create);
 
     OmgObjectDescriptor objectDescriptorHouse01_delete = new OmgObjectDescriptor("housedomain", "houseclass", "house01");
     objectDescriptorHouse01_delete.getPropertyMap().put("name", PROPERTYVALUE_NOTSET);
     objectDescriptorHouse01_delete.getPropertyMap().put("address", PROPERTYVALUE_NOTSET);
+    objectDescriptorMap_delete.put(objectDescriptorHouse01_delete.getKey(), objectDescriptorHouse01_delete);
 
     OmgObjectDescriptor objectDescriptorHouse02_create = new OmgObjectDescriptor("housedomain", "houseclass", "house02");
     objectDescriptorHouse02_create.getPropertyMap().put("name", "The Second House");
     objectDescriptorHouse02_create.getPropertyMap().put("address", "Second Street 2");
+    objectDescriptorMap_create.put(objectDescriptorHouse02_create.getKey(), objectDescriptorHouse02_create);
 
     // The floors
     OmgObjectDescriptor objectDescriptorFloor0101_create = new OmgObjectDescriptor("housedomain", "floorclass", "floor0101");
     objectDescriptorFloor0101_create.getPropertyMap().put("name", "The First Floor");
     objectDescriptorFloor0101_create.getPropertyMap().put("house_fk", "house01");
     objectDescriptorFloor0101_create.getDependeeKeys().add("house01");
+    objectDescriptorMap_create.put(objectDescriptorFloor0101_create.getKey(), objectDescriptorFloor0101_create);
 
     OmgObjectDescriptor objectDescriptorFloor0101_delete = new OmgObjectDescriptor("housedomain", "floorclass", "floor0101");
     objectDescriptorFloor0101_delete.getPropertyMap().put("name", PROPERTYVALUE_NOTSET);
     objectDescriptorFloor0101_delete.getPropertyMap().put("house_fk", PROPERTYVALUE_NOTSET);
+    objectDescriptorMap_delete.put(objectDescriptorFloor0101_delete.getKey(), objectDescriptorFloor0101_delete);
 
     OmgObjectDescriptor objectDescriptorFloor0102_create = new OmgObjectDescriptor("housedomain", "floorclass", "floor0102");
     objectDescriptorFloor0102_create.getPropertyMap().put("name", "The Second Floor");
     objectDescriptorFloor0102_create.getPropertyMap().put("house_fk", "house01");
     objectDescriptorFloor0102_create.getDependeeKeys().add("house01");
+    objectDescriptorMap_create.put(objectDescriptorFloor0102_create.getKey(), objectDescriptorFloor0102_create);
 
     OmgObjectDescriptor objectDescriptorFloor0102_delete = new OmgObjectDescriptor("housedomain", "floorclass", "floor0102");
     objectDescriptorFloor0102_delete.getPropertyMap().put("name", PROPERTYVALUE_NOTSET);
     objectDescriptorFloor0102_delete.getPropertyMap().put("house_fk", PROPERTYVALUE_NOTSET);
+    objectDescriptorMap_delete.put(objectDescriptorFloor0102_delete.getKey(), objectDescriptorFloor0102_delete);
 
     OmgObjectDescriptor objectDescriptorFloor0201_create = new OmgObjectDescriptor("housedomain", "floorclass", "floor0201");
     objectDescriptorFloor0201_create.getPropertyMap().put("name", "The First Floor");
     objectDescriptorFloor0201_create.getPropertyMap().put("house_fk", "house02");
     objectDescriptorFloor0201_create.getDependeeKeys().add("house02");
+    objectDescriptorMap_create.put(objectDescriptorFloor0201_create.getKey(), objectDescriptorFloor0201_create);
 
     OmgObjectDescriptor objectDescriptorFloor0202_create = new OmgObjectDescriptor("housedomain", "floorclass", "floor0202");
     objectDescriptorFloor0202_create.getPropertyMap().put("name", "The Second Floor");
     objectDescriptorFloor0202_create.getPropertyMap().put("house_fk", "house02");
     objectDescriptorFloor0202_create.getDependeeKeys().add("house02");
+    objectDescriptorMap_create.put(objectDescriptorFloor0202_create.getKey(), objectDescriptorFloor0202_create);
 
     OmgObjectDescriptor objectDescriptorFloor0203_create = new OmgObjectDescriptor("housedomain", "floorclass", "floor0203");
     objectDescriptorFloor0203_create.getPropertyMap().put("name", "The Third Floor");
     objectDescriptorFloor0203_create.getPropertyMap().put("house_fk", "house02");
     objectDescriptorFloor0203_create.getDependeeKeys().add("house02");
+    objectDescriptorMap_create.put(objectDescriptorFloor0203_create.getKey(), objectDescriptorFloor0203_create);
 
     OmgObjectDescriptor objectDescriptorFloor0204_create = new OmgObjectDescriptor("housedomain", "floorclass", "floor0204");
     objectDescriptorFloor0204_create.getPropertyMap().put("name", "The Fourth Floor");
     objectDescriptorFloor0204_create.getPropertyMap().put("house_fk", "house02");
     objectDescriptorFloor0204_create.getDependeeKeys().add("house02");
+    objectDescriptorMap_create.put(objectDescriptorFloor0204_create.getKey(), objectDescriptorFloor0204_create);
 
     // The persons
     OmgObjectDescriptor objectDescriptorAnton_create = new OmgObjectDescriptor("persondomain", "personclass", "anton");
     objectDescriptorAnton_create.getPropertyMap().put("name", "Anton A");
     objectDescriptorAnton_create.getPropertyMap().put("age", "23");
+    objectDescriptorMap_create.put(objectDescriptorAnton_create.getKey(), objectDescriptorAnton_create);
+
+    OmgObjectDescriptor objectDescriptorAnton_update = new OmgObjectDescriptor("persondomain", "personclass", "anton");
+    objectDescriptorAnton_update.getPropertyMap().put("name", PROPERTYVALUE_NOTSET);
+    objectDescriptorAnton_update.getPropertyMap().put("age", "24");
+    objectDescriptorMap_update.put("anton", objectDescriptorAnton_update);
 
     OmgObjectDescriptor objectDescriptorBerta_create = new OmgObjectDescriptor("persondomain", "personclass", "berta");
     objectDescriptorBerta_create.getPropertyMap().put("name", "Berta B");
     objectDescriptorBerta_create.getPropertyMap().put("age", "34");
+    objectDescriptorMap_create.put(objectDescriptorBerta_create.getKey(), objectDescriptorBerta_create);
 
     OmgObjectDescriptor objectDescriptorCharl_create = new OmgObjectDescriptor("persondomain", "personclass", "charlie");
     objectDescriptorCharl_create.getPropertyMap().put("name", "Charlie C");
     objectDescriptorCharl_create.getPropertyMap().put("age", "45");
+    objectDescriptorMap_create.put(objectDescriptorCharl_create.getKey(), objectDescriptorCharl_create);
+
+    OmgObjectDescriptor objectDescriptorCharl_update = new OmgObjectDescriptor("persondomain", "personclass", "charlie");
+    objectDescriptorCharl_update.getPropertyMap().put("name", PROPERTYVALUE_NOTSET);
+    objectDescriptorCharl_update.getPropertyMap().put("age", "46");
+    objectDescriptorMap_update.put("charlie", objectDescriptorCharl_update);
 
     // The person-to-floor relations
     OmgObjectDescriptor objectDescriptorP2F01_create = new OmgObjectDescriptor("persondomain", "p2fclass", "p2f01");
@@ -89,11 +121,13 @@ public class ObjectTestDataCreator {
     objectDescriptorP2F01_create.getPropertyMap().put("floor_fk", "floor0101");
     objectDescriptorP2F01_create.getDependeeKeys().add("anton");
     objectDescriptorP2F01_create.getDependeeKeys().add("floor0101");
+    objectDescriptorMap_create.put(objectDescriptorP2F01_create.getKey(), objectDescriptorP2F01_create);
 
     OmgObjectDescriptor objectDescriptorP2F01_delete = new OmgObjectDescriptor("persondomain", "p2fclass", "p2f01");
     objectDescriptorP2F01_delete.getPropertyMap().put("type", PROPERTYVALUE_NOTSET);
     objectDescriptorP2F01_delete.getPropertyMap().put("person_fk", PROPERTYVALUE_NOTSET);
     objectDescriptorP2F01_delete.getPropertyMap().put("floor_fk", PROPERTYVALUE_NOTSET);
+    objectDescriptorMap_delete.put(objectDescriptorP2F01_delete.getKey(), objectDescriptorP2F01_delete);
 
     OmgObjectDescriptor objectDescriptorP2F02_create = new OmgObjectDescriptor("persondomain", "p2fclass", "p2f02");
     objectDescriptorP2F02_create.getPropertyMap().put("type", "tenant");
@@ -101,11 +135,13 @@ public class ObjectTestDataCreator {
     objectDescriptorP2F02_create.getPropertyMap().put("floor_fk", "floor0101");
     objectDescriptorP2F02_create.getDependeeKeys().add("berta");
     objectDescriptorP2F02_create.getDependeeKeys().add("floor0101");
+    objectDescriptorMap_create.put(objectDescriptorP2F02_create.getKey(), objectDescriptorP2F02_create);
 
     OmgObjectDescriptor objectDescriptorP2F02_delete = new OmgObjectDescriptor("persondomain", "p2fclass", "p2f02");
     objectDescriptorP2F02_delete.getPropertyMap().put("type", PROPERTYVALUE_NOTSET);
     objectDescriptorP2F02_delete.getPropertyMap().put("person_fk", PROPERTYVALUE_NOTSET);
     objectDescriptorP2F02_delete.getPropertyMap().put("floor_fk", PROPERTYVALUE_NOTSET);
+    objectDescriptorMap_delete.put(objectDescriptorP2F02_delete.getKey(), objectDescriptorP2F02_delete);
 
     OmgObjectDescriptor objectDescriptorP2F03_create = new OmgObjectDescriptor("persondomain", "p2fclass", "p2f03");
     objectDescriptorP2F03_create.getPropertyMap().put("type", "tenant");
@@ -113,6 +149,7 @@ public class ObjectTestDataCreator {
     objectDescriptorP2F03_create.getPropertyMap().put("floor_fk", "floor0203");
     objectDescriptorP2F03_create.getDependeeKeys().add("anton");
     objectDescriptorP2F03_create.getDependeeKeys().add("floor0203");
+    objectDescriptorMap_create.put(objectDescriptorP2F03_create.getKey(), objectDescriptorP2F03_create);
 
     OmgObjectDescriptor objectDescriptorP2F04_create = new OmgObjectDescriptor("persondomain", "p2fclass", "p2f04");
     objectDescriptorP2F04_create.getPropertyMap().put("type", "tenant");
@@ -120,6 +157,7 @@ public class ObjectTestDataCreator {
     objectDescriptorP2F04_create.getPropertyMap().put("floor_fk", "floor0203");
     objectDescriptorP2F04_create.getDependeeKeys().add("berta");
     objectDescriptorP2F04_create.getDependeeKeys().add("floor0203");
+    objectDescriptorMap_create.put(objectDescriptorP2F04_create.getKey(), objectDescriptorP2F04_create);
 
     OmgObjectDescriptor objectDescriptorP2F05_create = new OmgObjectDescriptor("persondomain", "p2fclass", "p2f05");
     objectDescriptorP2F05_create.getPropertyMap().put("type", "tenant");
@@ -127,11 +165,13 @@ public class ObjectTestDataCreator {
     objectDescriptorP2F05_create.getPropertyMap().put("floor_fk", "floor0102");
     objectDescriptorP2F05_create.getDependeeKeys().add("charlie");
     objectDescriptorP2F05_create.getDependeeKeys().add("floor0102");
+    objectDescriptorMap_create.put(objectDescriptorP2F05_create.getKey(), objectDescriptorP2F05_create);
 
     OmgObjectDescriptor objectDescriptorP2F05_delete = new OmgObjectDescriptor("persondomain", "p2fclass", "p2f05");
     objectDescriptorP2F05_delete.getPropertyMap().put("type", PROPERTYVALUE_NOTSET);
     objectDescriptorP2F05_delete.getPropertyMap().put("person_fk", PROPERTYVALUE_NOTSET);
     objectDescriptorP2F05_delete.getPropertyMap().put("floor_fk", PROPERTYVALUE_NOTSET);
+    objectDescriptorMap_delete.put(objectDescriptorP2F05_delete.getKey(), objectDescriptorP2F05_delete);
 
     OmgObjectDescriptor objectDescriptorP2F06_create = new OmgObjectDescriptor("persondomain", "p2fclass", "p2f06");
     objectDescriptorP2F06_create.getPropertyMap().put("type", "tenant");
@@ -139,6 +179,7 @@ public class ObjectTestDataCreator {
     objectDescriptorP2F06_create.getPropertyMap().put("floor_fk", "floor0204");
     objectDescriptorP2F06_create.getDependeeKeys().add("charlie");
     objectDescriptorP2F06_create.getDependeeKeys().add("floor0204");
+    objectDescriptorMap_create.put(objectDescriptorP2F06_create.getKey(), objectDescriptorP2F06_create);
 
     // The person-to-person relations
     OmgObjectDescriptor objectDescriptorP2P01_create = new OmgObjectDescriptor("persondomain", "p2pclass", "p2p01");
@@ -146,43 +187,48 @@ public class ObjectTestDataCreator {
     objectDescriptorP2P01_create.getPropertyMap().put("person_fk", "(anton, berta)");
     objectDescriptorP2P01_create.getDependeeKeys().add("anton");
     objectDescriptorP2P01_create.getDependeeKeys().add("berta");
-
-    // Store everything in the corresponding map
-
-    // First the map which contains the objects which will be created
-    Map<String, OmgObjectDescriptor> objectDescriptorMap_create = new HashMap<>();
-    objectDescriptorMap_create.put(objectDescriptorHouse01_create.getKey(), objectDescriptorHouse01_create);
-    objectDescriptorMap_create.put(objectDescriptorHouse02_create.getKey(), objectDescriptorHouse02_create);
-    objectDescriptorMap_create.put(objectDescriptorFloor0101_create.getKey(), objectDescriptorFloor0101_create);
-    objectDescriptorMap_create.put(objectDescriptorFloor0102_create.getKey(), objectDescriptorFloor0102_create);
-    objectDescriptorMap_create.put(objectDescriptorFloor0201_create.getKey(), objectDescriptorFloor0201_create);
-    objectDescriptorMap_create.put(objectDescriptorFloor0202_create.getKey(), objectDescriptorFloor0202_create);
-    objectDescriptorMap_create.put(objectDescriptorFloor0203_create.getKey(), objectDescriptorFloor0203_create);
-    objectDescriptorMap_create.put(objectDescriptorFloor0204_create.getKey(), objectDescriptorFloor0204_create);
-    objectDescriptorMap_create.put(objectDescriptorAnton_create.getKey(), objectDescriptorAnton_create);
-    objectDescriptorMap_create.put(objectDescriptorBerta_create.getKey(), objectDescriptorBerta_create);
-    objectDescriptorMap_create.put(objectDescriptorCharl_create.getKey(), objectDescriptorCharl_create);
-    objectDescriptorMap_create.put(objectDescriptorP2F01_create.getKey(), objectDescriptorP2F01_create);
-    objectDescriptorMap_create.put(objectDescriptorP2F02_create.getKey(), objectDescriptorP2F02_create);
-    objectDescriptorMap_create.put(objectDescriptorP2F03_create.getKey(), objectDescriptorP2F03_create);
-    objectDescriptorMap_create.put(objectDescriptorP2F04_create.getKey(), objectDescriptorP2F04_create);
-    objectDescriptorMap_create.put(objectDescriptorP2F05_create.getKey(), objectDescriptorP2F05_create);
-    objectDescriptorMap_create.put(objectDescriptorP2F06_create.getKey(), objectDescriptorP2F06_create);
     objectDescriptorMap_create.put(objectDescriptorP2P01_create.getKey(), objectDescriptorP2P01_create);
 
-    // And then the map which contains the objects which will be deleted
-    Map<String, OmgObjectDescriptor> objectDescriptorMap_delete = new HashMap<>();
-    objectDescriptorMap_delete.put(objectDescriptorHouse01_delete.getKey(), objectDescriptorHouse01_delete);
-    objectDescriptorMap_delete.put(objectDescriptorFloor0101_delete.getKey(), objectDescriptorFloor0101_delete);
-    objectDescriptorMap_delete.put(objectDescriptorFloor0102_delete.getKey(), objectDescriptorFloor0102_delete);
-    objectDescriptorMap_delete.put(objectDescriptorP2F01_delete.getKey(), objectDescriptorP2F01_delete);
-    objectDescriptorMap_delete.put(objectDescriptorP2F02_delete.getKey(), objectDescriptorP2F02_delete);
-    objectDescriptorMap_delete.put(objectDescriptorP2F05_delete.getKey(), objectDescriptorP2F05_delete);
+    OmgObjectDescriptor objectDescriptorP2P01_update = new OmgObjectDescriptor("persondomain", "p2pclass", "p2p01");
+    objectDescriptorP2P01_update.getPropertyMap().put("type", "predivorce");
+    objectDescriptorP2P01_update.getPropertyMap().put("person_fk", PROPERTYVALUE_NOTSET);
+    objectDescriptorMap_update.put(objectDescriptorP2P01_update.getKey(), objectDescriptorP2P01_update);
+
+    OmgObjectDescriptor objectDescriptorP2P01_delete = new OmgObjectDescriptor("persondomain", "p2pclass", "p2p01");
+    objectDescriptorP2P01_delete.getPropertyMap().put("type", PROPERTYVALUE_NOTSET);
+    objectDescriptorP2P01_delete.getPropertyMap().put("person_fk", PROPERTYVALUE_NOTSET);
+    objectDescriptorMap_delete.put(objectDescriptorP2P01_delete.getKey(), objectDescriptorP2P01_delete);
+
+    OmgObjectDescriptor objectDescriptorP2P02_create = new OmgObjectDescriptor("persondomain", "p2pclass", "p2p02");
+    objectDescriptorP2P02_create.getPropertyMap().put("type", "friendship");
+    objectDescriptorP2P02_create.getPropertyMap().put("person_fk", "(berta, charlie)");
+    objectDescriptorP2P02_create.getDependeeKeys().add("berta");
+    objectDescriptorP2P02_create.getDependeeKeys().add("charlie");
+    objectDescriptorMap_create.put(objectDescriptorP2P02_create.getKey(), objectDescriptorP2P02_create);
+
+    OmgObjectDescriptor objectDescriptorP2P02_update01 = new OmgObjectDescriptor("persondomain", "p2pclass", "p2p02");
+    objectDescriptorP2P02_update01.getPropertyMap().put("type", PROPERTYVALUE_NOTSET);
+    objectDescriptorP2P02_update01.getPropertyMap().put("person_fk", "(anton, berta, charlie)");
+    objectDescriptorP2P02_update01.getDependeeKeys().add("anton");
+    objectDescriptorP2P02_update01.getDependeeKeys().add("berta");
+    objectDescriptorP2P02_update01.getDependeeKeys().add("charlie");
+    objectDescriptorMap_update.put(objectDescriptorP2P02_update01.getKey() + "_01", objectDescriptorP2P02_update01);
+
+    OmgObjectDescriptor objectDescriptorP2P02_update02 = new OmgObjectDescriptor("persondomain", "p2pclass", "p2p02");
+    objectDescriptorP2P02_update02.getPropertyMap().put("type", PROPERTYVALUE_NOTSET);
+    objectDescriptorP2P02_update02.getPropertyMap().put("person_fk", "(anton, charlie)");
+    objectDescriptorP2P02_update02.getDependeeKeys().add("anton");
+    objectDescriptorP2P02_update02.getDependeeKeys().add("charlie");
+    objectDescriptorMap_update.put(objectDescriptorP2P02_update02.getKey() + "_02", objectDescriptorP2P02_update02);
 
     if (action.equals(create)) {
       return objectDescriptorMap_create.get(objectDescriptorKey);
-    } else {
+    } else if (action.equals(delete)) {
       return objectDescriptorMap_delete.get(objectDescriptorKey);
+    } else if (action.equals(update)) {
+      return objectDescriptorMap_update.get(objectDescriptorKey);
+    } else {
+      throw new RuntimeException("Found unknown action: " + action.name());
     }
   }
 

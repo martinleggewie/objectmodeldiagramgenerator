@@ -32,7 +32,7 @@ class XSSFWorkbookDescriptionRepository_ScenarioSequenceTest {
     Set<OmgScenarioSequenceDescriptor> scenarioSequenceDescriptors = cut.findScenarioSequenceDescriptors();
 
     // Assert - check number of scenario sequence descriptors
-    assertEquals(6, scenarioSequenceDescriptors.size());
+    assertEquals(7, scenarioSequenceDescriptors.size());
   }
 
   @Test
@@ -48,7 +48,7 @@ class XSSFWorkbookDescriptionRepository_ScenarioSequenceTest {
 
     // Assert
     assertNotNull(result);
-    assertEquals(5, result.size());
+    assertEquals(6, result.size());
     assertEquals(scenarioSequenceDescriptors, result);
   }
 
