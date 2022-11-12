@@ -1,7 +1,8 @@
 
 # objectmodeldiagramgenerator
 
-Generates sequences of object model diagams in the form of PlantUML files.
+Generates sequences of object model diagrams in the form of PlantUML files.
+Goal is that such sequences explain step-by-step how a given domain model is filled with concrete data.
 
 You can define the object model in on Excel file following a specific proprietary structure.
 The underlying domain model allows you to define:
